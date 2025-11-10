@@ -79,7 +79,7 @@ structure ClientCapabilities where
   lean?         : Option LeanClientCapabilities         := none
   deriving ToJson, FromJson
 
-def ClientCapabilities.silentDiagnosticSupport (c : ClientCapabilities) : Bool := Id.run do
+def ClientCapabilities.silentDiagnosticSupport (c : ClientCapabilities) : Bool := id.run do
   let some lean := c.lean?
     | return false
   let some silentDiagnosticSupport := lean.silentDiagnosticSupport?

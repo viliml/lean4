@@ -445,7 +445,7 @@ similarly questionable).
 def withoutTacticIncrementality [Monad m] [MonadWithReaderOf Context m] [MonadOptions m]
     (cond : Bool) (act : m α) : m α := do
   let opts ← getOptions
-  withTheReader Term.Context (fun ctx => { ctx with tacSnap? := ctx.tacSnap?.filter fun tacSnap => Id.run do
+  withTheReader Term.Context (fun ctx => { ctx with tacSnap? := ctx.tacSnap?.filter fun tacSnap => id.run do
     if let some old := tacSnap.old? then
       if cond && opts.getBool `trace.Elab.reuse then
         dbg_trace "reuse stopped: guard failed at {old.stx}"
@@ -457,7 +457,7 @@ def withoutTacticReuse [Monad m] [MonadWithReaderOf Context m] [MonadOptions m]
     (cond : Bool) (act : m α) : m α := do
   let opts ← getOptions
   withTheReader Term.Context (fun ctx => { ctx with tacSnap? := ctx.tacSnap?.map fun tacSnap =>
-    { tacSnap with old? := tacSnap.old?.filter fun old => Id.run do
+    { tacSnap with old? := tacSnap.old?.filter fun old => id.run do
       if cond && opts.getBool `trace.Elab.reuse then
         dbg_trace "reuse stopped: guard failed at {old.stx}"
       return !cond }

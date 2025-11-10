@@ -35,7 +35,7 @@ theorem size_Rcc {a b : Nat} :
 theorem size_Rco {a b : Nat} :
     (a...b).size = b - a := by
   simp only [Rco.size, Iterators.Iter.size, Iterators.IteratorSize.size, Iterators.Iter.toIterM,
-    Rco.Internal.iter, Rxo.HasSize.size, Rxc.HasSize.size, Id.run_pure]
+    Rco.Internal.iter, Rxo.HasSize.size, Rxc.HasSize.size]
   omega
 
 @[simp]
@@ -48,7 +48,7 @@ theorem size_Roc {a b : Nat} :
 theorem size_Roo {a b : Nat} :
     (a<...b).size = b - a - 1 := by
   simp only [Roo.size, Iterators.Iter.size, Iterators.IteratorSize.size, Iterators.Iter.toIterM,
-    Roo.Internal.iter, Rxo.HasSize.size, Rxc.HasSize.size, Id.run_pure]
+    Roo.Internal.iter, Rxo.HasSize.size, Rxc.HasSize.size]
   omega
 
 @[simp]
@@ -61,7 +61,7 @@ theorem size_Ric {b : Nat} :
 theorem size_Rio {b : Nat} :
     (*...b).size = b := by
   simp only [Rio.size, Iterators.Iter.size, Iterators.IteratorSize.size, Iterators.Iter.toIterM,
-    Rio.Internal.iter, Rxo.HasSize.size, Rxc.HasSize.size, Id.run_pure]
+    Rio.Internal.iter, Rxo.HasSize.size, Rxc.HasSize.size]
   omega
 
 end Std.PRange.Nat

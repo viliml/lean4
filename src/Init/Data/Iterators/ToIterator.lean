@@ -34,7 +34,7 @@ def ToIterator.iterM (x : γ) [ToIterator x m β] : IterM (α := ToIterator.Stat
 
 /-- Converts `x` into a pure iterator. -/
 @[always_inline, inline, expose]
-def ToIterator.iter (x : γ) [ToIterator x Id β] : Iter (α := ToIterator.State x Id) β :=
+def ToIterator.iter (x : γ) [ToIterator x id β] : Iter (α := ToIterator.State x id) β :=
   ToIterator.iterM x |>.toIter
 
 /-- Creates a monadic `ToIterator` instance. -/
@@ -49,17 +49,17 @@ def ToIterator.ofM {x : γ} (State : Type w)
 @[always_inline, inline, expose]
 def ToIterator.of {x : γ} (State : Type w)
     (iter : Iter (α := State) β) :
-    ToIterator x Id β where
+    ToIterator x id β where
   State := State
   iterMInternal := iter.toIterM
 
 theorem ToIterator.iterM_eq {γ : Type u} {x : γ} {State : Type v} {β : Type v} {it} :
-    letI : ToIterator x Id β := .ofM State it
+    letI : ToIterator x id β := .ofM State it
     ToIterator.iterM x = it :=
   rfl
 
 theorem ToIterator.iter_eq {γ : Type u} {x : γ} {State : Type v} {β : Type v} {it} :
-    letI : ToIterator x Id β := .ofM State it
+    letI : ToIterator x id β := .ofM State it
     ToIterator.iter x = it.toIter :=
   rfl
 

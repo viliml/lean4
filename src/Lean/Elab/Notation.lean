@@ -87,7 +87,7 @@ partial def removeParentheses (stx : Syntax) : MacroM Syntax := do
     | .node info kind args => pure $ .node info kind (←args.mapM removeParentheses)
     | _ => pure stx
 
-partial def hasDuplicateAntiquot (stxs : Array Syntax) : Bool := Id.run do
+partial def hasDuplicateAntiquot (stxs : Array Syntax) : Bool := id.run do
   let mut seen := NameSet.empty
   for stx in stxs do
     for node in Syntax.topDown stx true do

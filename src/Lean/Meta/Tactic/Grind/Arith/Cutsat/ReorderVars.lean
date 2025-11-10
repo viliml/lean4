@@ -83,7 +83,7 @@ private def sortVars : GoalM (Array Var) := do
   let result := result.qsort (fun x y => cmp infos x y == .lt)
   return result
 
-private def mkPermInv (perm : Array Var) : Array Var := Id.run do
+private def mkPermInv (perm : Array Var) : Array Var := id.run do
   let mut inv := Array.replicate perm.size 0
   for h : i in [: perm.size] do
     inv := inv.set! perm[i] i
@@ -106,14 +106,14 @@ def LeCnstr.reorder (c : LeCnstr) (old2new : Array Var) : LeCnstr :=
 def DiseqCnstr.reorder (c : DiseqCnstr) (old2new : Array Var) : DiseqCnstr :=
   { p := c.p.reorder old2new, h := .reorder c : DiseqCnstr }.norm
 
-def reorderVarMap [Inhabited α] (m : PArray α) (new2old : Array Var) : PArray α := Id.run do
+def reorderVarMap [Inhabited α] (m : PArray α) (new2old : Array Var) : PArray α := id.run do
   let mut r := {}
   for h : i in [:new2old.size] do
     let j : Nat := new2old[i]
     r := r.push (m.get! j)
   return r
 
-def reorderDiseqSplits (m : PHashMap Poly FVarId) (old2new : Array Var) : PHashMap Poly FVarId := Id.run do
+def reorderDiseqSplits (m : PHashMap Poly FVarId) (old2new : Array Var) : PHashMap Poly FVarId := id.run do
   let mut m' := {}
   for (p, h) in m do
     m' := m'.insert (p.reorder old2new) h

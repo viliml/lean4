@@ -147,7 +147,7 @@ private def mkJmpNewArgs (args : Array Arg) (targetParamIdx : Nat) (fields : Arr
 Create the arguments for a jump to an auxiliary join point created using `mkJpAlt`.
 This function is used to create jumps from the join point satisfying `isJpCases?` to the new auxiliary join points created using `mkJpAlt`.
 -/
-private def mkJmpArgsAtJp (params : Array Param) (targetParamIdx : Nat) (fields : Array Param) (dependsOnTarget : Bool) : Array Arg := Id.run do
+private def mkJmpArgsAtJp (params : Array Param) (targetParamIdx : Nat) (fields : Array Param) (dependsOnTarget : Bool) : Array Arg := id.run do
   mkJmpNewArgs (params.map (Arg.fvar ·.fvarId)) targetParamIdx (fields.map (Arg.fvar ·.fvarId)) dependsOnTarget
 
 /--

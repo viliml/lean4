@@ -283,10 +283,10 @@ instance : ForIn m (PersistentArray α) α where
 end
 
 @[inline] def foldl (t : PersistentArray α) (f : β → α → β) (init : β) (start : Nat := 0) : β :=
-  Id.run <| t.foldlM (pure <| f · ·) init start
+  id.run <| t.foldlM f init start
 
 @[inline] def foldr (t : PersistentArray α) (f : α → β → β) (init : β) : β :=
-  Id.run <| t.foldrM (pure <| f · ·) init
+  id.run <| t.foldrM f init
 
 @[inline] def filter (as : PersistentArray α) (p : α → Bool) : PersistentArray α :=
   as.foldl (init := {}) fun asNew a => if p a then asNew.push a else asNew

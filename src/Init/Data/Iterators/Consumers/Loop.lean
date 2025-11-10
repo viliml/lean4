@@ -33,42 +33,42 @@ or future library improvements will make it more comfortable.
 -/
 @[always_inline, inline]
 def Iter.instForIn' {α : Type w} {β : Type w} {n : Type x → Type x'} [Monad n]
-    [Iterator α Id β] [Finite α Id] [IteratorLoop α Id n] :
+    [Iterator α id β] [Finite α id] [IteratorLoop α id n] :
     ForIn' n (Iter (α := α) β) β ⟨fun it out => it.IsPlausibleIndirectOutput out⟩ where
   forIn' it init f :=
-    IteratorLoop.finiteForIn' (fun _ _ f c => f c.run) |>.forIn' it.toIterM init
+    IteratorLoop.finiteForIn' (m := id) (fun _ _ f c => f c) |>.forIn' it.toIterM init
         fun out h acc =>
           f out (Iter.isPlausibleIndirectOutput_iff_isPlausibleIndirectOutput_toIterM.mpr h) acc
 
 instance (α : Type w) (β : Type w) (n : Type x → Type x') [Monad n]
-    [Iterator α Id β] [Finite α Id] [IteratorLoop α Id n] :
+    [Iterator α id β] [Finite α id] [IteratorLoop α id n] :
     ForIn n (Iter (α := α) β) β :=
   haveI : ForIn' n (Iter (α := α) β) β _ := Iter.instForIn'
   instForInOfForIn'
 
 @[always_inline, inline]
 def Iter.Partial.instForIn' {α : Type w} {β : Type w} {n : Type x → Type x'} [Monad n]
-    [Iterator α Id β] [IteratorLoopPartial α Id n] :
+    [Iterator α id β] [IteratorLoopPartial α id n] :
     ForIn' n (Iter.Partial (α := α) β) β ⟨fun it out => it.it.IsPlausibleIndirectOutput out⟩ where
   forIn' it init f :=
-    IteratorLoopPartial.forInPartial (α := α) (m := Id) (n := n) (fun _ _ f c => f c.run)
+    IteratorLoopPartial.forInPartial (α := α) (m := id) (n := n) (fun _ _ f c => f c)
       it.it.toIterM init
       fun out h acc =>
         f out (Iter.isPlausibleIndirectOutput_iff_isPlausibleIndirectOutput_toIterM.mpr h) acc
 
 instance (α : Type w) (β : Type w) (n : Type x → Type x') [Monad n]
-    [Iterator α Id β] [IteratorLoopPartial α Id n] :
+    [Iterator α id β] [IteratorLoopPartial α id n] :
     ForIn n (Iter.Partial (α := α) β) β :=
   haveI : ForIn' n (Iter.Partial (α := α) β) β _ := Iter.Partial.instForIn'
   instForInOfForIn'
 
 instance {m : Type x → Type x'}
-    {α : Type w} {β : Type w} [Iterator α Id β] [Finite α Id] [IteratorLoop α Id m] :
+    {α : Type w} {β : Type w} [Iterator α id β] [Finite α id] [IteratorLoop α id m] :
     ForM m (Iter (α := α) β) β where
   forM it f := forIn it PUnit.unit (fun out _ => do f out; return .yield .unit)
 
 instance {m : Type x → Type x'}
-    {α : Type w} {β : Type w} [Iterator α Id β] [Finite α Id] [IteratorLoopPartial α Id m] :
+    {α : Type w} {β : Type w} [Iterator α id β] [Finite α id] [IteratorLoopPartial α id m] :
     ForM m (Iter.Partial (α := α) β) β where
   forM it f := forIn it PUnit.unit (fun out _ => do f out; return .yield .unit)
 
@@ -85,8 +85,8 @@ verify the behavior of the partial variant.
 -/
 @[always_inline, inline]
 def Iter.foldM {m : Type x → Type x'} [Monad m]
-    {α : Type w} {β : Type w} {γ : Type x} [Iterator α Id β] [Finite α Id]
-    [IteratorLoop α Id m] (f : γ → β → m γ)
+    {α : Type w} {β : Type w} {γ : Type x} [Iterator α id β] [Finite α id]
+    [IteratorLoop α id m] (f : γ → β → m γ)
     (init : γ) (it : Iter (α := α) β) : m γ :=
   ForIn.forIn it init (fun x acc => ForInStep.yield <$> f acc x)
 
@@ -101,8 +101,8 @@ its behavior. If the iterator has a `Finite` instance, consider using `IterM.fol
 -/
 @[always_inline, inline]
 def Iter.Partial.foldM {m : Type x → Type x'} [Monad m]
-    {α : Type w} {β : Type w} {γ : Type x} [Iterator α Id β]
-    [IteratorLoopPartial α Id m] (f : γ → β → m γ)
+    {α : Type w} {β : Type w} {γ : Type x} [Iterator α id β]
+    [IteratorLoopPartial α id m] (f : γ → β → m γ)
     (init : γ) (it : Iter.Partial (α := α) β) : m γ :=
   ForIn.forIn it init (fun x acc => ForInStep.yield <$> f acc x)
 
@@ -118,10 +118,10 @@ number of steps. If the iterator is not finite or such an instance is not availa
 verify the behavior of the partial variant.
 -/
 @[always_inline, inline]
-def Iter.fold {α : Type w} {β : Type w} {γ : Type x} [Iterator α Id β] [Finite α Id]
-    [IteratorLoop α Id Id] (f : γ → β → γ)
+def Iter.fold {α : Type w} {β : Type w} {γ : Type x} [Iterator α id β] [Finite α id]
+    [IteratorLoop α id id] (f : γ → β → γ)
     (init : γ) (it : Iter (α := α) β) : γ :=
-  ForIn.forIn (m := Id) it init (fun x acc => ForInStep.yield (f acc x))
+  ForIn.forIn (m := id) it init (fun x acc => ForInStep.yield (f acc x))
 
 /--
 Folds a function over an iterator from the left, accumulating a value starting with `init`.
@@ -133,10 +133,10 @@ This is a partial, potentially nonterminating, function. It is not possible to f
 its behavior. If the iterator has a `Finite` instance, consider using `IterM.fold` instead.
 -/
 @[always_inline, inline]
-def Iter.Partial.fold {α : Type w} {β : Type w} {γ : Type x} [Iterator α Id β]
-    [IteratorLoopPartial α Id Id] (f : γ → β → γ)
+def Iter.Partial.fold {α : Type w} {β : Type w} {γ : Type x} [Iterator α id β]
+    [IteratorLoopPartial α id id] (f : γ → β → γ)
     (init : γ) (it : Iter.Partial (α := α) β) : γ :=
-  ForIn.forIn (m := Id) it init (fun x acc => ForInStep.yield (f acc x))
+  ForIn.forIn (m := id) it init (fun x acc => ForInStep.yield (f acc x))
 
 set_option doc.verso true in
 /--
@@ -148,7 +148,7 @@ examined in order of iteration.
 -/
 @[specialize]
 def Iter.anyM {α β : Type w} {m : Type → Type w'} [Monad m]
-    [Iterator α Id β] [IteratorLoop α Id m] [Finite α Id]
+    [Iterator α id β] [IteratorLoop α id m] [Finite α id]
     (p : β → m Bool) (it : Iter (α := α) β) : m Bool :=
   ForIn.forIn it false (fun x _ => do
     if ← p x then
@@ -166,9 +166,9 @@ examined in order of iteration.
 -/
 @[inline]
 def Iter.any {α β : Type w}
-    [Iterator α Id β] [IteratorLoop α Id Id] [Finite α Id]
+    [Iterator α id β] [IteratorLoop α id id] [Finite α id]
     (p : β → Bool) (it : Iter (α := α) β) : Bool :=
-  (it.anyM (fun x => pure (f := Id) (p x))).run
+  it.anyM (m := id) p
 
 set_option doc.verso true in
 /--
@@ -180,7 +180,7 @@ examined in order of iteration.
 -/
 @[specialize]
 def Iter.allM {α β : Type w} {m : Type → Type w'} [Monad m]
-    [Iterator α Id β] [IteratorLoop α Id m] [Finite α Id]
+    [Iterator α id β] [IteratorLoop α id m] [Finite α id]
     (p : β → m Bool) (it : Iter (α := α) β) : m Bool :=
   ForIn.forIn it true (fun x _ => do
     if ← p x then
@@ -198,19 +198,19 @@ examined in order of iteration.
 -/
 @[inline]
 def Iter.all {α β : Type w}
-    [Iterator α Id β] [IteratorLoop α Id Id] [Finite α Id]
+    [Iterator α id β] [IteratorLoop α id id] [Finite α id]
     (p : β → Bool) (it : Iter (α := α) β) : Bool :=
-  (it.allM (fun x => pure (f := Id) (p x))).run
+  it.allM (m := id) p
 
 @[always_inline, inline, expose, inherit_doc IterM.size]
-def Iter.size {α : Type w} {β : Type w} [Iterator α Id β] [IteratorSize α Id]
+def Iter.size {α : Type w} {β : Type w} [Iterator α id β] [IteratorSize α id]
     (it : Iter (α := α) β) : Nat :=
-  (IteratorSize.size it.toIterM).run.down
+  (IteratorSize.size it.toIterM).down
 
 @[always_inline, inline, inherit_doc IterM.Partial.size]
-def Iter.Partial.size {α : Type w} {β : Type w} [Iterator α Id β] [IteratorSizePartial α Id]
+def Iter.Partial.size {α : Type w} {β : Type w} [Iterator α id β] [IteratorSizePartial α id]
     (it : Iter (α := α) β) : Nat :=
-  (IteratorSizePartial.size it.toIterM).run.down
+  (IteratorSizePartial.size it.toIterM).down
 
 /--
 `LawfulIteratorSize α m` ensures that the `size` function of an iterator behaves as if it
@@ -220,10 +220,10 @@ for many efficient implementations of `size` that compute the size without actua
 
 This class is experimental and users of the iterator API should not explicitly depend on it.
 -/
-class LawfulIteratorSize (α : Type w) {β : Type w} [Iterator α Id β] [Finite α Id]
-    [IteratorSize α Id] where
+class LawfulIteratorSize (α : Type w) {β : Type w} [Iterator α id β] [Finite α id]
+    [IteratorSize α id] where
     size_eq_size_toArray {it : Iter (α := α) β} : it.size =
-      haveI : IteratorCollect α Id Id := .defaultImplementation
+      haveI : IteratorCollect α id id := .defaultImplementation
       it.toArray.size
 
 end Std.Iterators

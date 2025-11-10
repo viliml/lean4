@@ -58,7 +58,7 @@ def MatcherInfo.getAltRange (info : MatcherInfo) : Std.Rco Nat :=
 def MatcherInfo.getMotivePos (info : MatcherInfo) : Nat :=
   info.numParams
 
-def getNumEqsFromDiscrInfos (infos : Array DiscrInfo) : Nat := Id.run do
+def getNumEqsFromDiscrInfos (infos : Array DiscrInfo) : Nat := id.run do
   let mut r := 0
   for info in infos do
     if info.hName?.isSome then

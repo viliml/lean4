@@ -296,11 +296,11 @@ def tryFinally {m : Type u → Type v} {α β : Type u} [MonadFinally m] [Functo
   (·.1) <$> y
 
 @[always_inline]
-instance Id.finally : MonadFinally Id where
+instance id.finally : MonadFinally id where
   tryFinally' := fun x h =>
    let a := x
    let b := h (some x)
-   pure (a, b)
+   (a, b)
 
 @[always_inline]
 instance ExceptT.finally {m : Type u → Type v} {ε : Type u} [MonadFinally m] [Monad m] : MonadFinally (ExceptT ε m) where

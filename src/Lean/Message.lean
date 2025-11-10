@@ -485,7 +485,7 @@ namespace SerialMessage
 @[inline] def toMessage (msg : SerialMessage) : Message :=
   {msg with data := msg.data}
 
-protected def toString (msg : SerialMessage) (includeEndPos := false) : String := Id.run do
+protected def toString (msg : SerialMessage) (includeEndPos := false) : String := id.run do
   let mut str := msg.data
   let endPos := if includeEndPos then msg.endPos else none
   unless msg.caption == "" do

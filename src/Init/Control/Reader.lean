@@ -50,4 +50,4 @@ instance ReaderT.tryFinally [MonadFinally m] : MonadFinally (ReaderT ρ m) where
 A monad with access to a read-only value of type `ρ`. The value can be locally overridden by
 `withReader`, but it cannot be mutated.
 -/
-abbrev ReaderM (ρ : Type u) := ReaderT ρ Id
+abbrev ReaderM (ρ : Type u) := ReaderT ρ id

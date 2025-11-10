@@ -101,7 +101,7 @@ Returns the number of digits needed to distinguish the anchors in `es`
 public def getNumDigitsForAnchors [HasAnchor α] (es : Array α) : Nat :=
   go 4
 where
-  go (numDigits : Nat) : Nat := Id.run do
+  go (numDigits : Nat) : Nat := id.run do
     if 4*numDigits  < 64 then
       let shift := 64 - 4*numDigits
       let mut found : Std.HashSet UInt64 := {}

@@ -64,7 +64,7 @@ end
 /--
 Convert a LCNF local context into a regular Lean local context.
 -/
-def LCtx.toLocalContext (lctx : LCtx) : LocalContext := Id.run do
+def LCtx.toLocalContext (lctx : LCtx) : LocalContext := id.run do
   let mut result := {}
   for (_, param) in lctx.params.toArray do
     result := result.addDecl (.cdecl 0 param.fvarId param.binderName param.type .default .default)

@@ -44,7 +44,7 @@ the constructor may only appear in the type of other free variables introduced a
 public def occursOrInType (lctx : LocalContext) (e : Expr) (t : Expr) : Bool :=
   t.find? go |>.isSome
 where
-  go s := Id.run do
+  go s := id.run do
     let .fvar fvarId := s | s == e
     let some decl := lctx.find? fvarId | s == e
     return s == e || e.occurs decl.type

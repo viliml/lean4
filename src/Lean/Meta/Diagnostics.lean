@@ -13,7 +13,7 @@ public section
 
 namespace Lean.Meta
 
-def collectAboveThreshold [BEq α] [Hashable α] (counters : PHashMap α Nat) (threshold : Nat) (p : α → Bool) (lt : α → α → Bool) : Array (α × Nat) := Id.run do
+def collectAboveThreshold [BEq α] [Hashable α] (counters : PHashMap α Nat) (threshold : Nat) (p : α → Bool) (lt : α → α → Bool) : Array (α × Nat) := id.run do
   let mut r := #[]
   for (declName, counter) in counters do
     if counter > threshold then
@@ -21,7 +21,7 @@ def collectAboveThreshold [BEq α] [Hashable α] (counters : PHashMap α Nat) (t
       r := r.push (declName, counter)
   return r.qsort fun (d₁, c₁) (d₂, c₂) => if c₁ == c₂ then lt d₁ d₂ else c₁ > c₂
 
-def subCounters [BEq α] [Hashable α] (newCounters oldCounters : PHashMap α Nat) : PHashMap α Nat := Id.run do
+def subCounters [BEq α] [Hashable α] (newCounters oldCounters : PHashMap α Nat) : PHashMap α Nat := id.run do
   let mut result := {}
   for (a, counterNew) in newCounters do
     if let some counterOld := oldCounters.find? a then

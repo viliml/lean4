@@ -53,7 +53,7 @@ builtin_simproc_decl expandPowAdd (_ ^ _) := fun e => do
 private def notField : Std.HashSet Name :=
   [``Nat, ``Int, ``BitVec, ``UInt8, ``UInt16, ``UInt32, ``Int64, ``Int8, ``Int16, ``Int32, ``Int64].foldl (init := {}) (·.insert ·)
 
-private def isNotFieldQuick (type : Expr) : Bool := Id.run do
+private def isNotFieldQuick (type : Expr) : Bool := id.run do
   let .const declName _ := type.getAppFn | return false
   return notField.contains declName
 
@@ -102,7 +102,7 @@ builtin_dsimproc_decl normNatPowInst ((_ ^ _ : Nat)) := normInst 3 Nat.mkInstHPo
 /--
 Returns `true`, if `@OfNat.ofNat α n inst` is the standard way we represent `Nat` numerals in Lean.
 -/
-private def isNormNatNum (α n inst : Expr) : Bool := Id.run do
+private def isNormNatNum (α n inst : Expr) : Bool := id.run do
   unless α.isConstOf ``Nat do return false
   let .lit (.natVal _) := n | return false
   unless inst.isAppOfArity ``instOfNatNat 1 do return false
@@ -127,7 +127,7 @@ builtin_dsimproc_decl normNatCastInst ((NatCast.natCast _ : Int)) := normInst 1 
 /--
 Returns `true`, if `@OfNat.ofNat α n inst` is the standard way we represent `Int` numerals in Lean.
 -/
-private def isNormIntNum (α n inst : Expr) : Bool := Id.run do
+private def isNormIntNum (α n inst : Expr) : Bool := id.run do
   unless α.isConstOf ``Int do return false
   let .lit (.natVal _) := n | return false
   unless inst.isAppOfArity ``instOfNat 1 do return false

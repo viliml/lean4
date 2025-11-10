@@ -168,7 +168,7 @@ where
     range.start <= pos && (if includeStop then pos <= range.end else pos < range.end)
 
 /-- Checks whether any of the ranges in `self.definition?` or `self.usages` contains `pos`. -/
-def contains (self : RefInfo) (pos : Lsp.Position) (includeStop := false) : Bool := Id.run do
+def contains (self : RefInfo) (pos : Lsp.Position) (includeStop := false) : Bool := id.run do
   (self.findReferenceLocation? pos includeStop).isSome
 
 end Lean.Lsp.RefInfo
@@ -183,7 +183,7 @@ def findAt
     (self        : ModuleRefs)
     (pos         : Lsp.Position)
     (includeStop := false)
-    : Array RefIdent := Id.run do
+    : Array RefIdent := id.run do
   let mut result := #[]
   for (ident, info) in self do
     if info.contains pos includeStop then
@@ -284,7 +284,7 @@ an `FVarAliasInfo`.
 When collapsing identifiers, it prefers using a `RefIdent.const name` over a `RefIdent.fvar id` for
 all identifiers that are being collapsed into one.
 -/
-partial def combineIdents (trees : Array InfoTree) (refs : Array Reference) : Array Reference := Id.run do
+partial def combineIdents (trees : Array InfoTree) (refs : Array Reference) : Array Reference := id.run do
   -- Deduplicate definitions based on their exact range
   let mut posMap : Std.HashMap Lsp.Range RefIdent := ∅
   for ref in refs do
@@ -303,7 +303,7 @@ partial def combineIdents (trees : Array InfoTree) (refs : Array Reference) : Ar
   refs'
 where
   useConstRepresentatives (idMap : Std.HashMap RefIdent RefIdent)
-      : Std.HashMap RefIdent RefIdent := Id.run do
+      : Std.HashMap RefIdent RefIdent := id.run do
     let insertIntoClass classesById id :=
       let representative := findCanonicalRepresentative idMap id
       let «class»     := classesById.getD representative ∅
@@ -335,7 +335,7 @@ where
           r := r.insert id bestRepresentative
     return r
 
-  findCanonicalRepresentative (idMap : Std.HashMap RefIdent RefIdent) (id : RefIdent) : RefIdent := Id.run do
+  findCanonicalRepresentative (idMap : Std.HashMap RefIdent RefIdent) (id : RefIdent) : RefIdent := id.run do
     let mut canonicalRepresentative := id
     while h : idMap.contains canonicalRepresentative do
       canonicalRepresentative := idMap[canonicalRepresentative]
@@ -370,7 +370,7 @@ Groups `refs` by identifier and range s.t. references with the same identifier a
 are added to the `aliases` of the representative of the group.
 Yields to separate groups for declaration and usages if `allowSimultaneousBinderUse` is set.
 -/
-def dedupReferences (refs : Array Reference) (allowSimultaneousBinderUse := false) : Array Reference := Id.run do
+def dedupReferences (refs : Array Reference) (allowSimultaneousBinderUse := false) : Array Reference := id.run do
   let mut refsByIdAndRange : Std.HashMap (RefIdent × Option Bool × Lsp.Range) Reference := ∅
   for ref in refs do
     let isBinder := if allowSimultaneousBinderUse then some ref.isBinder else none
@@ -387,7 +387,7 @@ Finds all references in `trees` and deduplicates the result.
 See `dedupReferences` and `combineIdents`.
 -/
 def findModuleRefs (text : FileMap) (trees : Array InfoTree) (localVars : Bool := true)
-    (allowSimultaneousBinderUse := false) : ModuleRefs := Id.run do
+    (allowSimultaneousBinderUse := false) : ModuleRefs := id.run do
   let mut refs :=
     dedupReferences (allowSimultaneousBinderUse := allowSimultaneousBinderUse) <|
     combineIdents trees <|
@@ -647,7 +647,7 @@ The current references in a file worker take precedence over those in .ilean fil
 abbrev AllDirectImportsMap := Std.TreeMap Name (DocumentUri × DirectImports) Name.quickCmp
 
 /-- Yields a map from all modules to all of their direct imports. -/
-def allDirectImports (self : References) : AllDirectImportsMap := Id.run do
+def allDirectImports (self : References) : AllDirectImportsMap := id.run do
   let mut allDirectImports := ∅
   for (name, ilean) in self.ileans do
     allDirectImports := allDirectImports.insert name (ilean.moduleUri, ilean.directImports)
@@ -684,7 +684,7 @@ reference occurs in.
 def allRefsFor
     (self  : References)
     (ident : RefIdent)
-    : Array (DocumentUri × Name × Lsp.RefInfo) := Id.run do
+    : Array (DocumentUri × Name × Lsp.RefInfo) := id.run do
   let refsToCheck := match ident with
     | RefIdent.const .. => self.allRefs.toArray
     | RefIdent.fvar identModule .. =>
@@ -700,7 +700,7 @@ def allRefsFor
   return result
 
 /-- Yields all references in `module` at `pos`. -/
-def findAt (self : References) (module : Name) (pos : Lsp.Position) (includeStop := false) : Array RefIdent := Id.run do
+def findAt (self : References) (module : Name) (pos : Lsp.Position) (includeStop := false) : Array RefIdent := id.run do
   if let some (_, refs) := self.getModuleRefs? module then
     return refs.findAt pos includeStop
   #[]
@@ -724,7 +724,7 @@ def referringTo
     (self              : References)
     (ident             : RefIdent)
     (includeDefinition : Bool := true)
-    : Array DocumentRefInfo := Id.run do
+    : Array DocumentRefInfo := id.run do
   let mut result := #[]
   for (moduleUri, module, info) in self.allRefsFor ident do
     if includeDefinition then
@@ -738,7 +738,7 @@ def referringTo
 def definitionOf?
     (self  : References)
     (ident : RefIdent)
-    : Option DocumentRefInfo := Id.run do
+    : Option DocumentRefInfo := id.run do
   for (moduleUri, module, info) in self.allRefsFor ident do
     let some ⟨definitionRange, definitionParentDeclInfo?⟩ := info.definition?
       | continue
@@ -776,7 +776,7 @@ def definitionsMatching
   return result
 
 /-- Yields all imports that import the given `requestedMod`. -/
-def importedBy (self : References) (requestedMod : Name) : Array ModuleImport := Id.run do
+def importedBy (self : References) (requestedMod : Name) : Array ModuleImport := id.run do
   let mut result := #[]
   for (importedByModule, importedByModuleUri, directImports) in self.allDirectImports do
     let some importsOfRequestedMod := directImports.index.get? requestedMod

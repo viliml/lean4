@@ -449,7 +449,7 @@ public def mapContentType : String := "application/vnd.reservoir.outputs+json-li
 private def s3RevisionUrl
   (rev : String) (service : CacheService) (scope : String)
   (platform : String := "") (toolchain : String := "")
-: String := Id.run do
+: String := id.run do
   let mut url := appendScope s!"{service.revisionEndpoint}/" scope
   if service.repoScope then
     unless platform.isEmpty do
@@ -462,7 +462,7 @@ public def revisionUrl
   (rev : String) (service : CacheService) (scope : String)
   (platform : String := "") (toolchain : String := "")
 : String :=
-  if service.isReservoir then Id.run do
+  if service.isReservoir then id.run do
     let mut url := service.apiEndpoint
     if service.repoScope then
       url := url ++ "/repositories/"

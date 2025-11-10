@@ -155,7 +155,7 @@ inductive ElabSimpArgResult where
   | none -- used for example when elaboration fails
 
 def ElabSimpArgResult.simpTheorems : ElabSimpArgResult → Array SimpTheorem
-  | addEntries entries => Id.run do
+  | addEntries entries => id.run do
     let mut thms := #[]
     for entry in entries do
       if let .thm thm := entry then

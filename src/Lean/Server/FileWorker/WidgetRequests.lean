@@ -156,7 +156,7 @@ def lazyTraceChildrenToInteractive (children : WithRpcRef LazyTraceChildren) :
 
 builtin_initialize registerBuiltinRpcProcedure ``lazyTraceChildrenToInteractive _ _ lazyTraceChildrenToInteractive
 
-private def kmpSearch (query text : String) : Array String.Pos.Raw := Id.run do
+private def kmpSearch (query text : String) : Array String.Pos.Raw := id.run do
   if query.isEmpty then
     return #[]
   let query := query.toUTF8
@@ -173,7 +173,7 @@ private def kmpSearch (query text : String) : Array String.Pos.Raw := Id.run do
       qi := table[qi.toNat]!
   return r.map (⟨·⟩)
 where
-  buildKMPTable (w : ByteArray) : Array Int := Id.run do
+  buildKMPTable (w : ByteArray) : Array Int := id.run do
     let mut t := Array.emptyWithCapacity w.size
     let mut n := -1
     t := t.push n
@@ -193,7 +193,7 @@ private def matchEndPos (query : String) (startPos : String.Pos.Raw) : String.Po
 @[specialize]
 private def hightlightStringMatches? (query text : String) (matchPositions : Array String.Pos.Raw)
     (highlight : α) (offset : String.Pos.Raw := ⟨0⟩) (mapIdx : Nat → Nat := id) :
-    Option (TaggedText α) := Id.run do
+    Option (TaggedText α) := id.run do
   if query.isEmpty || text.isEmpty || matchPositions.isEmpty then
     return none
   let mut anyMatch : Bool := false
@@ -255,7 +255,7 @@ where
       let ms := updateMatches s.query s.ms p
       let anyHighlight := s.anyHighlight || isHighlighted
       { s with p, ms, anyHighlight }
-  updateMatches (query : String) (ms : Array String.Pos.Raw) (p : String.Pos.Raw) : Array String.Pos.Raw := Id.run do
+  updateMatches (query : String) (ms : Array String.Pos.Raw) (p : String.Pos.Raw) : Array String.Pos.Raw := id.run do
     let n := ms.size
     let mut ms := ms
     for i in 0...n do

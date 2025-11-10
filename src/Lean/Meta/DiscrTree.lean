@@ -694,7 +694,7 @@ private partial def getAllValuesForKey (d : DiscrTree α) (k : Key) (result : Ar
   | none      => result
   | some trie => go trie result
 where
-  go (trie : Trie α) (result : Array α) : Array α := Id.run do
+  go (trie : Trie α) (result : Array α) : Array α := id.run do
     match trie with
     | .node vs cs =>
       let mut result := result ++ vs

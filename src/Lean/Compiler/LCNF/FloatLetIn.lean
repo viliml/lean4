@@ -148,7 +148,7 @@ where
 Compute the initial new arms. This will just set up a map from all arms of
 `cs` to empty `Array`s, plus one additional entry for `dont`.
 -/
-def initialNewArms (cs : Cases) : Std.HashMap Decision (List CodeDecl) := Id.run do
+def initialNewArms (cs : Cases) : Std.HashMap Decision (List CodeDecl) := id.run do
   let mut map := Std.HashMap.emptyWithCapacity (cs.alts.size + 1)
   map := map.insert .dont []
   cs.alts.foldr (init := map) fun val acc => acc.insert (.ofAlt val) []

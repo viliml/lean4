@@ -131,7 +131,7 @@ private partial def resolvePrivateName (env : Environment) (opts : Options) (dec
     return n
 
 /-- Check whether `ns ++ id` is a valid namespace name and/or there are aliases names `ns ++ id`. -/
-private def resolveQualifiedName (env : Environment) (opts : Options) (ns : Name) (id : Name) : List Name := Id.run do
+private def resolveQualifiedName (env : Environment) (opts : Options) (ns : Name) (id : Name) : List Name := id.run do
   let resolvedId    := ns ++ id
   -- We ignore protected aliases if `id` is atomic.
   let resolvedIds   := getAliases env resolvedId (skipProtected := id.isAtomic)

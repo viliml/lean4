@@ -297,7 +297,7 @@ where
   it as an insertion. After a deletion, we render the old whitespace as a deletion unless it
   contains a newline, for the same reason mentioned previously.
   -/
-  wordDiff := Id.run do
+  wordDiff := id.run do
     let (words, wss) := splitWords s
     let (words', wss') := splitWords s'
     let diff := Diff.diff words words'

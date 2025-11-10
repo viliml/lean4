@@ -51,7 +51,7 @@ For `Prod.fst` and `ite` this function creates the path: `Prod.fst (ite (Prod _ 
 This path can be used to match on applications of structure projections onto control flow primitives.
 -/
 def mkApplyProjControlDiscrPath (struct : Name) (structParams : Nat) (projIdx : Nat)
-    (controlFlow : Name) (controlFlowParams : Nat) : Array DiscrTree.Key := Id.run do
+    (controlFlow : Name) (controlFlowParams : Nat) : Array DiscrTree.Key := id.run do
   let stars := structParams + controlFlowParams - 1
   let mut path : Array DiscrTree.Key := Array.mkEmpty (3 + stars)
   path := path.push <| .proj struct projIdx 0
@@ -65,7 +65,7 @@ For `f`, `SomeType α β` and `ite` this function creates the path: `f (ite (Som
 This path can be used to match on applications of unary functions onto control flow primitives.
 -/
 def mkApplyUnaryControlDiscrPath (type : Name) (typeParams : Nat) (constName : Name)
-    (controlFlow : Name) (controlFlowParams : Nat) : Array DiscrTree.Key := Id.run do
+    (controlFlow : Name) (controlFlowParams : Nat) : Array DiscrTree.Key := id.run do
   let stars := typeParams + controlFlowParams - 1
   let mut path : Array DiscrTree.Key := Array.mkEmpty (3 + stars)
   path := path.push <| .const constName 1

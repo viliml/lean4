@@ -36,7 +36,7 @@ namespace BuildStore
 /-- Derive an array of built module facets from the store. -/
 public def collectModuleFacetArray
   (self : BuildStore) (facet : Name) [FamilyOut FacetOut facet α]
-: Array (Job α) := Id.run do
+: Array (Job α) := id.run do
   let mut res : Array (Job α) := #[]
   for ⟨k, v⟩ in self do
     match k with
@@ -50,7 +50,7 @@ public def collectModuleFacetArray
 /-- Derive a map of module names to built facets from the store. -/
 public def collectModuleFacetMap
   (self : BuildStore) (facet : Name) [FamilyOut FacetOut facet α]
-: NameMap (Job α) := Id.run do
+: NameMap (Job α) := id.run do
   let mut res := Lean.mkNameMap (Job α)
   for ⟨k, v⟩ in self do
     match k with
@@ -64,7 +64,7 @@ public def collectModuleFacetMap
 /-- Derive an array of built package facets from the store. -/
 public def collectPackageFacetArray
   (self : BuildStore) (facet : Name) [FamilyOut FacetOut facet α]
-: Array (Job α) := Id.run do
+: Array (Job α) := id.run do
   let mut res : Array (Job α) := #[]
   for ⟨k, v⟩ in self do
     match k with
@@ -78,7 +78,7 @@ public def collectPackageFacetArray
 /-- Derive an array of built target facets from the store. -/
 public def collectTargetFacetArray
   (self : BuildStore) (facet : Name) [FamilyOut FacetOut facet α]
-: Array (Job α) := Id.run do
+: Array (Job α) := id.run do
   let mut res : Array (Job α) := #[]
   for ⟨k, v⟩ in self do
     match k with

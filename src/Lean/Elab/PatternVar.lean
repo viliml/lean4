@@ -216,7 +216,7 @@ private def processVar (idStx : Syntax) : M Syntax := do
   modify fun s => { s with vars := s.vars.push idStx, found := s.found.insert id }
   return idStx
 
-private def samePatternsVariables (startingAt : Nat) (s₁ s₂ : State) : Bool := Id.run do
+private def samePatternsVariables (startingAt : Nat) (s₁ s₂ : State) : Bool := id.run do
   if h₁ : s₁.vars.size = s₂.vars.size then
     for h₂ : i in startingAt...s₁.vars.size do
       if s₁.vars[i] != s₂.vars[i] then

@@ -25,7 +25,7 @@ open Std Slice PRange Iterators
 
 variable {shape : RangeShape} {α : Type u}
 
-instance {s : Subarray α} : ToIterator s Id α :=
+instance {s : Subarray α} : ToIterator s id α :=
   .of _
     (Rco.Internal.iter (s.internalRepresentation.start...<s.internalRepresentation.stop)
       |>.attachWith (· < s.internalRepresentation.array.size) ?h
@@ -40,18 +40,18 @@ where finally
 
 universe v w
 
-@[no_expose] instance {s : Subarray α} : Iterator (ToIterator.State s Id) Id α := inferInstance
-@[no_expose] instance {s : Subarray α} : Finite (ToIterator.State s Id) Id := inferInstance
-@[no_expose] instance {s : Subarray α} : IteratorCollect (ToIterator.State s Id) Id Id := inferInstance
-@[no_expose] instance {s : Subarray α} : IteratorCollectPartial (ToIterator.State s Id) Id Id := inferInstance
+@[no_expose] instance {s : Subarray α} : Iterator (ToIterator.State s id) id α := inferInstance
+@[no_expose] instance {s : Subarray α} : Finite (ToIterator.State s id) id := inferInstance
+@[no_expose] instance {s : Subarray α} : IteratorCollect (ToIterator.State s id) id id := inferInstance
+@[no_expose] instance {s : Subarray α} : IteratorCollectPartial (ToIterator.State s id) id id := inferInstance
 @[no_expose] instance {s : Subarray α} {m : Type v → Type w} [Monad m] :
-    IteratorLoop (ToIterator.State s Id) Id m := inferInstance
+    IteratorLoop (ToIterator.State s id) id m := inferInstance
 @[no_expose] instance {s : Subarray α} {m : Type v → Type w} [Monad m] :
-    IteratorLoopPartial (ToIterator.State s Id) Id m := inferInstance
+    IteratorLoopPartial (ToIterator.State s id) id m := inferInstance
 @[no_expose] instance {s : Subarray α} :
-    IteratorSize (ToIterator.State s Id) Id := inferInstance
+    IteratorSize (ToIterator.State s id) id := inferInstance
 @[no_expose] instance {s : Subarray α} :
-    IteratorSizePartial (ToIterator.State s Id) Id := inferInstance
+    IteratorSizePartial (ToIterator.State s id) id := inferInstance
 
 @[no_expose]
 instance {α : Type u} {m : Type v → Type w} :

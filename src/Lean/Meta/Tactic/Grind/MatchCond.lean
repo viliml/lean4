@@ -100,7 +100,7 @@ Given `e` a `match`-expression condition, returns the left-hand side
 of the ground equations, and its type if it is the left-hand side of
 a heterogeneous equality.
 -/
-private def collectMatchCondLhss (e : Expr) : Array (Expr × Option Expr) := Id.run do
+private def collectMatchCondLhss (e : Expr) : Array (Expr × Option Expr) := id.run do
   let mut r := #[]
   let mut e := e
   repeat
@@ -182,7 +182,7 @@ def collectMatchCondLhssAndAbstract (matchCond : Expr) : GoalM (Array Expr × Ex
         withLocalDeclD ((`x).appendIndexAfter i) (← inferType lhs) fun x =>
           go (i+1) (xs.push x) (tys.push none) (tysxs.push x) (args.push lhs)
     else
-      let rec replaceLhss (e : Expr) (i : Nat) : Expr := Id.run do
+      let rec replaceLhss (e : Expr) (i : Nat) : Expr := id.run do
         let .forallE _ d b _ := e | return e
         if h : i < xs.size then
           if let some dNew := replaceLhs? d xs[i] tys[i]! then

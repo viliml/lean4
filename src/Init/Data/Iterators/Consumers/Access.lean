@@ -24,7 +24,7 @@ available, consider using `it.allowNontermination.atIdxSlow?` instead of `it.atI
 it is not possible to formally verify the behavior of the partial variant.
 -/
 @[specialize]
-def Iter.atIdxSlow? {α β} [Iterator α Id β] [Productive α Id]
+def Iter.atIdxSlow? {α β} [Iterator α id β] [Productive α id]
     (n : Nat) (it : Iter (α := α) β) : Option β :=
   match it.step with
   | .yield it' out _ =>
@@ -44,7 +44,7 @@ This is a partial, potentially nonterminating, function. It is not possible to f
 its behavior. If the iterator has a `Productive` instance, consider using `Iter.atIdxSlow?` instead.
 -/
 @[specialize]
-partial def Iter.Partial.atIdxSlow? {α β} [Iterator α Id β] [Monad Id]
+partial def Iter.Partial.atIdxSlow? {α β} [Iterator α id β] [Monad id]
     (n : Nat) (it : Iter.Partial (α := α) β) : Option β := do
   match it.it.step with
   | .yield it' out _ =>
@@ -55,7 +55,7 @@ partial def Iter.Partial.atIdxSlow? {α β} [Iterator α Id β] [Monad Id]
   | .done _ => none
 
 @[always_inline, inline, inherit_doc IterM.atIdx?]
-def Iter.atIdx? {α β} [Iterator α Id β] [Productive α Id] [IteratorAccess α Id]
+def Iter.atIdx? {α β} [Iterator α id β] [Productive α id] [IteratorAccess α id]
     (n : Nat) (it : Iter (α := α) β) : Option β :=
   match (IteratorAccess.nextAtIdx? it.toIterM n).run.val with
   | .yield _ out => some out

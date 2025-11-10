@@ -537,7 +537,7 @@ Examples:
 -/
 @[inline]
 def modify (xs : Array α) (i : Nat) (f : α → α) : Array α :=
-  Id.run <| modifyM xs i (pure <| f ·)
+  modifyM (m := id) xs i f
 
 set_option linter.indexVariables false in -- Changing `idx` causes bootstrapping issues, haven't investigated.
 /--
@@ -1048,7 +1048,7 @@ Examples:
 -/
 @[inline, expose]
 def foldl {α : Type u} {β : Type v} (f : β → α → β) (init : β) (as : Array α) (start := 0) (stop := as.size) : β :=
-  Id.run <| as.foldlM (pure <| f · ·) init start stop
+  id.run <| as.foldlM f init start stop
 
 /--
 Folds a function over an array from the right, accumulating a value starting with `init`. The
@@ -1065,7 +1065,7 @@ Examples:
 -/
 @[inline, expose]
 def foldr {α : Type u} {β : Type v} (f : α → β → β) (init : β) (as : Array α) (start := as.size) (stop := 0) : β :=
-  Id.run <| as.foldrM (pure <| f · ·) init start stop
+  id.run <| as.foldrM f init start stop
 
 /--
 Computes the sum of the elements of an array.
@@ -1113,7 +1113,7 @@ Examples:
 -/
 @[inline, expose]
 def map {α : Type u} {β : Type v} (f : α → β) (as : Array α) : Array β :=
-  Id.run <| as.mapM (pure <| f ·)
+  id.run <| as.mapM f
 
 instance : Functor Array where
   map := map
@@ -1128,7 +1128,7 @@ valid.
 -/
 @[inline, expose]
 def mapFinIdx {α : Type u} {β : Type v} (as : Array α) (f : (i : Nat) → α → (h : i < as.size) → β) : Array β :=
-  Id.run <| as.mapFinIdxM (pure <| f · · ·)
+  id.run <| as.mapFinIdxM f
 
 /--
 Applies a function to each element of the array along with the index at which that element is found,
@@ -1139,7 +1139,7 @@ is valid.
 -/
 @[inline, expose]
 def mapIdx {α : Type u} {β : Type v} (f : Nat → α → β) (as : Array α) : Array β :=
-  Id.run <| as.mapIdxM (pure <| f · ·)
+  id.run <| as.mapIdxM f
 
 /--
 Pairs each element of an array with its index, optionally starting from an index other than `0`.
@@ -1164,7 +1164,7 @@ Examples:
 -/
 @[inline, expose]
 def find? {α : Type u} (p : α → Bool) (as : Array α) : Option α :=
-  Id.run do
+  id.run do
     for a in as do
       if p a then
         return some a
@@ -1188,7 +1188,7 @@ some 10
 -/
 @[inline, expose]
 def findSome? {α : Type u} {β : Type v} (f : α → Option β) (as : Array α) : Option β :=
-  Id.run <| as.findSomeM? (pure <| f ·)
+  id.run <| as.findSomeM? f
 
 /--
 Returns the first non-`none` result of applying the function `f` to each element of the
@@ -1222,7 +1222,7 @@ Examples:
 -/
 @[inline]
 def findSomeRev? {α : Type u} {β : Type v} (f : α → Option β) (as : Array α) : Option β :=
-  Id.run <| as.findSomeRevM? (pure <| f ·)
+  id.run <| as.findSomeRevM? f
 
 /--
 Returns the last element of the array for which the predicate `p` returns `true`, or `none` if no
@@ -1234,7 +1234,7 @@ Examples:
 -/
 @[inline]
 def findRev? {α : Type} (p : α → Bool) (as : Array α) : Option α :=
-  Id.run <| as.findRevM? (pure <| p ·)
+  id.run <| as.findRevM? p
 
 /--
 Returns the index of the first element for which `p` returns `true`, or `none` if there is no such
@@ -1364,7 +1364,7 @@ Examples:
 -/
 @[inline, expose]
 def any (as : Array α) (p : α → Bool) (start := 0) (stop := as.size) : Bool :=
-  Id.run <| as.anyM (pure <| p ·) start stop
+  id.run <| as.anyM p start stop
 
 /--
 Returns `true` if `p` returns `true` for every element of `as`.
@@ -1382,7 +1382,7 @@ Examples:
 -/
 @[inline]
 def all (as : Array α) (p : α → Bool) (start := 0) (stop := as.size) : Bool :=
-  Id.run <| as.allM (pure <| p ·) start stop
+  id.run <| as.allM p start stop
 
 /--
 Checks whether `a` is an element of `as`, using `==` to compare elements.
@@ -1654,7 +1654,7 @@ Example:
 -/
 @[inline, expose]
 def filterMap (f : α → Option β) (as : Array α) (start := 0) (stop := as.size) : Array β :=
-  Id.run <| as.filterMapM (pure <| f ·) (start := start) (stop := stop)
+  id.run <| as.filterMapM f (start := start) (stop := stop)
 
 /--
 Returns the largest element of the array, as determined by the comparison `lt`, or `none` if
@@ -1688,7 +1688,7 @@ Examples:
  * `#[1, 2, 5, 2, 7, 7].partition (fun _ => true) = (#[1, 2, 5, 2, 7, 7], #[])`
 -/
 @[inline]
-def partition (p : α → Bool) (as : Array α) : Array α × Array α := Id.run do
+def partition (p : α → Bool) (as : Array α) : Array α × Array α := id.run do
   let mut bs := #[]
   let mut cs := #[]
   for a in as do
@@ -1955,7 +1955,7 @@ Examples:
 * `#[x₁, x₂, x₃].zipWith f #[y₁, y₂, y₃, y₄] = #[f x₁ y₁, f x₂ y₂, f x₃ y₃]`
 -/
 @[inline] def zipWith (f : α → β → γ) (as : Array α) (bs : Array β) : Array γ :=
-  Id.run (zipWithMAux as bs (pure <| f · ·) 0 #[])
+  id.run <| zipWithMAux as bs f 0 #[]
 
 /--
 Combines two arrays into an array of pairs in which the first and second components are the

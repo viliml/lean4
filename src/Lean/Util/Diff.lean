@@ -134,7 +134,7 @@ Empirically, however, even quadratic cases of this implementation can handle hun
 in a second or so, and it is intended to be used for short strings like error messages. Be
 cautious when applying it to larger workloads.
 -/
-partial def lcs (left right : Subarray α) : Array α := Id.run do
+partial def lcs (left right : Subarray α) : Array α := id.run do
   let (pref, left, right) := matchPrefix left right
   let (left, right, suff) := matchSuffix left right
   let mut hist : Histogram α left.size right.size := (∅ : Std.HashMap ..)
@@ -167,7 +167,7 @@ def diff [Inhabited α] (original edited : Array α) : Array (Action × α) :=
     edited.map (.insert, ·)
   else if h' : ¬(0 < edited.size) then
     original.map (.delete, ·)
-  else Id.run do
+  else id.run do
     have : original.size > 0 := by omega
     have : edited.size > 0 := by omega
     let mut out := #[]
@@ -193,7 +193,7 @@ def diff [Inhabited α] (original edited : Array α) : Array (Action × α) :=
     out
 
 /-- Shows a line-by-line edit script with markers for added and removed lines. -/
-def linesToString [ToString α] (lines : Array (Action × α)) : String := Id.run do
+def linesToString [ToString α] (lines : Array (Action × α)) : String := id.run do
   let mut out : String := ""
   for (act, line) in lines do
     let lineStr := toString line

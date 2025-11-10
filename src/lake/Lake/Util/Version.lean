@@ -137,7 +137,7 @@ namespace ToolchainVer
 
 public instance : Coe LeanVer ToolchainVer := ⟨ToolchainVer.release⟩
 
-public def ofString (ver : String) : ToolchainVer := Id.run do
+public def ofString (ver : String) : ToolchainVer := id.run do
   let colonPos := ver.posOf ':'
   let (origin, tag) :=
     if h : colonPos < ver.endPos then

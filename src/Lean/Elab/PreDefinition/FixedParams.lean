@@ -103,7 +103,7 @@ def Info.mayBeFixed (callerIdx paramIdx : Nat) (info : Info) : Bool :=
 /--
 This parameter is varying. Set and propagate that information.
 -/
-partial def Info.setVarying (funIdx paramIdx : Nat) (info : Info) : Info := Id.run do
+partial def Info.setVarying (funIdx paramIdx : Nat) (info : Info) : Info := id.run do
   let mut info : Info := info
   if info.mayBeFixed funIdx paramIdx then
     -- Set this as varying
@@ -139,7 +139,7 @@ partial def Info.setCallerParam (calleeIdx argIdx callerIdx paramIdx : Nat) (inf
     else
       -- Set the new entry
       let info := { info with graph := info.graph.modify calleeIdx (·.modify argIdx (·.map (·.set! callerIdx (some paramIdx)))) }
-      Id.run do
+      id.run do
         -- Propagate information about the caller
         let mut info : Info := info
         if let some callerParamInfo := info.graph[callerIdx]![paramIdx]! then
@@ -379,7 +379,7 @@ where
 If `xs` are arguments to the `funIdx`'s function, pick only the fixed ones, and reorder appropriately.
 Expects `xs` to match the arity of the function.
 -/
-def FixedParamPerm.pickFixed (perm : FixedParamPerm) (xs : Array α) : Array α := Id.run do
+def FixedParamPerm.pickFixed (perm : FixedParamPerm) (xs : Array α) : Array α := id.run do
   assert! xs.size = perm.size
   if h : xs.size = 0 then
     pure #[]
@@ -399,7 +399,7 @@ where
 If `xs` are arguments to the `funIdx`'s function, pick only the varying ones.
 Unlike `pickFixed`, this function can handle over- or under-application.
 -/
-def FixedParamPerm.pickVarying (perm : FixedParamPerm) (xs : Array α) : Array α := Id.run do
+def FixedParamPerm.pickVarying (perm : FixedParamPerm) (xs : Array α) : Array α := id.run do
   let mut ys := #[]
   for h : i in *...xs.size do
     if perm[i]?.join.isNone then ys := ys.push xs[i]
@@ -451,7 +451,7 @@ This is used in structural recursion, where we may discover that some fixed para
 indices and need to be treated as varying, including all parameters that depend on them.
 -/
 def FixedParamPerms.erase  (fixedParamPerms : FixedParamPerms) (xs : Array Expr)
-    (toErase : Array (Array Nat)) : (FixedParamPerms × Array Expr × Array FVarId) := Id.run do
+    (toErase : Array (Array Nat)) : (FixedParamPerms × Array Expr × Array FVarId) := id.run do
   assert! xs.all (·.isFVar)
   assert! fixedParamPerms.numFixed  = xs.size
   assert! toErase.size = fixedParamPerms.perms.size

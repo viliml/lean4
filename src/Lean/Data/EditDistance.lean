@@ -18,7 +18,7 @@ If the return value is `none`, then the distance is certainly greater than the c
 returned `some` does not necessarily indicate that the edit distance is less than or equal to the
 cutoff.
 -/
-public def levenshtein (str1 str2 : String) (cutoff : Nat) : Option Nat := Id.run do
+public def levenshtein (str1 str2 : String) (cutoff : Nat) : Option Nat := id.run do
   let len1 := str1.length
   let len2 := str2.length
 

@@ -138,7 +138,7 @@ public class MarkdownBlock (i : Type u) (b : Type v) where
 public instance : MarkdownBlock i Empty where
   toMarkdown := nofun
 
-private def escape (s : String) : String := Id.run do
+private def escape (s : String) : String := id.run do
   let mut s' := ""
   let mut iter := s.iter
   while h : iter.hasNext do
@@ -151,7 +151,7 @@ private def escape (s : String) : String := Id.run do
 where
   isSpecial c := "*_`-+.!<>[]{}()#".any (· == c)
 
-private def quoteCode (str : String) : String := Id.run do
+private def quoteCode (str : String) : String := id.run do
   let mut longest := 0
   let mut current := 0
   let mut iter := str.iter
@@ -255,7 +255,7 @@ private partial def inlineMarkdown [MarkdownInline i] : Inline i → MarkdownM U
 public instance [MarkdownInline i] : ToMarkdown (Inline i) where
   toMarkdown inline := private inlineMarkdown inline
 
-private def quoteCodeBlock (indent : Nat) (str : String) : String := Id.run do
+private def quoteCodeBlock (indent : Nat) (str : String) : String := id.run do
   let mut longest := 2
   let mut current := 0
   let mut iter := str.iter

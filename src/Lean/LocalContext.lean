@@ -507,19 +507,19 @@ instance : ForIn m LocalContext LocalDecl where
     | some d => f d b
 
 @[inline] def foldl (lctx : LocalContext) (f : β → LocalDecl → β) (init : β) (start : Nat := 0) : β :=
-  Id.run <| lctx.foldlM (pure <| f · ·) init start
+  id.run <| lctx.foldlM f init start
 
 @[inline] def foldr (lctx : LocalContext) (f : LocalDecl → β → β) (init : β) : β :=
-  Id.run <| lctx.foldrM (pure <| f · ·) init
+  id.run <| lctx.foldrM f init
 
 def size (lctx : LocalContext) : Nat :=
   lctx.foldl (fun n _ => n+1) 0
 
 @[inline] def findDecl? (lctx : LocalContext) (f : LocalDecl → Option β) : Option β :=
-  Id.run <| lctx.findDeclM? (pure <| f ·)
+  id.run <| lctx.findDeclM? f
 
 @[inline] def findDeclRev? (lctx : LocalContext) (f : LocalDecl → Option β) : Option β :=
-  Id.run <| lctx.findDeclRevM? (pure <| f ·)
+  id.run <| lctx.findDeclRevM? f
 
 partial def isSubPrefixOfAux (a₁ a₂ : PArray (Option LocalDecl)) (exceptFVars : Array Expr) (i j : Nat) : Bool :=
   if h : i < a₁.size then
@@ -587,11 +587,11 @@ def mkForall (lctx : LocalContext) (xs : Array Expr) (b : Expr) (usedLetOnly : B
 
 /-- Return `true` if `lctx` contains a local declaration satisfying `p`. -/
 @[inline] def any (lctx : LocalContext) (p : LocalDecl → Bool) : Bool :=
-  Id.run <| lctx.anyM (pure <| p ·)
+  id.run <| lctx.anyM p
 
 /-- Return `true` if all declarations in `lctx` satisfy `p`. -/
 @[inline] def all (lctx : LocalContext) (p : LocalDecl → Bool) : Bool :=
-  Id.run <| lctx.allM (pure <| p ·)
+  id.run <| lctx.allM p
 
 /-- If option `pp.sanitizeNames` is set to `true`, add tombstone to shadowed local declaration names and ones contains macroscopes. -/
 def sanitizeNames (lctx : LocalContext) : StateM NameSanitizerState LocalContext := do

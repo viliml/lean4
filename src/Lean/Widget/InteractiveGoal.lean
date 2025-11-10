@@ -74,7 +74,7 @@ structure InteractiveTermGoal extends InteractiveGoalCore where
   deriving RpcEncodable
 
 def InteractiveGoalCore.pretty (g : InteractiveGoalCore) (userName? : Option String)
-    (goalPrefix : String) : Format := Id.run do
+    (goalPrefix : String) : Format := id.run do
   let indent := 2 -- Use option
   let mut ret := match userName? with
     | some userName => f!"case {userName}"

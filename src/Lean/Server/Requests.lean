@@ -73,14 +73,14 @@ where
   traverseChildren (acc : α) : List (SnapshotTask SnapshotTree) → ServerTask (α × Bool)
     | [] => .pure (acc, false)
     | child::otherChildren =>
-      f child acc |>.bindCheap fun (acc, control) => Id.run do
+      f child acc |>.bindCheap fun (acc, control) => id.run do
         let .proceed foldChildrenOfChild := control
           | return .pure (acc, true)
         if ! foldChildrenOfChild then
           return traverseChildren acc otherChildren
         let subtreeTask := child.task.asServerTask.bindCheap fun tree =>
           traverseTree acc tree
-        return subtreeTask.bindCheap fun (acc, done) => Id.run do
+        return subtreeTask.bindCheap fun (acc, done) => id.run do
           if done then
             return .pure (acc, done)
           return traverseChildren acc otherChildren
@@ -97,7 +97,7 @@ that contains `hoverPos` in its whitespace, which is not necessarily the correct
 -/
 partial def SnapshotTree.findInfoTreeAtPos (text : FileMap) (tree : SnapshotTree)
     (hoverPos : String.Pos.Raw) (includeStop : Bool) : ServerTask (Option Elab.InfoTree) :=
-  tree.foldSnaps (init := none) fun snap _ => Id.run do
+  tree.foldSnaps (init := none) fun snap _ => id.run do
     let some stx := snap.stx?
       -- One of the invariants of the snapshot tree is that `stx? = none` implies that
       -- this entire subtree has no relevant `InfoTree` information, so we can safely discard it
@@ -112,24 +112,24 @@ partial def SnapshotTree.findInfoTreeAtPos (text : FileMap) (tree : SnapshotTree
       -- Subtrees of the snapshot tree always have syntax ranges that are contained in those of
       -- their parents, so we can terminate early here.
       return .pure (none, .proceed (foldChildren := false))
-    return snap.task.asServerTask.mapCheap fun tree => Id.run do
+    return snap.task.asServerTask.mapCheap fun tree => id.run do
       let some infoTree := tree.element.infoTree?
         | return (none, .proceed (foldChildren := true))
       return (infoTree, .done)
 
 partial def SnapshotTree.foldInfosInRange (tree : SnapshotTree) (requestedRange : String.Range)
     (init : α) (f : Elab.ContextInfo → Elab.Info → α → α) : ServerTask α :=
-  tree.foldSnaps (init := init) fun snap acc => Id.run do
+  tree.foldSnaps (init := init) fun snap acc => id.run do
     let some stx := snap.stx?
       | return .pure (acc, .proceed (foldChildren := false))
     let some range := stx.getRangeWithTrailing? (canonicalOnly := true)
       | return .pure (acc, .proceed (foldChildren := true))
     if ! range.overlaps requestedRange (includeFirstStop := true) (includeSecondStop := true) then
       return .pure (acc, .proceed (foldChildren := false))
-    return snap.task.asServerTask.mapCheap fun tree => Id.run do
+    return snap.task.asServerTask.mapCheap fun tree => id.run do
       let some infoTree := tree.element.infoTree?
         | return (acc, .proceed (foldChildren := true))
-      let acc := infoTree.foldInfo (init := acc) fun ctx i acc => Id.run do
+      let acc := infoTree.foldInfo (init := acc) fun ctx i acc => id.run do
         let some r := i.range?
           | return acc
         if ! r.overlaps requestedRange (includeFirstStop := true) (includeSecondStop := true) then
@@ -139,14 +139,14 @@ partial def SnapshotTree.foldInfosInRange (tree : SnapshotTree) (requestedRange 
 
 partial def SnapshotTree.collectMessagesInRange (tree : SnapshotTree)
     (requestedRange : String.Range) : ServerTask MessageLog :=
-  tree.foldSnaps (init := .empty) fun snap log => Id.run do
+  tree.foldSnaps (init := .empty) fun snap log => id.run do
     let some stx := snap.stx?
       | return .pure (log, .proceed (foldChildren := true))
     let some range := stx.getRangeWithTrailing? (canonicalOnly := true)
       | return .pure (log, .proceed (foldChildren := true))
     if ! range.overlaps requestedRange (includeFirstStop := true) (includeSecondStop := true) then
       return .pure (log, .proceed (foldChildren := false))
-    return snap.task.asServerTask.mapCheap fun tree => Id.run do
+    return snap.task.asServerTask.mapCheap fun tree => id.run do
       return (log ++ tree.element.diagnostics.msgLog, .proceed (foldChildren := true))
 
 end Lean.Language
@@ -367,16 +367,16 @@ def withWaitFindSnapAtPos
 open Language.Lean in
 /-- Finds the first `CommandParsedSnapshot` containing `hoverPos`, asynchronously. -/
 partial def findCmdParsedSnap (doc : EditableDocument) (hoverPos : String.Pos.Raw)
-    : ServerTask (Option CommandParsedSnapshot) := Id.run do
+    : ServerTask (Option CommandParsedSnapshot) := id.run do
   let some headerParsed := doc.initSnap.result?
     | .pure none
-  headerParsed.processedSnap.task.asServerTask.bindCheap fun headerProcessed => Id.run do
+  headerParsed.processedSnap.task.asServerTask.bindCheap fun headerProcessed => id.run do
     let some headerSuccess := headerProcessed.result?
       | return .pure none
     let firstCmdSnapTask : ServerTask CommandParsedSnapshot := headerSuccess.firstCmdSnap.task
     firstCmdSnapTask.bindCheap go
 where
-  go (cmdParsed : CommandParsedSnapshot) : ServerTask (Option CommandParsedSnapshot) := Id.run do
+  go (cmdParsed : CommandParsedSnapshot) : ServerTask (Option CommandParsedSnapshot) := id.run do
     if containsHoverPos cmdParsed then
       return .pure (some cmdParsed)
     if isAfterHoverPos cmdParsed then
@@ -389,12 +389,12 @@ where
       next.task.asServerTask.bindCheap go
     | none => .pure none
 
-  containsHoverPos (cmdParsed : CommandParsedSnapshot) : Bool := Id.run do
+  containsHoverPos (cmdParsed : CommandParsedSnapshot) : Bool := id.run do
     let some range := cmdParsed.stx.getRangeWithTrailing? (canonicalOnly := true)
       | return false
     return doc.meta.text.rangeContainsHoverPos range hoverPos (includeStop := false)
 
-  isAfterHoverPos (cmdParsed : CommandParsedSnapshot) : Bool := Id.run do
+  isAfterHoverPos (cmdParsed : CommandParsedSnapshot) : Bool := id.run do
     let some startPos := cmdParsed.stx.getPos? (canonicalOnly := true)
       | return false
     return hoverPos < startPos

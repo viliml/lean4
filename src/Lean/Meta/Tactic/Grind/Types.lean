@@ -529,7 +529,7 @@ private def hashRoot (enodes : ENodeMap) (e : Expr) : UInt64 :=
   else
     hashPtrExpr e
 
-private def hasSameRoot (enodes : ENodeMap) (a b : Expr) : Bool := Id.run do
+private def hasSameRoot (enodes : ENodeMap) (a b : Expr) : Bool := id.run do
   if isSameExpr a b then
     return true
   else
@@ -614,14 +614,14 @@ structure PreInstance where
   assignment : Array Expr
 
 instance : Hashable PreInstance where
-  hash i := Id.run do
+  hash i := id.run do
     let mut r := hashPtrExpr i.proof
     for v in i.assignment do
       r := mixHash r (hashPtrExpr v)
     return r
 
 instance : BEq PreInstance where
-  beq i₁ i₂ := Id.run do
+  beq i₁ i₂ := id.run do
     unless isSameExpr i₁.proof i₂.proof do return false
     unless i₁.assignment.size == i₂.assignment.size do return false
     for v₁ in i₁.assignment, v₂ in i₂.assignment do
@@ -989,7 +989,7 @@ def isRoot (e : Expr) : GoalM Bool := do
   return isSameExpr n.root e
 
 /-- Returns the root element in the equivalence class of `e` IF `e` has been internalized. -/
-def Goal.getRoot? (goal : Goal) (e : Expr) : Option Expr := Id.run do
+def Goal.getRoot? (goal : Goal) (e : Expr) : Option Expr := id.run do
   let some n ← goal.getENode? e | return none
   return some n.root
 
@@ -1018,7 +1018,7 @@ def getRootENode? (e : Expr) : GoalM (Option ENode) := do
 Returns the next element in the equivalence class of `e`
 if `e` has been internalized in the given goal.
 -/
-def Goal.getNext? (goal : Goal) (e : Expr) : Option Expr := Id.run do
+def Goal.getNext? (goal : Goal) (e : Expr) : Option Expr := id.run do
   let some n ← goal.getENode? e | return none
   return some n.next
 
@@ -1034,7 +1034,7 @@ def getNext (e : Expr) : GoalM Expr := do
 def alreadyInternalized (e : Expr) : GoalM Bool :=
   return (← get).enodeMap.contains { expr := e }
 
-def Goal.getTarget? (goal : Goal) (e : Expr) : Option Expr := Id.run do
+def Goal.getTarget? (goal : Goal) (e : Expr) : Option Expr := id.run do
   let some n ← goal.getENode? e | return none
   return n.target?
 
@@ -1391,7 +1391,7 @@ partial def Goal.getEqc (goal : Goal) (e : Expr) (sort := false) : List Expr :=
   else
     eqc.toList
 where
-  go (first : Expr) (e : Expr) (acc : Array Expr) : Array Expr := Id.run do
+  go (first : Expr) (e : Expr) (acc : Array Expr) : Array Expr := id.run do
     let some next := goal.getNext? e | acc
     let acc := acc.push e
     if isSameExpr first next then
@@ -1404,7 +1404,7 @@ partial def getEqc (e : Expr) (sort := false) : GoalM (List Expr) :=
   return (← get).getEqc e sort
 
 /-- Returns all equivalence classes in the current goal. -/
-partial def Goal.getEqcs (goal : Goal) (sort := false) : List (List Expr) := Id.run do
+partial def Goal.getEqcs (goal : Goal) (sort := false) : List (List Expr) := id.run do
  let mut r : Array (Nat × Expr × List Expr) := #[]
  for e in goal.exprs do
     let some node := goal.getENode? e | pure ()

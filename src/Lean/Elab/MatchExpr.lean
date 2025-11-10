@@ -76,7 +76,7 @@ def toAlt? (stx : Syntax) : Option Alt :=
 /--
 Returns the function names of alternatives that do not have any pattern variable left.
 -/
-def getFunNamesToMatch (alts : List Alt) : List Ident := Id.run do
+def getFunNamesToMatch (alts : List Alt) : List Ident := id.run do
   let mut funNames := #[]
   for alt in alts do
     if alt.pvars.isEmpty then

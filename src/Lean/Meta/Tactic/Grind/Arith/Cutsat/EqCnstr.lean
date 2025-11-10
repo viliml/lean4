@@ -518,7 +518,7 @@ private def getKindAndType? (e : Expr) : Option (SupportedTermKind × Expr) :=
   | Grind.ToInt.toInt _ _ _ _ => some (.toInt, Int.mkType)
   | _ => none
 
-private def isForbiddenParent (parent? : Option Expr) (k : SupportedTermKind) : Bool := Id.run do
+private def isForbiddenParent (parent? : Option Expr) (k : SupportedTermKind) : Bool := id.run do
   let some parent := parent? | return false
   let .const declName _ := parent.getAppFn | return false
   -- TODO: document `NatCast.natCast` case.

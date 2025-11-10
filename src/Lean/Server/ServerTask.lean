@@ -68,7 +68,7 @@ def bindCheap (t : ServerTask α) (f : α → ServerTask β) : ServerTask β :=
 def bindCostly (t : ServerTask α) (f : α → ServerTask β) : ServerTask β :=
   t.task.bind (f · |>.task) (prio := .dedicated)
 
-def join (ts : Array (ServerTask α)) : ServerTask (Array α) := Id.run do
+def join (ts : Array (ServerTask α)) : ServerTask (Array α) := id.run do
   let mut r := ServerTask.pure #[]
   for t in ts do
     r := r.bindCheap fun acc => t.mapCheap (acc.push ·)

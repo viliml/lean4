@@ -26,7 +26,7 @@ private def alphaHash (e : Expr) : UInt64 :=
   | .mdata _ b => mixHash 13 (hashChild b)
   | .proj n i b => mixHash (mixHash (hash n) (hash i)) (hashChild b)
 
-private def alphaEq (e₁ e₂ : Expr) : Bool := Id.run do
+private def alphaEq (e₁ e₂ : Expr) : Bool := id.run do
   match e₁ with
   | .bvar .. | .mvar .. | .const .. | .fvar .. | .sort .. | .lit .. =>
     e₁ == e₂

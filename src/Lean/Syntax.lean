@@ -238,7 +238,7 @@ partial def hasIdent (id : Name) : Syntax → Bool
   | stx => fn stx
 
 @[inline] def rewriteBottomUp (fn : Syntax → Syntax) (stx : Syntax) : Syntax :=
-  Id.run <| stx.rewriteBottomUpM (pure <| fn ·)
+  id.run <| stx.rewriteBottomUpM fn
 
 private def updateInfo : SourceInfo → String.Pos.Raw → String.Pos.Raw → SourceInfo
   | SourceInfo.original lead pos trail endPos, leadStart, trailStop =>
@@ -301,7 +301,7 @@ If `nFields` is set, we take that many fields from the end and keep the remainin
 as one name. For example, `` `foo.bla.boo `` with `(nFields := 1)` ↦ `` [`foo.bla, `boo] ``. -/
 def identComponents (stx : Syntax) (nFields? : Option Nat := none) : List Syntax :=
   match stx with
-  | ident si@(SourceInfo.original lead pos trail _) rawStr val _ => Id.run do
+  | ident si@(SourceInfo.original lead pos trail _) rawStr val _ => id.run do
     let val := val.eraseMacroScopes
     -- With original info, we assume that `rawStr` represents `val`.
     let nameComps := nameComps val nFields?
@@ -397,7 +397,7 @@ where
     -- guaranteed.
     | _                                => s!" {val} "
 
-def hasMissing (stx : Syntax) : Bool := Id.run do
+def hasMissing (stx : Syntax) : Bool := id.run do
   for stx in stx.topDown do
     if stx.isMissing then
       return true
@@ -622,7 +622,7 @@ protected abbrev Stack := List (Syntax × Nat)
 partial def findStack? (root : Syntax) (visit : Syntax → Bool) (accept : Syntax → Bool := fun stx => !stx.hasArgs) : Option Syntax.Stack :=
   if visit root then go [] root else none
 where
-  go (stack : Syntax.Stack) (stx : Syntax) : Option Syntax.Stack := Id.run do
+  go (stack : Syntax.Stack) (stx : Syntax) : Option Syntax.Stack := id.run do
     if accept stx then
       return (stx, 0) :: stack  -- the first index is arbitrary as there is no preceding element
     for i in *...stx.getNumArgs do

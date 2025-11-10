@@ -89,7 +89,7 @@ private abbrev withIncOffset (x : AbstractM α) : AbstractM α :=
 Returns `fun (x_0 : varTypes[0]) ... (x_n : varTypes[n]) => b`.
 `b` contains `varTypes.size` loose bound variables.
 -/
-private def mkLambdaWithBodyAndVarType (varTypes : Array Expr) (b : Expr) : Expr := Id.run do
+private def mkLambdaWithBodyAndVarType (varTypes : Array Expr) (b : Expr) : Expr := id.run do
   let mut i := 0
   let mut f := b
   for varType in varTypes do

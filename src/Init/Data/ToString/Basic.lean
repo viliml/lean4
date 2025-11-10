@@ -31,7 +31,7 @@ export ToString (toString)
 instance {α} [ToString α] : ToString (id α) :=
   inferInstanceAs (ToString α)
 
-instance {α} [ToString α] : ToString (Id α) :=
+instance {α} [ToString α] : ToString (id α) :=
   inferInstanceAs (ToString α)
 
 instance : ToString String :=

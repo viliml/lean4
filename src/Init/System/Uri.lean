@@ -26,7 +26,7 @@ namespace UriEscape
 /-- Decode %HH escapings in the given string. Note that sometimes a consecutive
 sequence of multiple escapings can represent a utf-8 encoded sequence for
 a single unicode code point and these will also be decoded correctly. -/
-def decodeUri (uri : String) : String := Id.run do
+def decodeUri (uri : String) : String := id.run do
   let mut decoded : ByteArray := ByteArray.empty
   let rawBytes := uri.toUTF8
   let len := rawBytes.size
@@ -88,7 +88,7 @@ def unescapeUri (s: String) : String :=
   UriEscape.decodeUri s
 
 /-- Convert the given FilePath to a "file:///encodedpath" Uri. -/
-def pathToUri (fname : System.FilePath) : String := Id.run do
+def pathToUri (fname : System.FilePath) : String := id.run do
   let mut uri := fname.normalize.toString
   if System.Platform.isWindows then
     -- normalize drive letter
@@ -102,7 +102,7 @@ def pathToUri (fname : System.FilePath) : String := Id.run do
 
 /-- Convert the given uri to a FilePath stripping the 'file://' prefix,
 ignoring the optional host name. -/
-def fileUriToPath? (uri : String) : Option System.FilePath := Id.run do
+def fileUriToPath? (uri : String) : Option System.FilePath := id.run do
   if !uri.startsWith "file://" then
     none
   else

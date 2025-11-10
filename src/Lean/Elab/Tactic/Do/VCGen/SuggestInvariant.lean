@@ -62,7 +62,7 @@ inductive ClassifyInvariantUseResult where
   | notAnInvariantUse
   | unknownInvariantUse
 
-def classifyInvariantUse (assertion : Expr) (inv : MVarId) : ClassifyInvariantUseResult := Id.run do
+def classifyInvariantUse (assertion : Expr) (inv : MVarId) : ClassifyInvariantUseResult := id.run do
   -- Looking through metadata here is important because of the name hints the proof mode leaves behind
   let assertion := assertion.consumeMData
   -- `assertion` looks like `?inv.2.2....1 payload args`. The number of `2`s is the condition index.

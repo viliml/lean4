@@ -48,7 +48,7 @@ structure ModuleParserState where
   recovering : Bool       := false
   deriving Inhabited
 
-private partial def mkErrorMessage (c : InputContext) (pos : String.Pos.Raw) (stk : SyntaxStack) (e : Parser.Error) : Message := Id.run do
+private partial def mkErrorMessage (c : InputContext) (pos : String.Pos.Raw) (stk : SyntaxStack) (e : Parser.Error) : Message := id.run do
   let mut pos := pos
   let mut endPos? := none
   let mut e := e
@@ -134,7 +134,7 @@ private def consumeInput (inputCtx : InputContext) (pmctx : ParserModuleContext)
 def topLevelCommandParserFn : ParserFn :=
   commandParser.fn
 
-partial def parseCommand (inputCtx : InputContext) (pmctx : ParserModuleContext) (mps : ModuleParserState) (messages : MessageLog) : Syntax × ModuleParserState × MessageLog := Id.run do
+partial def parseCommand (inputCtx : InputContext) (pmctx : ParserModuleContext) (mps : ModuleParserState) (messages : MessageLog) : Syntax × ModuleParserState × MessageLog := id.run do
   let mut pos := mps.pos
   let mut recovering := mps.recovering
   let mut messages := messages

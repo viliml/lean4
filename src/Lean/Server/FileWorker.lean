@@ -105,14 +105,14 @@ structure WorkerContext where
 
 def WorkerContext.modifyGetPartialHandler (ctx : WorkerContext) (method : String)
     (f : PartialHandlerInfo → α × PartialHandlerInfo) : BaseIO α :=
-  ctx.partialHandlersRef.modifyGet fun partialHandlers => Id.run do
+  ctx.partialHandlersRef.modifyGet fun partialHandlers => id.run do
     let h := partialHandlers.get! method
     let (r, h) := f h
     (r, partialHandlers.insert method h)
 
 def WorkerContext.modifyPartialHandler (ctx : WorkerContext) (method : String)
     (f : PartialHandlerInfo → PartialHandlerInfo) : BaseIO Unit :=
-  ctx.partialHandlersRef.modify fun partialHandlers => Id.run do
+  ctx.partialHandlersRef.modify fun partialHandlers => id.run do
   let some h := partialHandlers.get? method
     | return partialHandlers
   partialHandlers.insert method <| f h
@@ -529,7 +529,7 @@ section Initialization
         o.writeSerializedLspMessage serialized |>.catchExceptions (fun _ => pure ())
       return chanOut
 
-    getImportClosure? (snap : Language.Lean.InitialSnapshot) : Array Name := Id.run do
+    getImportClosure? (snap : Language.Lean.InitialSnapshot) : Array Name := id.run do
       let some snap := snap.result?
         | return #[]
       let some snap ← snap.processedSnap.get.result?
@@ -979,7 +979,7 @@ def runRefreshTasks : WorkerM (Array (ServerTask Unit)) := do
   for (method, refreshMethod, refreshIntervalMs) in ← partialLspRequestHandlerMethods do
     tasks := tasks.push <| ← ServerTask.BaseIO.asTask do
       while true do
-        let lastRefreshTimestamp? ← ctx.modifyGetPartialHandler method fun h => Id.run do
+        let lastRefreshTimestamp? ← ctx.modifyGetPartialHandler method fun h => id.run do
           let some info := h.pendingRefreshInfo?
             | return (none, h)
           if info.successiveRefreshAttempts >= maxSuccessiveRefreshAttempts then
@@ -1000,7 +1000,7 @@ def runRefreshTasks : WorkerM (Array (ServerTask Unit)) := do
             return
 
         let currentTimestamp ← IO.monoMsNow
-        let canRefresh := ← ctx.modifyGetPartialHandler method fun h => Id.run do
+        let canRefresh := ← ctx.modifyGetPartialHandler method fun h => id.run do
           let some pendingRefreshInfo := h.pendingRefreshInfo?
             | return (false, h)
           -- If there is a request in flight and we emit a refresh request, VS Code will discard

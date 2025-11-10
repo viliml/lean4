@@ -22,7 +22,7 @@ def collectVar (x : Var) : VarCollector := (·.insert x)
 instance : AndThen VarCollector where
   andThen c₁ c₂ := fun s => c₂ () (c₁ s)
 
-def collectMapVars {_ : BEq α} {_ : Hashable α} (m : Std.HashMap α Expr) (k : α → VarCollector) : VarCollector := fun s => Id.run do
+def collectMapVars {_ : BEq α} {_ : Hashable α} (m : Std.HashMap α Expr) (k : α → VarCollector) : VarCollector := fun s => id.run do
   let mut s := s
   for (a, _) in m do
     s := k a s
@@ -37,7 +37,7 @@ structure VarRename where
 instance : CoeFun VarRename (fun _ => Var → Var) where
   coe := fun s x => s.map[x]?.getD 0
 
-def mkVarRename (new2old : Array Var) : VarRename := Id.run do
+def mkVarRename (new2old : Array Var) : VarRename := id.run do
   let mut old2new : Std.HashMap Var Var := {}
   let mut new := 0
   for old in new2old do

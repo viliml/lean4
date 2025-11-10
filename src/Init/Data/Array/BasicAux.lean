@@ -89,4 +89,4 @@ pointer equality, and does not allocate a new array if the result of each functi
 pointer-equal to its argument.
 -/
 @[inline] def Array.mapMono (as : Array α) (f : α → α) : Array α :=
-  Id.run <| as.mapMonoM (pure <| f ·)
+  id.run <| as.mapMonoM f

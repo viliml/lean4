@@ -11,13 +11,13 @@ public import Init.Data.Rat.Basic
 public section
 namespace Lean.Meta.Grind.Arith
 /-- Returns `true` if `e` is a numeral and has type `Nat`. -/
-def isNatNum (e : Expr) : Bool := Id.run do
+def isNatNum (e : Expr) : Bool := id.run do
   let_expr OfNat.ofNat _ _ inst := e | false
   let_expr instOfNatNat _ := inst | false
   true
 
 /-- Returns `true` if `e` is a nonnegative numeral and has type `Int`. -/
-def isNonnegIntNum (e : Expr) : Bool := Id.run do
+def isNonnegIntNum (e : Expr) : Bool := id.run do
   let_expr OfNat.ofNat _ _ inst := e | false
   let_expr instOfNat _ := inst | false
   true
@@ -25,7 +25,7 @@ def isNonnegIntNum (e : Expr) : Bool := Id.run do
 /-- Returns `true` if `e` is a numeral and has type `Int`. -/
 def isIntNum (e : Expr) : Bool :=
   match_expr e with
-  | Neg.neg _ inst e => Id.run do
+  | Neg.neg _ inst e => id.run do
     let_expr Int.instNegInt := inst | false
     isNonnegIntNum e
   | _ => isNonnegIntNum e
@@ -72,7 +72,7 @@ def isNatAdd (e : Expr) : Bool :=
   isInstAddNat i
 
 /-- Returns `some k` if `e` `@OfNat.ofNat Nat _ (instOfNatNat k)` -/
-def isNatNum? (e : Expr) : Option Nat := Id.run do
+def isNatNum? (e : Expr) : Option Nat := id.run do
   let_expr OfNat.ofNat _ _ inst := e | none
   let_expr instOfNatNat k := inst | none
   let .lit (.natVal k) := k | none
@@ -176,7 +176,7 @@ def isIntModuleVirtualParent (parent? : Option Expr) : Bool :=
   | none => false
   | some parent => parent == getIntModuleVirtualParent
 
-@[specialize] def split (cs : PArray α) (getCoeff : α → Int) : PArray α × Array (Int × α) := Id.run do
+@[specialize] def split (cs : PArray α) (getCoeff : α → Int) : PArray α × Array (Int × α) := id.run do
   let mut cs' := {}
   let mut todo := #[]
   for c in cs do

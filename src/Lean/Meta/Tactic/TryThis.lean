@@ -40,7 +40,7 @@ apply the replacement.
 -/
 @[builtin_code_action_provider] private def tryThisProvider : CodeActionProvider := fun params snap => do
   let doc ← readDoc
-  pure <| snap.infoTree.foldInfo (init := #[]) fun _ctx info result => Id.run do
+  pure <| snap.infoTree.foldInfo (init := #[]) fun _ctx info result => id.run do
     let .ofCustomInfo { stx, value } := info | result
     let some { edit, codeActionTitle, .. } :=
       value.get? TryThisInfo | result

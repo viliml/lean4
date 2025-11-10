@@ -67,7 +67,7 @@ partial def backtrackIfNecessary (pat : Slice) (table : Array String.Pos.Raw) (s
   else
     needlePos
 
-instance (s : Slice) : Std.Iterators.Iterator (ForwardSliceSearcher s) Id (SearchStep s) where
+instance (s : Slice) : Std.Iterators.Iterator (ForwardSliceSearcher s) id (SearchStep s) where
   IsPlausibleStep it
     | .yield it' out =>
       match it.internalState with
@@ -88,9 +88,9 @@ instance (s : Slice) : Std.Iterators.Iterator (ForwardSliceSearcher s) Id (Searc
     | .empty pos =>
       let res := .matched pos pos
       if h : pos ≠ s.endPos then
-        pure (.deflate ⟨.yield ⟨.empty (pos.next h)⟩ res, by simp⟩)
+        .deflate ⟨.yield ⟨.empty (pos.next h)⟩ res, by simp⟩
       else
-        pure (.deflate ⟨.yield ⟨.atEnd⟩ res, by simp⟩)
+        .deflate ⟨.yield ⟨.atEnd⟩ res, by simp⟩
     | .proper needle table stackPos needlePos =>
       let rec findNext (startPos : String.Pos.Raw)
           (currStackPos : String.Pos.Raw) (needlePos : String.Pos.Raw) (h : stackPos ≤ currStackPos) :=
@@ -146,7 +146,7 @@ instance (s : Slice) : Std.Iterators.Iterator (ForwardSliceSearcher s) Id (Searc
           omega
 
       findNext stackPos stackPos needlePos (by simp)
-    | .atEnd => pure (.deflate ⟨.done, by simp⟩)
+    | .atEnd => .deflate ⟨.done, by simp⟩
 
 private def toPair : ForwardSliceSearcher s → (Nat × Nat)
   | .empty pos => (1, s.utf8ByteSize - pos.offset.byteIdx)
@@ -160,7 +160,7 @@ private instance : WellFoundedRelation (ForwardSliceSearcher s) where
     apply (Prod.lex _ _).wf
 
 private def finitenessRelation :
-    Std.Iterators.FinitenessRelation (ForwardSliceSearcher s) Id where
+    Std.Iterators.FinitenessRelation (ForwardSliceSearcher s) id where
   rel := InvImage WellFoundedRelation.rel (fun it => it.internalState)
   wf := InvImage.wf _ WellFoundedRelation.wf
   subrelation {it it'} h := by
@@ -196,10 +196,10 @@ private def finitenessRelation :
     · cases h
 
 @[no_expose]
-instance : Std.Iterators.Finite (ForwardSliceSearcher s) Id :=
+instance : Std.Iterators.Finite (ForwardSliceSearcher s) id :=
   .of_finitenessRelation finitenessRelation
 
-instance : Std.Iterators.IteratorLoop (ForwardSliceSearcher s) Id Id :=
+instance : Std.Iterators.IteratorLoop (ForwardSliceSearcher s) id id :=
   .defaultImplementation
 
 instance : ToForwardSearcher Slice ForwardSliceSearcher where

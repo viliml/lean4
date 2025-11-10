@@ -478,7 +478,7 @@ def FourierMotzkinData.exact (d : FourierMotzkinData) : Bool := d.lowerExact || 
 
 /-- Prepare the Fourier-Motzkin elimination data for each variable. -/
 -- TODO we could short-circuit here, if we find one with `size = 0`.
-def fourierMotzkinData (p : Problem) : Array FourierMotzkinData := Id.run do
+def fourierMotzkinData (p : Problem) : Array FourierMotzkinData := id.run do
   let n := p.numVars
   let mut data : Array FourierMotzkinData :=
     (List.range p.numVars).foldl (fun a i => a.push { var := i}) #[]
@@ -488,7 +488,7 @@ def fourierMotzkinData (p : Problem) : Array FourierMotzkinData := Id.run do
       data := data.modify i fun d =>
         if x = 0 then
           { d with irrelevant := f :: d.irrelevant }
-        else Id.run do
+        else id.run do
           let s' := s.scale x
           let mut d' := d
           if s'.lowerBound.isSome then

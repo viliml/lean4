@@ -230,7 +230,7 @@ def name (full : Option Ident := none) (scope : DocScope := .local)
     }
     return .other { name := ``PostponedCheck, val := .mk val } #[.code s.getString]
 
-private def similarNames (x : Name) (xs : Array Name) : Array Name := Id.run do
+private def similarNames (x : Name) (xs : Array Name) : Array Name := id.run do
   let s := x.toString
   let mut threshold := if s.length < 5 then 1 else if s.length < 8 then 2 else 3
   let mut candidates := #[]

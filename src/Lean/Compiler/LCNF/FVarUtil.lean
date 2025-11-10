@@ -207,9 +207,9 @@ where
     if !(← f fvar) then failure
 
 def anyFVar [TraverseFVar α] (f : FVarId → Bool) (x : α) : Bool :=
-  Id.run <| anyFVarM (pure <| f ·) x
+  id.run <| anyFVarM f x
 
 def allFVar [TraverseFVar α] (f : FVarId → Bool) (x : α) : Bool :=
-  Id.run <| allFVarM (pure <| f ·) x
+  id.run <| allFVarM f x
 
 end Lean.Compiler.LCNF

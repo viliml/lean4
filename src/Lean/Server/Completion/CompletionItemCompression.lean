@@ -12,7 +12,7 @@ namespace Lean.Lsp.ResolvableCompletionList
 
 @[inline]
 def compressItemDataFast (acc : String) (data : ResolvableCompletionItemData) :
-    String := Id.run do
+    String := id.run do
   let mut acc := acc ++ "["
   acc := Json.renderString data.mod.toString acc
   acc := acc ++ "," ++ data.pos.line.repr
@@ -74,7 +74,7 @@ def compressCompletionTagsFast (acc : String) (tags : Array CompletionItemTag) (
     acc
 
 @[inline]
-def compressItemFast (acc : String) (item : ResolvableCompletionItem) : String := Id.run do
+def compressItemFast (acc : String) (item : ResolvableCompletionItem) : String := id.run do
   let mut acc := acc ++ "{\"label\":"
   acc := Json.renderString item.label acc
   if let some detail := item.detail? then

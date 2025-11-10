@@ -2392,24 +2392,16 @@ theorem foldrM_pure [Monad m] [LawfulMonad m] {f : α → β → β} {b} {xs : V
   Array.foldrM_pure
 
 theorem foldl_eq_foldlM {f : β → α → β} {b} {xs : Vector α n} :
-    xs.foldl f b = (xs.foldlM (m := Id) (pure <| f · ·) b).run := rfl
+    xs.foldl f b = (xs.foldlM (m := id) f b).run := rfl
 
 theorem foldr_eq_foldrM {f : α → β → β} {b} {xs : Vector α n} :
-    xs.foldr f b = (xs.foldrM (m := Id) (pure <| f · ·) b).run := rfl
+    xs.foldr f b = (xs.foldrM (m := id) f b).run := rfl
 
-@[simp] theorem idRun_foldlM {f : β → α → Id β} {b} {xs : Vector α n} :
-    Id.run (xs.foldlM f b) = xs.foldl (f · · |>.run) b := foldl_eq_foldlM.symm
+@[simp] theorem idRun_foldlM {f : β → α → β} {b} {xs : Vector α n} :
+    xs.foldlM (m := id) f b = xs.foldl f b := foldl_eq_foldlM.symm
 
-@[deprecated idRun_foldlM (since := "2025-05-21")]
-theorem id_run_foldlM {f : β → α → Id β} {b} {xs : Vector α n} :
-    Id.run (xs.foldlM f b) = xs.foldl f b := foldl_eq_foldlM.symm
-
-@[simp] theorem idRun_foldrM {f : α → β → Id β} {b} {xs : Vector α n} :
-    Id.run (xs.foldrM f b) = xs.foldr (f · · |>.run) b := foldr_eq_foldrM.symm
-
-@[deprecated idRun_foldrM (since := "2025-05-21")]
-theorem id_run_foldrM {f : α → β → Id β} {b} {xs : Vector α n} :
-    Id.run (xs.foldrM f b) = xs.foldr f b := foldr_eq_foldrM.symm
+@[simp] theorem idRun_foldrM {f : α → β → β} {b} {xs : Vector α n} :
+    xs.foldrM (m := id) f b = xs.foldr f b := foldr_eq_foldrM.symm
 
 @[simp] theorem foldlM_reverse [Monad m] {xs : Vector α n} {f : β → α → m β} {b} :
     xs.reverse.foldlM f b = xs.foldrM (fun x y => f y x) b := by

@@ -81,7 +81,7 @@ def InfoTree.collectNodesBottomUpM [Monad m] (p : ContextInfo → Info → Persi
 /--
   Visit nodes bottom-up, passing in a surrounding context (the innermost one) and the union of nested results (empty at leaves). -/
 def InfoTree.collectNodesBottomUp (p : ContextInfo → Info → PersistentArray InfoTree → List α → List α) (i : InfoTree) : List α :=
-  Id.run <| i.collectNodesBottomUpM (pure <| p · · · ·)
+  id.run <| i.collectNodesBottomUpM p
 
 /--
   For every branch of the `InfoTree`, find the deepest node in that branch for which `p` returns
@@ -101,7 +101,7 @@ partial def InfoTree.deepestNodesM [Monad m] (p : ContextInfo → Info → Persi
   `some _`  and return the union of all such nodes. The visitor `p` is given a node together with
   its innermost surrounding `ContextInfo`. -/
 partial def InfoTree.deepestNodes (p : ContextInfo → Info → PersistentArray InfoTree → Option α) (infoTree : InfoTree) : List α :=
-  Id.run <| infoTree.deepestNodesM (pure <| p · · ·)
+  id.run <| infoTree.deepestNodesM p
 
 partial def InfoTree.foldInfo (f : ContextInfo → Info → α → α) (init : α) : InfoTree → α :=
   go none init
@@ -226,7 +226,7 @@ def Info.occursInside? (i : Info) (hoverPos : String.Pos.Raw) : Option String.Po
   guard (headPos ≤ hoverPos && hoverPos < tailPos)
   return hoverPos.unoffsetBy headPos
 
-def Info.occursInOrOnBoundary (i : Info) (hoverPos : String.Pos.Raw) : Bool := Id.run do
+def Info.occursInOrOnBoundary (i : Info) (hoverPos : String.Pos.Raw) : Bool := id.run do
   let some headPos := i.pos?
     | return false
   let some tailPos := i.tailPos?
@@ -257,7 +257,7 @@ structure HoverableInfoPrio where
   deriving BEq
 
 instance : Ord HoverableInfoPrio where
-  compare i1 i2 := Id.run do
+  compare i1 i2 := id.run do
     if i1.isHoverPosOnStop && ! i2.isHoverPosOnStop then
       return .lt
     if ! i1.isHoverPosOnStop && i2.isHoverPosOnStop then
@@ -442,7 +442,7 @@ structure GoalsAtResult where
   - there is no nested tactic info after the hover position (tactic combinators should decide for themselves
     where to show intermediate states by calling `withTacticInfoContext`) -/
 partial def InfoTree.goalsAt? (text : FileMap) (t : InfoTree) (hoverPos : String.Pos.Raw) : List GoalsAtResult :=
-  let gs := t.collectNodesBottomUp fun ctx i cs gs => Id.run do
+  let gs := t.collectNodesBottomUp fun ctx i cs gs => id.run do
     let Info.ofTacticInfo ti := i
       | return gs
     let (some pos, some tailPos) := (i.pos?, i.tailPos?)
@@ -470,7 +470,7 @@ partial def InfoTree.goalsAt? (text : FileMap) (t : InfoTree) (hoverPos : String
   gs.filter (some ·.priority == maxPrio?)
 where
   hasNestedTactic (pos tailPos) : InfoTree → Bool
-    | InfoTree.node i@(Info.ofTacticInfo _) cs => Id.run do
+    | InfoTree.node i@(Info.ofTacticInfo _) cs => id.run do
       if let `(by $_) := i.stx then
         return false  -- ignore term-nested proofs such as in `simp [show p by ...]`
       if let (some pos', some tailPos') := (i.pos?, i.tailPos?) then

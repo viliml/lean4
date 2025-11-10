@@ -266,7 +266,7 @@ def registerParametricAttribute (impl : ParametricAttributeImpl α) : IO (Parame
     mkInitial       := pure ([], {})
     addImportedFn   := fun _ => pure ([], {})
     addEntryFn      := fun (decls, m) (p : Name × α) => (p.1 :: decls, m.insert p.1 p.2)
-    exportEntriesFnEx := fun env (decls, m) lvl => Id.run do
+    exportEntriesFnEx := fun env (decls, m) lvl => id.run do
       let mut r := if impl.preserveOrder then
         decls.toArray.reverse.filterMap (fun n => return (n, ← m.find? n))
       else

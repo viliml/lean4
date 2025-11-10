@@ -100,8 +100,8 @@ where
     omega
 
 variable {ρ : Type} {σ : Slice → Type}
-variable [∀ s, Std.Iterators.Iterator (σ s) Id (SearchStep s)]
-variable [∀ s, Std.Iterators.Finite (σ s) Id]
+variable [∀ s, Std.Iterators.Iterator (σ s) id (SearchStep s)]
+variable [∀ s, Std.Iterators.Finite (σ s) id]
 
 /--
 Tries to skip the {name}`searcher` until the next {name}`SearchStep.matched` and return it. If no
@@ -112,7 +112,7 @@ def nextMatch (searcher : Std.Iter (α := σ s) (SearchStep s)) :
     Option (Std.Iter (α := σ s) (SearchStep s) × s.Pos × s.Pos) :=
   go searcher
 where
-  go [∀ s, Std.Iterators.Finite (σ s) Id] (searcher : Std.Iter (α := σ s) (SearchStep s)) :
+  go [∀ s, Std.Iterators.Finite (σ s) id] (searcher : Std.Iter (α := σ s) (SearchStep s)) :
       Option (Std.Iter (α := σ s) (SearchStep s) × s.Pos × s.Pos) :=
     match searcher.step with
     | .yield it (.matched startPos endPos) _ => some (it, startPos, endPos)
@@ -129,7 +129,7 @@ def nextReject (searcher : Std.Iter (α := σ s) (SearchStep s)) :
     Option (Std.Iter (α := σ s) (SearchStep s) × s.Pos × s.Pos) :=
   go searcher
 where
-  go [∀ s, Std.Iterators.Finite (σ s) Id] (searcher : Std.Iter (α := σ s) (SearchStep s)) :
+  go [∀ s, Std.Iterators.Finite (σ s) id] (searcher : Std.Iter (α := σ s) (SearchStep s)) :
       Option (Std.Iter (α := σ s) (SearchStep s) × s.Pos × s.Pos) :=
     match searcher.step with
     | .yield it (.rejected startPos endPos) _ => some (it, startPos, endPos)
@@ -142,7 +142,7 @@ end Internal
 namespace ForwardPattern
 
 variable {ρ : Type} {σ : Slice → Type}
-variable [∀ s, Std.Iterators.Iterator (σ s) Id (SearchStep s)]
+variable [∀ s, Std.Iterators.Iterator (σ s) id (SearchStep s)]
 variable [ToForwardSearcher ρ σ]
 
 @[specialize pat]
@@ -201,7 +201,7 @@ class BackwardPattern (ρ : Type) where
 namespace ToBackwardSearcher
 
 variable {ρ : Type} {σ : Slice → Type}
-variable [∀ s, Std.Iterators.Iterator (σ s) Id (SearchStep s)]
+variable [∀ s, Std.Iterators.Iterator (σ s) id (SearchStep s)]
 variable [ToBackwardSearcher ρ σ]
 
 @[specialize pat]

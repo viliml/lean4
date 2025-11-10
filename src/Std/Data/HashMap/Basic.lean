@@ -311,7 +311,7 @@ Std.HashMap.ofList [(0, #[0, 2, 4, 6]), (1, #[1, 3, 5])]
 ```
 -/
 def Array.groupByKey [BEq α] [Hashable α] (key : β → α) (xs : Array β)
-    : Std.HashMap α (Array β) := Id.run do
+    : Std.HashMap α (Array β) := id.run do
   let mut groups := ∅
   for x in xs do
     groups := groups.alter (key x) (some <| ·.getD #[] |>.push x)

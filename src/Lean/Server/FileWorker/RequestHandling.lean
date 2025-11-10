@@ -146,7 +146,7 @@ def findGoalsAt? (doc : EditableDocument) (hoverPos : String.Pos.Raw) : ServerTa
   let text := doc.meta.text
   findCmdParsedSnap doc hoverPos |>.bindCostly fun
     | some cmdParsed =>
-      let t := toSnapshotTree cmdParsed.elabSnap |>.foldSnaps [] fun snap oldGoals => Id.run do
+      let t := toSnapshotTree cmdParsed.elabSnap |>.foldSnaps [] fun snap oldGoals => id.run do
         let some stx := snap.stx?
           | return .pure (oldGoals, .proceed (foldChildren := false))
         let some (pos, tailPos, trailingPos) := getPositions stx
@@ -158,7 +158,7 @@ def findGoalsAt? (doc : EditableDocument) (hoverPos : String.Pos.Raw) : ServerTa
         if ! text.rangeContainsHoverPos snapRange hoverPos (includeStop := hasNoTrailingWhitespace) then
           return .pure (oldGoals, .proceed (foldChildren := false))
 
-        return snap.task.asServerTask.mapCheap fun tree => Id.run do
+        return snap.task.asServerTask.mapCheap fun tree => id.run do
           let some infoTree := tree.element.infoTree?
             | return (oldGoals, .proceed (foldChildren := true))
 
@@ -256,7 +256,7 @@ partial def handleDocumentHighlight (p : DocumentHighlightParams)
   let pos := text.lspPosToUtf8Pos p.position
 
   let rec highlightReturn? (doRange? : Option Range) : Syntax → Option DocumentHighlight
-    | `(doElem|return%$i $e) => Id.run do
+    | `(doElem|return%$i $e) => id.run do
       if let some range := i.getRange? then
         if range.contains pos then
           return some { range := doRange?.getD (range.toLspRange text), kind? := DocumentHighlightKind.text }

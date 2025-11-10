@@ -108,7 +108,7 @@ def _root_.Lean.MVarId.assertHypotheses (mvarId : MVarId) (hs : Array Hypothesis
     let val := hs.foldl (init := mvarNew) fun val h => .app val h.value
     mvarId.assign val
     let (fvarIds, mvarId) ← mvarNew.mvarId!.introNP hs.size
-    mvarId.modifyLCtx fun lctx => Id.run do
+    mvarId.modifyLCtx fun lctx => id.run do
       let mut lctx := lctx
       for h : i in *...hs.size do
         let h := hs[i]

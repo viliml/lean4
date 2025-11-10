@@ -98,7 +98,7 @@ Uniqueness is guaranteed for the current branch of elaboration. When entering pa
 branching elaboration steps, `mkChild` must be used (automatically done in `wrapAsync*`).
 -/
 partial def mkUniqueName (env : Environment) (g : DeclNameGenerator) («infix» : Name) :
-    (Name × DeclNameGenerator) := Id.run do
+    (Name × DeclNameGenerator) := id.run do
   -- `Name.append` does not allow macro scopes on both operands; as the result of this function is
   -- unlikely to be referenced in a macro; the choice doesn't really matter.
   let «infix» := if g.namePrefix.hasMacroScopes && infix.hasMacroScopes then infix.eraseMacroScopes else «infix»
@@ -116,7 +116,7 @@ where
     (env.setExporting false).containsOnBranch n ||
     isPrivateName n && (env.setExporting false).containsOnBranch (privateToUserName n) ||
     !isPrivateName n && (env.setExporting false).containsOnBranch (mkPrivateName env n)
-  curr (g : DeclNameGenerator) (base : Name) : Name := Id.run do
+  curr (g : DeclNameGenerator) (base : Name) : Name := id.run do
     let mut n := g.idxs.foldr (fun i n => n.appendIndexAfter i) base
     if env.header.isModule && !env.isExporting && !isPrivateName n then
       n := mkPrivateName env n

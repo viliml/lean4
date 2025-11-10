@@ -664,7 +664,7 @@ inductive ParserResolution where
 
 /-- Resolve the given parser name and return a list of candidates. -/
 private def resolveParserNameCore (env : Environment) (opts : Options) (currNamespace : Name)
-    (openDecls : List OpenDecl) (ident : Ident) : List ParserResolution := Id.run do
+    (openDecls : List OpenDecl) (ident : Ident) : List ParserResolution := id.run do
   let ⟨.ident (val := val) (preresolved := pre) ..⟩ := ident | return []
 
   let rec isParser (name : Name) : Option Bool :=
@@ -704,7 +704,7 @@ def ParserContext.resolveParserName (ctx : ParserContext) (id : Ident) : List Pa
 def resolveParserName (id : Ident) : CoreM (List ParserResolution) :=
   return resolveParserNameCore (← getEnv) (← getOptions) (← getCurrNamespace) (← getOpenDecls) id
 
-def parserOfStackFn (offset : Nat) : ParserFn := fun ctx s => Id.run do
+def parserOfStackFn (offset : Nat) : ParserFn := fun ctx s => id.run do
   let stack := s.stxStack
   if stack.size < offset + 1 then
     return s.mkUnexpectedError ("failed to determine parser using syntax stack, stack is too small")

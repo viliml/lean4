@@ -48,7 +48,7 @@ Actions in `StateM σ` are functions that take an initial state and return a val
 final state.
 -/
 @[expose, reducible]
-def StateM (σ α : Type u) : Type u := StateT σ Id α
+def StateM (σ α : Type u) : Type u := StateT σ id α
 
 instance {σ α} [Subsingleton σ] [Subsingleton α] : Subsingleton (StateM σ α) where
   allEq x y := by

@@ -89,7 +89,7 @@ where
 
   nextn (str : String) (n : Nat) (p : String.Pos.Raw) : String.Pos.Raw :=
     n.fold (init := p) fun _ _ _ => p.next str
-  posIndex (str : String) (p : String.Pos.Raw) : Nat := Id.run do
+  posIndex (str : String) (p : String.Pos.Raw) : Nat := id.run do
     let mut p := p
     let mut n := 0
     while p > 0 do

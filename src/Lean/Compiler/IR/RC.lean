@@ -88,7 +88,7 @@ private partial def visitFnBody (b : FnBody) : M Unit := do
   | _ => if !b.isTerminal then visitFnBody b.body
 
 private partial def collectDerivedValInfo (ps : Array Param) (b : FnBody)
-    : DerivedValMap × VarIdSet := Id.run do
+    : DerivedValMap × VarIdSet := id.run do
   let ⟨_, { varMap, borrowedParams }⟩ := go |>.run { }
   return ⟨varMap, borrowedParams⟩
 where go : M Unit := do
@@ -155,7 +155,7 @@ def getJPLiveVars (ctx : Context) (j : JoinPointId) : LiveVars :=
 
 @[specialize]
 private def useVar (ctx : Context) (x : VarId) (liveVars : LiveVars)
-    (shouldBorrow : VarId → Bool := fun _ => true) : LiveVars := Id.run do
+    (shouldBorrow : VarId → Bool := fun _ => true) : LiveVars := id.run do
   let ⟨contains, vars⟩ := liveVars.vars.containsThenInsert x
   let borrows := if contains then
       liveVars.borrows

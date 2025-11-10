@@ -22,7 +22,7 @@ open Lean.Parser (registerParserAttributeHook)
 open Lean.Parser.Attr
 
 /-- Check whether a name is a tactic syntax kind -/
-def isTactic (env : Environment) (kind : Name) : Bool := Id.run do
+def isTactic (env : Environment) (kind : Name) : Bool := id.run do
   let some tactics := (Lean.Parser.parserExtension.getState env).categories.find? `tactic
     | return false
   return tactics.kinds.contains kind
@@ -174,7 +174,7 @@ builtin_initialize tacticTagExt
     mkInitial := pure {},
     addImportedFn := fun _ => pure {},
     addEntryFn := fun tags (decl, newTag) => tags.insert decl (tags.getD decl {} |>.insert newTag)
-    exportEntriesFn := fun tags => Id.run do
+    exportEntriesFn := fun tags => id.run do
       let mut exported := #[]
       for (decl, dTags) in tags do
         for t in dTags do
@@ -246,7 +246,7 @@ builtin_initialize tacticDocExtExt
   }
 
 /-- Gets the extensions declared for the documentation for the given canonical tactic name -/
-def getTacticExtensions (env : Environment) (tactic : Name) : Array String := Id.run do
+def getTacticExtensions (env : Environment) (tactic : Name) : Array String := id.run do
   let mut extensions := #[]
   -- Extensions may be declared in any module, so they must all be searched
   for modArr in tacticDocExtExt.toEnvExtension.getState env |>.importedEntries do
@@ -257,7 +257,7 @@ def getTacticExtensions (env : Environment) (tactic : Name) : Array String := Id
   pure extensions
 
 /-- Gets the rendered extensions for the given canonical tactic name -/
-def getTacticExtensionString (env : Environment) (tactic : Name) : String := Id.run do
+def getTacticExtensionString (env : Environment) (tactic : Name) : String := id.run do
   let exts := getTacticExtensions env tactic
   if exts.size == 0 then ""
   else "\n\nExtensions:\n\n" ++ String.join (exts.toList.map bullet) |>.trimRight

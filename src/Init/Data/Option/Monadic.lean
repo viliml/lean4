@@ -91,16 +91,9 @@ theorem forIn'_eq_pelim [Monad m] [LawfulMonad m]
       pure (f := m) (o.pelim b (fun a h => f a h b)) := by
   cases o <;> simp
 
-@[simp] theorem idRun_forIn'_yield_eq_pelim
-    (o : Option α) (f : (a : α) → a ∈ o → β → Id β) (b : β) :
-    (forIn' o b (fun a m b => .yield <$> f a m b)).run =
-      o.pelim b (fun a h => f a h b |>.run) :=
-  forIn'_pure_yield_eq_pelim _ _ _
-
-@[deprecated idRun_forIn'_yield_eq_pelim (since := "2025-05-21")]
-theorem forIn'_id_yield_eq_pelim
+@[simp] theorem forIn'_id_yield_eq_pelim
     (o : Option α) (f : (a : α) → a ∈ o → β → β) (b : β) :
-    forIn' (m := Id) o b (fun a m b => .yield (f a m b)) =
+    forIn' (m := id) o b (fun a m b => .yield (f a m b)) =
       o.pelim b (fun a h => f a h b) :=
   forIn'_pure_yield_eq_pelim _ _ _
 
@@ -134,16 +127,9 @@ theorem forIn_eq_elim [Monad m] [LawfulMonad m]
       pure (f := m) (o.elim b (fun a => f a b)) := by
   cases o <;> simp
 
-@[simp] theorem idRun_forIn_yield_eq_elim
-    (o : Option α) (f : (a : α) → β → Id β) (b : β) :
-    (forIn o b (fun a b => .yield <$> f a b)).run =
-      o.elim b (fun a => f a b |>.run) :=
-  forIn_pure_yield_eq_elim _ _ _
-
-@[deprecated idRun_forIn_yield_eq_elim (since := "2025-05-21")]
-theorem forIn_id_yield_eq_elim
+@[simp] theorem forIn_id_yield_eq_elim
     (o : Option α) (f : (a : α) → β → β) (b : β) :
-    forIn (m := Id) o b (fun a b => .yield (f a b)) =
+    forIn (m := id) o b (fun a b => .yield (f a b)) =
       o.elim b (fun a => f a b) :=
   forIn_pure_yield_eq_elim _ _ _
 

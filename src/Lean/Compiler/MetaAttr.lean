@@ -50,7 +50,7 @@ def isMeta (env : Environment) (declName : Name) : Bool :=
 Returns the IR phases of the given declaration that should be considered accessible. Does not take
 additional IR loaded for language server purposes into account.
 -/
-def getIRPhases (env : Environment) (declName : Name) : IRPhases := Id.run do
+def getIRPhases (env : Environment) (declName : Name) : IRPhases := id.run do
   if !env.header.isModule then
     return .all
   match env.getModuleIdxFor? declName with

@@ -21,7 +21,7 @@ Transforms a step of the base iterator into a step of the `uLift` iterator.
 -/
 @[always_inline, inline]
 def Types.ULiftIterator.modifyStep (step : IterStep (Iter (α := α) β) β) :
-    IterStep (Iter (α := ULiftIterator.{v} α Id Id β (fun _ => monadLift)) (ULift.{v} β))
+    IterStep (Iter (α := ULiftIterator.{v} α id id β (fun _ => monadLift)) (ULift.{v} β))
       (ULift.{v} β) :=
   (Monadic.modifyStep (step.mapIterator Iter.toIterM)).mapIterator IterM.toIter
 
@@ -45,7 +45,7 @@ it.uLift n    ---.up a----.up b---.up c--.up d---⊥
 -/
 @[always_inline, inline, expose]
 def Iter.uLift (it : Iter (α := α) β) :
-    Iter (α := Types.ULiftIterator.{v} α Id Id β (fun _ => monadLift)) (ULift β) :=
-  (it.toIterM.uLift Id).toIter
+    Iter (α := Types.ULiftIterator.{v} α id id β (fun _ => monadLift)) (ULift β) :=
+  (it.toIterM.uLift id).toIter
 
 end Std.Iterators

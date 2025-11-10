@@ -18,7 +18,7 @@ namespace Lean.Meta.Monotonicity
 open Lean Meta
 open Lean.Order
 
-partial def headBetaUnderLambda (f : Expr) : Expr := Id.run do
+partial def headBetaUnderLambda (f : Expr) : Expr := id.run do
   let mut f := f.headBeta
   if f.isLambda then
     while f.bindingBody!.isHeadBetaTarget do

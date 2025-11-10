@@ -223,7 +223,7 @@ inductive OrElseOnAntiquotBehavior where
   | merge        -- ... and create choice node if both made the same progress
   deriving BEq
 
-def orelseFnCore (p q : ParserFn) (antiquotBehavior := OrElseOnAntiquotBehavior.merge) : ParserFn := fun c s => Id.run do
+def orelseFnCore (p q : ParserFn) (antiquotBehavior := OrElseOnAntiquotBehavior.merge) : ParserFn := fun c s => id.run do
   let iniSz  := s.stackSize
   let iniPos := s.pos
   let mut s  := p c s
@@ -408,7 +408,7 @@ This parser has arity 0 - it does not capture anything. -/
 @[builtin_doc] def notFollowedBy (p : Parser) (msg : String) : Parser where
   fn := notFollowedByFn p.fn msg
 
-partial def manyAux (p : ParserFn) : ParserFn := fun c s => Id.run do
+partial def manyAux (p : ParserFn) : ParserFn := fun c s => id.run do
   let iniSz  := s.stackSize
   let iniPos := s.pos
   let mut s  := p c s
@@ -438,7 +438,7 @@ def many1Fn (p : ParserFn) : ParserFn := fun c s =>
 def many1NoAntiquot : Parser → Parser := withFn many1Fn
 
 private partial def sepByFnAux (p : ParserFn) (sep : ParserFn) (allowTrailingSep : Bool) (iniSz : Nat) (pOpt : Bool) : ParserFn :=
-  let rec parse (pOpt : Bool) (c s) := Id.run do
+  let rec parse (pOpt : Bool) (c s) := id.run do
     let sz  := s.stackSize
     let pos := s.pos
     let mut s := p c s
@@ -689,7 +689,7 @@ Push `(Syntax.node tk <new-atom>)` onto syntax stack if parse was successful.
 If `includeWhitespace` is `false`, trailing whitespace is left behind.
 -/
 def mkNodeToken (n : SyntaxNodeKind) (startPos : String.Pos.Raw)
-    (includeWhitespace := true) : ParserFn := fun c s => Id.run do
+    (includeWhitespace := true) : ParserFn := fun c s => id.run do
   if s.hasError then
     return s
   let stopPos   := s.pos
@@ -1088,7 +1088,7 @@ def rawIdentFn (includeWhitespace := true) : ParserFn := fun c s =>
   if c.atEnd i then s.mkEOIError
   else identFnAux i none .anonymous (includeWhitespace := includeWhitespace) c s
 
-def satisfySymbolFn (p : String → Bool) (expected : List String) : ParserFn := fun c s => Id.run do
+def satisfySymbolFn (p : String → Bool) (expected : List String) : ParserFn := fun c s => id.run do
   let iniPos := s.pos
   let s := tokenFn expected c s
   if s.hasError then
@@ -1127,7 +1127,7 @@ def checkTailNoWs (prev : Syntax) : Bool :=
     For example, the universe `max` Function is parsed using this combinator so that
     it can still be used as an identifier outside of universe (but registering it
     as a token in a Term Syntax would not break the universe Parser). -/
-def nonReservedSymbolFnAux (sym : String) (errorMsg : String) : ParserFn := fun c s => Id.run do
+def nonReservedSymbolFnAux (sym : String) (errorMsg : String) : ParserFn := fun c s => id.run do
   let s := tokenFn [errorMsg] c s
   if s.hasError then
     return s
@@ -1319,7 +1319,7 @@ def identEq (id : Name) : Parser := {
   info := mkAtomicInfo "ident"
 }
 
-def hygieneInfoFn : ParserFn := fun c s => Id.run do
+def hygieneInfoFn : ParserFn := fun c s => id.run do
   let finish pos str trailing s :=
     -- Builds an actual hygieneInfo node from empty string `str` and trailing whitespace `trailing`.
     let info  := SourceInfo.original str pos trailing pos
@@ -1389,7 +1389,7 @@ def invalidLongestMatchParser (s : ParserState) : ParserState :=
 
  Remark: `p` must produce exactly one syntax node.
  Remark: the `left?` is not none when we are processing trailing parsers. -/
-def runLongestMatchParser (left? : Option Syntax) (startLhsPrec : Nat) (p : ParserFn) : ParserFn := fun c s => Id.run do
+def runLongestMatchParser (left? : Option Syntax) (startLhsPrec : Nat) (p : ParserFn) : ParserFn := fun c s => id.run do
   /-
     We assume any registered parser `p` has one of two forms:
     * a direct call to `leadingParser` or `trailingParser`
@@ -1774,7 +1774,7 @@ def pushNone : Parser := {
 def antiquotNestedExpr : Parser := node `antiquotNestedExpr (symbolNoAntiquot "(" >> decQuotDepth termParser >> symbolNoAntiquot ")")
 def antiquotExpr : Parser       := identNoAntiquot <|> symbolNoAntiquot "_" <|> antiquotNestedExpr
 
-def tokenAntiquotFn : ParserFn := fun c s => Id.run do
+def tokenAntiquotFn : ParserFn := fun c s => id.run do
   if s.hasError then
     return s
   let iniSz  := s.stackSize
@@ -1862,7 +1862,7 @@ def withoutInfo (p : Parser) : Parser := {
     checkNoWsBefore "no space before spliced term" >> symbol "[" >> node nullKind p >> symbol "]" >>
     suffix
 
-private def withAntiquotSuffixSpliceFn (kind : SyntaxNodeKind) (suffix : ParserFn) : ParserFn := fun c s => Id.run do
+private def withAntiquotSuffixSpliceFn (kind : SyntaxNodeKind) (suffix : ParserFn) : ParserFn := fun c s => id.run do
   let iniSz  := s.stackSize
   let iniPos := s.pos
   let s      := suffix c s
@@ -1905,7 +1905,7 @@ private def mkResult (s : ParserState) (iniSz : Nat) : ParserState :=
   if s.stackSize == iniSz + 1 then s
   else s.mkNode nullKind iniSz -- throw error instead?
 
-def leadingParserAux (kind : Name) (tables : PrattParsingTables) (behavior : LeadingIdentBehavior) : ParserFn := fun c s => Id.run do
+def leadingParserAux (kind : Name) (tables : PrattParsingTables) (behavior : LeadingIdentBehavior) : ParserFn := fun c s => id.run do
   let iniSz   := s.stackSize
   let (s, ps) := indexed tables.leadingTable c s behavior
   if s.hasError then
@@ -1926,7 +1926,7 @@ def leadingParser (kind : Name) (tables : PrattParsingTables) (behavior : Leadin
 def trailingLoopStep (tables : PrattParsingTables) (left : Syntax) (ps : List (Parser × Nat)) : ParserFn := fun c s =>
   longestMatchFn left (ps ++ tables.trailingParsers) c s
 
-partial def trailingLoop (tables : PrattParsingTables) (c : ParserContext) (s : ParserState) : ParserState := Id.run do
+partial def trailingLoop (tables : PrattParsingTables) (c : ParserContext) (s : ParserState) : ParserState := id.run do
   let iniSz  := s.stackSize
   let iniPos := s.pos
   let (s, ps)       := indexed tables.trailingTable c s LeadingIdentBehavior.default

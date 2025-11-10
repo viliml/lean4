@@ -254,7 +254,7 @@ theorem findRevM?_toArray [Monad m] [LawfulMonad m] (f : α → m Bool) (l : Lis
 
 @[simp, grind =] theorem findSome?_toArray (f : α → Option β) (l : List α) :
     l.toArray.findSome? f = l.findSome? f := by
-  rw [Array.findSome?, findSomeM?_toArray, findSomeM?_pure, Id.run_pure]
+  rw [Array.findSome?, findSomeM?_toArray, findSomeM?_id, id.run]
 
 @[simp, grind =] theorem find?_toArray (f : α → Bool) (l : List α) :
     l.toArray.find? f = l.find? f := by

@@ -322,7 +322,7 @@ private def isRelevantParent (parent? : Option Expr) : GoalM Bool := do
   let z ← getNatZeroExpr
   return !isNatAdd parent && (isNatOffsetCnstr? parent z).isNone
 
-private def isEqParent (parent? : Option Expr) : Bool := Id.run do
+private def isEqParent (parent? : Option Expr) : Bool := id.run do
   let some parent := parent? | return false
   return parent.isEq
 

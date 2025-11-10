@@ -33,7 +33,7 @@ def prettyParameterSet (fnNames : Array Name) (xs : Array Expr) (values : Array 
       l := l.push m!"{(← prettyRecArg xs value recArgInfo)} of {fnName}"
     return m!"parameters " ++ .andList l.toList
 
-private def getIndexMinPos (xs : Array Expr) (indices : Array Expr) : Nat := Id.run do
+private def getIndexMinPos (xs : Array Expr) (indices : Array Expr) : Nat := id.run do
   let mut minPos := xs.size
   for index in indices do
     match xs.idxOf? index with
@@ -147,7 +147,7 @@ last.
 See issue #837 for an example where we can show termination using the index of an inductive family, but
 we don't get the desired definitional equalities.
 -/
-def nonIndicesFirst (recArgInfos : Array RecArgInfo) : Array RecArgInfo := Id.run do
+def nonIndicesFirst (recArgInfos : Array RecArgInfo) : Array RecArgInfo := id.run do
   let mut indicesPos : Std.HashSet Nat := {}
   for recArgInfo in recArgInfos do
     for pos in recArgInfo.indicesPos do

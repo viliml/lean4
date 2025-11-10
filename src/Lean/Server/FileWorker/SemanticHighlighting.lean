@@ -133,7 +133,7 @@ Handles state transitions that are not due to a new token. If `nextToken?` is `n
 no more tokens to process, so all remaining transitions occur. If it is `some t`, then state
 transitions only occur for token boundaries less than the `t`'s start.
 -/
-private def HandleOverlapState.untilToken (st : HandleOverlapState) (nextToken? : Option AbsoluteLspSemanticToken) : HandleOverlapState := Id.run do
+private def HandleOverlapState.untilToken (st : HandleOverlapState) (nextToken? : Option AbsoluteLspSemanticToken) : HandleOverlapState := id.run do
   let mut st := st
   repeat
     if let some curr := st.current? then
@@ -194,7 +194,7 @@ token (if any), and then the highest-priority of the two is made current with th
 the surrounding tokens list. If `t` and the current token have the same priority, then the one that
 starts later or ends earlier is made into the new current token.
 -/
-private def HandleOverlapState.token (st : HandleOverlapState) (t : AbsoluteLspSemanticToken) : HandleOverlapState := Id.run do
+private def HandleOverlapState.token (st : HandleOverlapState) (t : AbsoluteLspSemanticToken) : HandleOverlapState := id.run do
   let st := st.untilToken (some t)
   -- Now we know that the current token, if present, overlaps with `t`
   let some curr := st.current?
@@ -259,7 +259,7 @@ Callers should ensure that all tokens in `tokens` designate non-empty regions of
 words, it should be true that `∀ t ∈ tokens, t.pos < t.tailPos`.
 -/
 def handleOverlappingSemanticTokens (tokens : Array AbsoluteLspSemanticToken) :
-    Array AbsoluteLspSemanticToken := Id.run do
+    Array AbsoluteLspSemanticToken := id.run do
   -- `insertionSort` is used because a stable sort is needed here in order to allow the final
   -- tiebreaker to be position in the input array
   let count := tokens.size
@@ -282,7 +282,7 @@ Given a set of `AbsoluteLspSemanticToken`, computes the LSP `SemanticTokens` dat
 token-relative positioning.
 See https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_semanticTokens.
 -/
-def computeDeltaLspSemanticTokens (tokens : Array AbsoluteLspSemanticToken) : SemanticTokens := Id.run do
+def computeDeltaLspSemanticTokens (tokens : Array AbsoluteLspSemanticToken) : SemanticTokens := id.run do
   let tokens := tokens.qsort fun ⟨pos1, tailPos1, _, _⟩ ⟨pos2, tailPos2, _, _⟩ =>
     pos1 < pos2 || pos1 == pos2 && tailPos1 <= tailPos2
   let mut data : Array Nat := Array.mkEmpty (5*tokens.size)
@@ -305,7 +305,7 @@ def isVersoKind (k : SyntaxNodeKind) : Bool :=
 Split the token at newline boundaries to support LSP clients such as VS Code that can't deal with
 newline-spanning tokens.
 -/
-private def splitStr (text : FileMap) (stx : Syntax) : Array Syntax := Id.run do
+private def splitStr (text : FileMap) (stx : Syntax) : Array Syntax := id.run do
   let some ⟨pos, tailPos⟩ := stx.getRange?
     | return #[]
   -- Construct fake syntax with the right source spans
@@ -472,7 +472,7 @@ partial def collectSyntaxBasedSemanticTokens (text : FileMap) : (stx : Syntax) �
   | `($e |>.$field:ident) =>
     let tokens := collectSyntaxBasedSemanticTokens text e
     tokens.push { stx := field, type := SemanticTokenType.property }
-  | stx => Id.run do
+  | stx => id.run do
     if noHighlightKinds.contains stx.getKind then
       return #[]
     if docKinds.contains stx.getKind then
@@ -518,7 +518,7 @@ def collectInfoBasedSemanticTokens (i : Elab.InfoTree) : Array LeanSemanticToken
 A debugging utility for inspecting sets of collected tokens, classified by line and sorted by
 column.
 -/
-def dbgShowTokens (text : FileMap) (toks : Array LeanSemanticToken) : String := Id.run do
+def dbgShowTokens (text : FileMap) (toks : Array LeanSemanticToken) : String := id.run do
   let mut byLine : Std.HashMap Nat (Array (Nat × Nat × LeanSemanticToken)) := {}
   for ⟨stx, tok, prio⟩ in toks do
     if let some ⟨⟨l, c1⟩, ⟨_, c2⟩⟩ := text.lspRangeOfStx? stx then

@@ -863,7 +863,7 @@ end Const
 
 @[inline, inherit_doc DTreeMap.insertMany]
 def insertMany [TransCmp cmp] {ρ} [ForIn Id ρ ((a : α) × β a)] (t : ExtDTreeMap α β cmp) (l : ρ) :
-    ExtDTreeMap α β cmp := Id.run do
+    ExtDTreeMap α β cmp := id.run do
   let mut acc : { a // ∀ P : _ → Prop, P t → (∀ t a b, P t → P (t.insert a b)) → P a } :=
     ⟨t, fun _ h _ => h⟩
   for ⟨a, b⟩ in l do
@@ -872,7 +872,7 @@ def insertMany [TransCmp cmp] {ρ} [ForIn Id ρ ((a : α) × β a)] (t : ExtDTre
 
 @[inline, inherit_doc DTreeMap.eraseMany]
 def eraseMany [TransCmp cmp] {ρ} [ForIn Id ρ α] (t : ExtDTreeMap α β cmp) (l : ρ) :
-    ExtDTreeMap α β cmp := Id.run do
+    ExtDTreeMap α β cmp := id.run do
   let mut acc : { a // ∀ P : _ → Prop, P t → (∀ t a, P t → P (t.erase a)) → P a } :=
     ⟨t, fun _ h _ => h⟩
   for a in l do
@@ -885,7 +885,7 @@ variable {β : Type v}
 
 @[inline, inherit_doc ExtDTreeMap.insertMany]
 def insertMany [TransCmp cmp] {ρ} [ForIn Id ρ (α × β)] (t : ExtDTreeMap α β cmp) (l : ρ) :
-    ExtDTreeMap α β cmp := Id.run do
+    ExtDTreeMap α β cmp := id.run do
   let mut acc : { a // ∀ P : _ → Prop, P t → (∀ t a b, P t → P (t.insert a b)) → P a } :=
     ⟨t, fun _ h _ => h⟩
   for ⟨a, b⟩ in l do
@@ -894,7 +894,7 @@ def insertMany [TransCmp cmp] {ρ} [ForIn Id ρ (α × β)] (t : ExtDTreeMap α 
 
 @[inline, inherit_doc DTreeMap.Const.insertManyIfNewUnit]
 def insertManyIfNewUnit [TransCmp cmp] {ρ} [ForIn Id ρ α] (t : ExtDTreeMap α Unit cmp) (l : ρ) :
-    ExtDTreeMap α Unit cmp := Id.run do
+    ExtDTreeMap α Unit cmp := id.run do
   let mut acc : { a // ∀ P : _ → Prop, P t → (∀ t a, P t → P (t.insertIfNew a ())) → P a } :=
     ⟨t, fun _ h _ => h⟩
   for a in l do

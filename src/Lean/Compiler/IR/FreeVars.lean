@@ -96,11 +96,11 @@ private def visitDecl (decl : Decl) : M Unit := do
 
 end MaxIndex
 
-def FnBody.maxIndex (b : FnBody) : Index := Id.run do
+def FnBody.maxIndex (b : FnBody) : Index := id.run do
   let ⟨_, { currentMax }⟩ := MaxIndex.visitFnBody b |>.run {}
   return currentMax
 
-def Decl.maxIndex (d : Decl) : Index := Id.run do
+def Decl.maxIndex (d : Decl) : Index := id.run do
   let ⟨_, { currentMax }⟩ := MaxIndex.visitDecl d |>.run {}
   return currentMax
 
@@ -183,7 +183,7 @@ private def visitDecl (decl : Decl) : M Unit := do
 
 end FreeIndices
 
-def FnBody.collectFreeIndices (b : FnBody) (init : IndexSet) : IndexSet := Id.run do
+def FnBody.collectFreeIndices (b : FnBody) (init : IndexSet) : IndexSet := id.run do
   let ⟨_, { freeIndices }⟩ := FreeIndices.visitFnBody b |>.run { freeIndices := init }
   return freeIndices
 

@@ -36,7 +36,7 @@ expression - pair values.
 -/
 def reconstructCounterExample (var2Cnf : Std.HashMap BVBit Nat) (assignment : Array (Bool × Nat))
     (aigSize : Nat) (atomsAssignment : Std.HashMap Nat (Nat × Expr × Bool)) :
-    Array (Expr × BVExpr.PackedBitVec) := Id.run do
+    Array (Expr × BVExpr.PackedBitVec) := id.run do
   let mut sparseMap : Std.HashMap Nat (Std.TreeMap Nat Bool) := {}
   let filter bvBit _ :=
     let (_, _, synthetic) := atomsAssignment[bvBit.var]!

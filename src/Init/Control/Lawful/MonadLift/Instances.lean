@@ -137,10 +137,10 @@ instance {ε : Type u} [Monad m] [LawfulMonad m] : LawfulMonadLift m (ExceptCpsT
 
 end ExceptCpsT
 
-namespace Id
+namespace id
 
-instance [Monad m] [LawfulMonad m] : LawfulMonadLiftT Id m where
+instance [Monad m] [LawfulMonad m] : LawfulMonadLiftT id m where
   monadLift_pure a := by simp [monadLift]
   monadLift_bind a f := by simp [monadLift]
 
-end Id
+end id

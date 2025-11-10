@@ -21,16 +21,16 @@ abbrev ImportTrie := Lean.NameTrie Name
 
 abbrev AvailableImports := Array Name
 
-def AvailableImports.toImportTrie (imports : AvailableImports) : ImportTrie := Id.run do
+def AvailableImports.toImportTrie (imports : AvailableImports) : ImportTrie := id.run do
   let mut importTrie := ∅
   for i in imports do
     importTrie := importTrie.insert i i
   return importTrie
 
-def isImportNameCompletionRequest (headerStx : TSyntax ``Parser.Module.header) (completionPos : String.Pos.Raw) : Bool := Id.run do
+def isImportNameCompletionRequest (headerStx : TSyntax ``Parser.Module.header) (completionPos : String.Pos.Raw) : Bool := id.run do
   let `(Parser.Module.header| $[module]? $[prelude]? $importsStx*) := headerStx
     | return false
-  return importsStx.any fun importStx => Id.run do
+  return importsStx.any fun importStx => id.run do
     let importStx := importStx.raw
     -- `importStx[0] == "private"?`
     -- `importStx[1] == "meta"?`
@@ -41,7 +41,7 @@ def isImportNameCompletionRequest (headerStx : TSyntax ``Parser.Module.header) (
     return importId.isMissing && keywordsTailPos.isSome && completionPos == keywordsTailPos.get! + ' '
 
 /-- Checks whether `completionPos` points at a free space in the header. -/
-def isImportCmdCompletionRequest (headerStx : TSyntax ``Parser.Module.header) (completionPos : String.Pos.Raw) : Bool := Id.run do
+def isImportCmdCompletionRequest (headerStx : TSyntax ``Parser.Module.header) (completionPos : String.Pos.Raw) : Bool := id.run do
   let `(Parser.Module.header| $[module]? $[prelude]? $importsStx*) := headerStx
     | return false
   return ! importsStx.any fun importStx => importStx.raw.getArgs.any fun arg =>
@@ -52,7 +52,7 @@ def computePartialImportCompletions
     (headerStx : TSyntax ``Parser.Module.header)
     (completionPos : String.Pos.Raw)
     (availableImports : ImportTrie)
-    : Array Name := Id.run do
+    : Array Name := id.run do
   let `(Parser.Module.header| $[module]? $[prelude]? $importsStx*) := headerStx
     | return #[]
   let some (completePrefix, incompleteSuffix) := importsStx.findSome? fun importStx => do

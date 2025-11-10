@@ -22,7 +22,7 @@ open Lean
 
 namespace Lean.PremiseSelection.MePo
 
-def symbolFrequency (env : Environment) : NameMap Nat := Id.run do
+def symbolFrequency (env : Environment) : NameMap Nat := id.run do
   let mut map := {}
   for (_, ci) in env.constants do
     for n' in ci.type.getUsedConstantsAsSet do

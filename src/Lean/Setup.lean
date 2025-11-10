@@ -72,7 +72,7 @@ def ImportArtifacts.oleanServer? (arts : ImportArtifacts) :=
 def ImportArtifacts.oleanPrivate? (arts : ImportArtifacts) :=
   arts.toArray[3]?
 
-def ImportArtifacts.oleanParts (inServer : Bool) (arts : ImportArtifacts) : Array System.FilePath := Id.run do
+def ImportArtifacts.oleanParts (inServer : Bool) (arts : ImportArtifacts) : Array System.FilePath := id.run do
   let mut fnames := #[]
   if let some mFile := arts.olean? then
     fnames := fnames.push mFile
@@ -97,7 +97,7 @@ structure ModuleArtifacts where
   bc? : Option System.FilePath := none
   deriving Repr, Inhabited, ToJson, FromJson
 
-def ModuleArtifacts.oleanParts (arts : ModuleArtifacts) : Array System.FilePath := Id.run do
+def ModuleArtifacts.oleanParts (arts : ModuleArtifacts) : Array System.FilePath := id.run do
   let mut fnames := #[]
   if let some mFile := arts.olean? then
     fnames := fnames.push mFile

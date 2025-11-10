@@ -55,7 +55,7 @@ def SeenCalls.push (e : Expr) (funIndInfo : FunIndInfo) (args : Array Expr) (cal
 Which functions have exactly one candidate application. Used by `try?` to determine whether
 we can use `fun_induction foo` or need `fun_induction foo x y z`.
 -/
-def SeenCalls.uniques (calls : SeenCalls) : NameSet := Id.run do
+def SeenCalls.uniques (calls : SeenCalls) : NameSet := id.run do
   let mut seen : NameSet := {}
   let mut seenTwice : NameSet := {}
   for (n, _) in calls.seen do

@@ -408,7 +408,7 @@ def mkUnexpectedError (s : ParserState) (msg : String) (expected : List String :
 def mkEOIError (s : ParserState) (expected : List String := []) : ParserState :=
   s.mkUnexpectedError "unexpected end of input" expected
 
-def mkErrorsAt (s : ParserState) (ex : List String) (pos : String.Pos.Raw) (initStackSz? : Option Nat := none) : ParserState := Id.run do
+def mkErrorsAt (s : ParserState) (ex : List String) (pos : String.Pos.Raw) (initStackSz? : Option Nat := none) : ParserState := id.run do
   let mut s := s.setPos pos
   if let some sz := initStackSz? then
     s := s.shrinkStack sz
@@ -440,7 +440,7 @@ def mkUnexpectedTokenError (s : ParserState) (msg : String) (iniPos : String.Pos
 def mkUnexpectedErrorAt (s : ParserState) (msg : String) (pos : String.Pos.Raw) : ParserState :=
   s.setPos pos |>.mkUnexpectedError msg
 
-def toErrorMsg (ctx : InputContext) (s : ParserState) : String := Id.run do
+def toErrorMsg (ctx : InputContext) (s : ParserState) : String := id.run do
   let mut errStr := ""
   for (pos, _stk, err) in s.allErrors do
     if errStr != "" then errStr := errStr ++ "\n"
@@ -545,7 +545,7 @@ As this excludes trailing parsers from being cached, we also reset `lhsPrec`, wh
 in order to increase cache hits. Finally, `errorMsg` is also reset to `none` as a leading parser should not be called in the first
 place if there was an error.
 -/
-def withCacheFn (parserName : Name) (p : ParserFn) : ParserFn := fun c s => Id.run do
+def withCacheFn (parserName : Name) (p : ParserFn) : ParserFn := fun c s => id.run do
   let key := ⟨c.toCacheableParserContext, parserName, s.pos⟩
   if let some r := s.cache.parserCache[key]? then
     -- TODO: turn this into a proper trace once we have these in the parser

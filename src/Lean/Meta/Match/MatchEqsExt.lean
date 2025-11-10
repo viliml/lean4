@@ -49,7 +49,7 @@ opaque getEquationsFor (matchDeclName : Name) : MetaM MatchEqns
 /--
 Returns `true` if `declName` is the name of a `match` equational theorem.
 -/
-def isMatchEqnTheorem (env : Environment) (declName : Name) : Bool := Id.run do
+def isMatchEqnTheorem (env : Environment) (declName : Name) : Bool := id.run do
   -- avoid blocking on async decls whose names look nothing like matchers
   let .str _ s := declName.eraseMacroScopes | return false
   if !isEqnLikeSuffix s then

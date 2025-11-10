@@ -161,7 +161,7 @@ builtin_initialize typePrefixDenyListExt : SimplePersistentEnvExtension Name (Li
 def isDeniedModule (env : Environment) (moduleName : Name) : Bool :=
   (moduleDenyListExt.getState env).any fun p => moduleName.anyS (· == p)
 
-def isDeniedPremise (env : Environment) (name : Name) : Bool := Id.run do
+def isDeniedPremise (env : Environment) (name : Name) : Bool := id.run do
   if name == ``sorryAx then return true
   if name.isInternalDetail then return true
   if (nameDenyListExt.getState env).any (fun p => name.anyS (· == p)) then return true

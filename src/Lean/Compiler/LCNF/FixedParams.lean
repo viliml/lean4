@@ -94,7 +94,7 @@ def evalArg (arg : Arg) : FixParamM AbsValue := do
 def inMutualBlock (declName : Name) : FixParamM Bool :=
   return (← read).decls.any (·.name == declName)
 
-def mkAssignment (decl : Decl) (values : Array AbsValue) : FVarIdMap AbsValue := Id.run do
+def mkAssignment (decl : Decl) (values : Array AbsValue) : FVarIdMap AbsValue := id.run do
   let mut assignment := {}
   for param in decl.params, value in values do
     assignment := assignment.insert param.fvarId value
@@ -171,7 +171,7 @@ partial def evalApp (declName : Name) (args : Array Arg) : FixParamM Unit := do
 
 end
 
-def mkInitialValues (numParams : Nat) : Array AbsValue := Id.run do
+def mkInitialValues (numParams : Nat) : Array AbsValue := id.run do
   let mut values := #[]
   for i in *...numParams do
     values := values.push <| .val i
@@ -188,7 +188,7 @@ applications.
 The function assumes that if a function `f` was declared in a mutual block, then `decls`
 contains all (computationally relevant) functions in the mutual block.
 -/
-def mkFixedParamsMap (decls : Array Decl) : NameMap (Array Bool) := Id.run do
+def mkFixedParamsMap (decls : Array Decl) : NameMap (Array Bool) := id.run do
   let mut result := {}
   for decl in decls do
     let values := mkInitialValues decl.params.size

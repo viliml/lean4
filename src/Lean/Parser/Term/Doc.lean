@@ -58,7 +58,7 @@ def addRecommendedSpelling (env : Environment) (rec : RecommendedSpelling) (name
 
 /-- Returns the recommended spellings associated with the given declaration name. -/
 def getRecommendedSpellingsForName (env : Environment) (declName : Name) :
-    Array RecommendedSpelling := Id.run do
+    Array RecommendedSpelling := id.run do
   let mut spellings := #[]
   for modArr in recommendedSpellingByNameExt.toEnvExtension.getState env |>.importedEntries do
     if let some (_, strs) := modArr.binSearch (declName, #[]) (Name.quickLt ·.1 ·.1) then
@@ -69,7 +69,7 @@ def getRecommendedSpellingsForName (env : Environment) (declName : Name) :
 
 /-- Renders the recommended spellings for the given declaration into a string for appending to
 the docstring. -/
-def getRecommendedSpellingString (env : Environment) (declName : Name) : String := Id.run do
+def getRecommendedSpellingString (env : Environment) (declName : Name) : String := id.run do
   let spellings := getRecommendedSpellingsForName env declName
   if spellings.size == 0 then ""
   else "\n\nConventions for notations in identifiers:\n\n" ++ String.join (spellings.toList.map bullet) |>.trimRight

@@ -60,7 +60,7 @@ public def filterPairsM {m} [Monad m] {α} (a : Array α) (f : α → α → m (
 /--
 `maskArray mask xs` keeps those `x` where the corresponding entry in `mask` is `true`
 -/
-public def mask {α} (mask : Array Bool) (xs : Array α) : Array α := Id.run do
+public def mask {α} (mask : Array Bool) (xs : Array α) : Array α := id.run do
   let mut ys := #[]
   for b in mask, x in xs do
     if b then ys := ys.push x
@@ -72,7 +72,7 @@ Inverse of `Array.mask`:
 Array.zipMasked mask (Array.mask (mask.map not) xs) (Array.mask mask xs) == xs
 ```
 -/
-public def zipMasked {α} (mask : Array Bool) (xs ys : Array α) : Array α := Id.run do
+public def zipMasked {α} (mask : Array Bool) (xs ys : Array α) : Array α := id.run do
   let mut i := 0
   let mut j := 0
   let mut zs := #[]

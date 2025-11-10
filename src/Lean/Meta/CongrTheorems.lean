@@ -44,14 +44,14 @@ structure CongrTheorem where
   proof    : Expr
   argKinds : Array CongrArgKind
 
-private def addPrimeToFVarUserNames (ys : Array Expr) (lctx : LocalContext) : LocalContext := Id.run do
+private def addPrimeToFVarUserNames (ys : Array Expr) (lctx : LocalContext) : LocalContext := id.run do
   let mut lctx := lctx
   for y in ys do
     let decl := lctx.getFVar! y
     lctx := lctx.setUserName decl.fvarId (decl.userName.appendAfter "'")
   return lctx
 
-private def setBinderInfosD (ys : Array Expr) (lctx : LocalContext) : LocalContext := Id.run do
+private def setBinderInfosD (ys : Array Expr) (lctx : LocalContext) : LocalContext := id.run do
   let mut lctx := lctx
   for y in ys do
     let decl := lctx.getFVar! y
@@ -124,7 +124,7 @@ def mkHCongr (f : Expr) : MetaM CongrTheorem := do
 /--
 Ensures all dependencies for `.eq` are `.fixed`.
 -/
-private def fixKindsForDependencies (info : FunInfo) (kinds : Array CongrArgKind) : Array CongrArgKind := Id.run do
+private def fixKindsForDependencies (info : FunInfo) (kinds : Array CongrArgKind) : Array CongrArgKind := id.run do
   let mut kinds := kinds
   for i in *...info.paramInfo.size do
     for hj : j in (i+1)...info.paramInfo.size do
@@ -146,7 +146,7 @@ private def withNext (type : Expr) (k : Expr → Expr → MetaM α) : MetaM α :
 Tests whether we should use `subsingletonInst` kind for instances which depend on `eq`.
 (Otherwise `fixKindsForDependencies`will downgrade them to Fixed
 -/
-private def shouldUseSubsingletonInst (info : FunInfo) (kinds : Array CongrArgKind) (i : Nat) : Bool := Id.run do
+private def shouldUseSubsingletonInst (info : FunInfo) (kinds : Array CongrArgKind) (i : Nat) : Bool := id.run do
   if info.paramInfo[i]!.isDecInst then
     for j in info.paramInfo[i]!.backDeps do
       if kinds[j]! matches .eq then

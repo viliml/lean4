@@ -29,32 +29,32 @@ namespace Std.Iterators
 
 @[always_inline, inline, inherit_doc IterM.toArray]
 def Iter.toArray {α : Type w} {β : Type w}
-    [Iterator α Id β] [Finite α Id] [IteratorCollect α Id Id] (it : Iter (α := α) β) : Array β :=
-  it.toIterM.toArray.run
+    [Iterator α id β] [Finite α id] [IteratorCollect α id id] (it : Iter (α := α) β) : Array β :=
+  it.toIterM.toArray
 
 @[always_inline, inline, inherit_doc IterM.Partial.toArray]
 def Iter.Partial.toArray {α : Type w} {β : Type w}
-    [Iterator α Id β] [IteratorCollectPartial α Id Id] (it : Iter.Partial (α := α) β) : Array β :=
-  it.it.toIterM.allowNontermination.toArray.run
+    [Iterator α id β] [IteratorCollectPartial α id id] (it : Iter.Partial (α := α) β) : Array β :=
+  it.it.toIterM.allowNontermination.toArray
 
 @[always_inline, inline, inherit_doc IterM.toListRev]
 def Iter.toListRev {α : Type w} {β : Type w}
-    [Iterator α Id β] [Finite α Id] (it : Iter (α := α) β) : List β :=
-  it.toIterM.toListRev.run
+    [Iterator α id β] [Finite α id] (it : Iter (α := α) β) : List β :=
+  it.toIterM.toListRev
 
 @[always_inline, inline, inherit_doc IterM.Partial.toListRev]
 def Iter.Partial.toListRev {α : Type w} {β : Type w}
-    [Iterator α Id β] (it : Iter.Partial (α := α) β) : List β :=
-  it.it.toIterM.allowNontermination.toListRev.run
+    [Iterator α id β] (it : Iter.Partial (α := α) β) : List β :=
+  it.it.toIterM.allowNontermination.toListRev
 
 @[always_inline, inline, inherit_doc IterM.toList]
 def Iter.toList {α : Type w} {β : Type w}
-    [Iterator α Id β] [Finite α Id] [IteratorCollect α Id Id] (it : Iter (α := α) β) : List β :=
-  it.toIterM.toList.run
+    [Iterator α id β] [Finite α id] [IteratorCollect α id id] (it : Iter (α := α) β) : List β :=
+  it.toIterM.toList
 
 @[always_inline, inline, inherit_doc IterM.Partial.toList]
 def Iter.Partial.toList {α : Type w} {β : Type w}
-    [Iterator α Id β] [IteratorCollectPartial α Id Id] (it : Iter.Partial (α := α) β) : List β :=
-  it.it.toIterM.allowNontermination.toList.run
+    [Iterator α id β] [IteratorCollectPartial α id id] (it : Iter.Partial (α := α) β) : List β :=
+  it.it.toIterM.allowNontermination.toList
 
 end Std.Iterators

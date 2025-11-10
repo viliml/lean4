@@ -80,7 +80,7 @@ private def detectOffsets (pat : Expr) : MetaM Expr := do
         return .continue <| mkOffsetPattern e k
   Core.transform pat (pre := pre)
 
-def isOffsetPattern? (pat : Expr) : Option (Expr × Nat) := Id.run do
+def isOffsetPattern? (pat : Expr) : Option (Expr × Nat) := id.run do
   let_expr Grind.offset pat k := pat | none
   let .lit (.natVal k) := k | none
   return some (pat, k)
@@ -126,11 +126,11 @@ structure GenPatternInfo where
 
 def isGenPattern? (pat : Expr) : Option (GenPatternInfo × Expr) :=
   match_expr pat with
-  | Grind.genPattern _ h x pat => Id.run do
+  | Grind.genPattern _ h x pat => id.run do
     let .bvar hIdx := h | unreachable!
     let .bvar xIdx := x | unreachable!
     return some ({ heq := false, hIdx, xIdx }, pat )
-  | Grind.genHEqPattern _ _ h x pat => Id.run do
+  | Grind.genHEqPattern _ _ h x pat => id.run do
     let .bvar hIdx := h | unreachable!
     let .bvar xIdx := x | unreachable!
     return some ({ heq := true, hIdx, xIdx }, pat )
@@ -230,7 +230,7 @@ private def detectGeneralizedPatterns? (type : Expr) : MetaM Expr := do
   -- uses is a solid approximation.
   recordExtraModUseFromDecl (isMeta := false) ``Grind.genPattern
   forallTelescopeReducing type fun hs resultType => do
-    let isTarget? (lhs : Expr) (rhs : Expr) (s : FVarSubst) : Option (FVarId × Expr) := Id.run do
+    let isTarget? (lhs : Expr) (rhs : Expr) (s : FVarSubst) : Option (FVarId × Expr) := id.run do
       let .fvar fvarId := lhs | return none
       if !hs.contains lhs then
         return none -- It is a foreign free variable
@@ -450,7 +450,7 @@ def isPatternDontCare (e : Expr) : Bool :=
 private def isAtomicPattern (e : Expr) : Bool :=
   e.isBVar || isPatternDontCare e || isGroundPattern e
 
-partial def ppPattern (pattern : Expr) : MessageData := Id.run do
+partial def ppPattern (pattern : Expr) : MessageData := id.run do
   if let some e := groundPattern? pattern then
     return m!"`[{e}]"
   else if isPatternDontCare pattern then
@@ -1159,7 +1159,7 @@ def EMatchTheoremKind.gen : EMatchTheoremKind → Bool
   | .eqBwd | .fwd | .rightLeft
   | .leftRight | .user => false
 
-private def collectUsedPriorities (prios : SymbolPriorities) (searchPlaces : Array Expr) : Array Nat := Id.run do
+private def collectUsedPriorities (prios : SymbolPriorities) (searchPlaces : Array Expr) : Array Nat := id.run do
   let mut s : Std.HashSet Nat := {}
   for place in searchPlaces do
     s := place.foldConsts (init := s) fun declName s =>

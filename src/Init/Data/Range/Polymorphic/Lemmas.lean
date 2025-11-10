@@ -565,7 +565,6 @@ public instance [LE α] [DecidableLE α] [UpwardEnumerable α] [Rxc.HasSize α] 
     split <;> rename_i heq
     · simp [Iter.toArray_eq_match_step (it := it), Rxc.Iterator.step_eq_step, Rxc.Iterator.step, heq]
     · rename_i next
-      simp only [Id.run_pure]
       induction h : Rxc.HasSize.size _ it.internalState.upperBound generalizing it next
       · simp only [Rxc.size_eq_zero_iff_not_le] at h
         simp [Iter.toArray_eq_match_step (it := it), Rxc.Iterator.step_eq_step, Rxc.Iterator.step, heq, h]
@@ -590,7 +589,6 @@ public instance [LT α] [DecidableLT α] [UpwardEnumerable α] [Rxo.HasSize α]
     split <;> rename_i heq
     · simp [Iter.toArray_eq_match_step (it := it), Rxo.Iterator.step_eq_step, Rxo.Iterator.step, heq]
     · rename_i next
-      simp only [Id.run_pure]
       induction h : Rxo.HasSize.size _ it.internalState.upperBound generalizing it next
       · simp only [Rxo.size_eq_zero_iff_not_le] at h
         simp [Iter.toArray_eq_match_step (it := it), Rxo.Iterator.step_eq_step, Rxo.Iterator.step, heq, h]
@@ -614,7 +612,6 @@ public instance [UpwardEnumerable α] [Rxi.HasSize α] [Rxi.LawfulHasSize α] [R
     split <;> rename_i heq
     · simp [Iter.toArray_eq_match_step (it := it), Rxi.Iterator.step_eq_step, Rxi.Iterator.step, heq]
     · rename_i next
-      simp only [Id.run_pure]
       induction h : Rxi.HasSize.size next generalizing it next
       · nomatch h ▸ Rxi.size_pos
       · rename_i ih

@@ -48,7 +48,7 @@ def CompletionItem.resolve
     item := { item with detail? := detail? }
 
   if item.documentation?.isNone then
-    let docStringPrefix? := Id.run do
+    let docStringPrefix? := id.run do
       let .const declName := id
         | none
       let some param := Linter.deprecatedAttr.getParam? env declName

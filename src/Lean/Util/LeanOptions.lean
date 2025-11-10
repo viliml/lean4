@@ -96,7 +96,7 @@ def LeanOptions.appendArray (self : LeanOptions) (new : Array LeanOption) : Lean
 
 instance : HAppend LeanOptions (Array LeanOption) LeanOptions := ⟨LeanOptions.appendArray⟩
 
-def LeanOptions.toOptions (leanOptions : LeanOptions) : Options := Id.run do
+def LeanOptions.toOptions (leanOptions : LeanOptions) : Options := id.run do
   let mut options := KVMap.empty
   for ⟨name, optionValue⟩ in leanOptions.values do
     options := options.insert name optionValue.toDataValue

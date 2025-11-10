@@ -591,13 +591,13 @@ theorem anyM_loop_cons [Monad m] {p : α → m Bool} {a : α} {as : List α} {st
 
 -- Auxiliary for `any_iff_exists`.
 theorem anyM_loop_iff_exists {p : α → Bool} {as : Array α} {start stop} (h : stop ≤ as.size) :
-    (anyM.loop (m := Id) (pure <| p ·) as stop h start).run = true ↔
+    anyM.loop (m := id) p as stop h start = true ↔
       ∃ (i : Nat) (_ : i < as.size), start ≤ i ∧ i < stop ∧ p as[i] = true := by
   unfold anyM.loop
   split <;> rename_i h₁
   · dsimp
     split <;> rename_i h₂
-    · simp only [true_iff, Id.run_pure]
+    · simp only [true_iff]
       refine ⟨start, by omega, by omega, by omega, h₂⟩
     · rw [anyM_loop_iff_exists]
       constructor
@@ -1569,7 +1569,7 @@ theorem filterMap_congr {as bs : Array α} (h : as = bs)
   dsimp only [filterMap, filterMapM]
   rw [← foldlM_toList]
   generalize xs.toList = xs
-  have this : ∀ as : Array β, (Id.run (List.foldlM (m := Id) ?_ as xs)).toList =
+  have this : ∀ as : Array β, (List.foldlM (m := id) ?_ as xs).toList =
     as.toList ++ List.filterMap f xs := ?_
   exact this #[]
   induction xs
@@ -3173,16 +3173,16 @@ theorem foldlM_push [Monad m] [LawfulMonad m] {xs : Array α} {a : α} {f : β �
   rw [foldr, foldrM_start_stop, ← foldrM_toList, List.foldrM_pure, foldr_toList, foldr, ← foldrM_start_stop]
 
 theorem foldl_eq_foldlM {f : β → α → β} {b} {xs : Array α} {start stop : Nat} :
-    xs.foldl f b start stop = (xs.foldlM (m := Id) (pure <| f · ·) b start stop).run := rfl
+    xs.foldl f b start stop = xs.foldlM (m := id) f b start stop := rfl
 
 theorem foldr_eq_foldrM {f : α → β → β} {b} {xs : Array α} {start stop : Nat} :
-    xs.foldr f b start stop = (xs.foldrM (m := Id) (pure <| f · ·) b start stop).run := rfl
+    xs.foldr f b start stop = xs.foldrM (m := id) f b start stop := rfl
 
-@[simp] theorem id_run_foldlM {f : β → α → Id β} {b} {xs : Array α} {start stop : Nat} :
-    Id.run (xs.foldlM f b start stop) = xs.foldl (f · · |>.run) b start stop := rfl
+@[simp] theorem id_run_foldlM {f : β → α → β} {b} {xs : Array α} {start stop : Nat} :
+    xs.foldlM (m := id) f b start stop = xs.foldl f b start stop := rfl
 
-@[simp] theorem id_run_foldrM {f : α → β → Id β} {b} {xs : Array α} {start stop : Nat} :
-    Id.run (xs.foldrM f b start stop) = xs.foldr (f · · |>.run) b start stop := rfl
+@[simp] theorem id_run_foldrM {f : α → β → β} {b} {xs : Array α} {start stop : Nat} :
+    xs.foldrM (m := id) f b start stop = xs.foldr f b start stop := rfl
 
 /-- Variant of `foldlM_reverse` with a side condition for the `stop` argument. -/
 @[simp] theorem foldlM_reverse' [Monad m] {xs : Array α} {f : β → α → m β} {b} {stop : Nat}
@@ -3252,7 +3252,7 @@ theorem foldl_induction
     (hf : ∀ i : Fin as.size, ∀ b, motive i.1 b → motive (i.1 + 1) (f b as[i])) :
     motive as.size (as.foldl f init) := by
   let rec go {i j b} (h₁ : j ≤ as.size) (h₂ : as.size ≤ i + j) (H : motive j b) :
-    (motive as.size) (foldlM.loop (m := Id) f as as.size (Nat.le_refl _) i j b) := by
+    (motive as.size) (foldlM.loop (m := id) f as as.size (Nat.le_refl _) i j b) := by
     unfold foldlM.loop; split
     next hj =>
       split
@@ -3266,7 +3266,7 @@ theorem foldr_induction
     (hf : ∀ i : Fin as.size, ∀ b, motive (i.1 + 1) b → motive i.1 (f as[i] b)) :
     motive 0 (as.foldr f init) := by
   let rec go {i b} (hi : i ≤ as.size) (H : motive i b) :
-    (motive 0) (foldrM.fold (m := Id) f as 0 i hi b) := by
+    (motive 0) (foldrM.fold (m := id) f as 0 i hi b) := by
     unfold foldrM.fold; simp; split
     next hi => exact (hi ▸ H)
     next hi =>
@@ -4070,8 +4070,8 @@ abbrev all_mkArray := @all_replicate
     (xs.modify j f)[i] = if j = i then f (xs[i]'(by simpa using h)) else xs[i]'(by simpa using h) := by
   simp only [modify, modifyM]
   split
-  · simp only [getElem_set, Id.run_pure, Id.run_bind]; split <;> simp [*]
-  · simp only [Id.run_pure]
+  · simp only [getElem_set, id.pure_eq, id.bind_eq]; split <;> simp [*]
+  · simp only [id.pure_eq]
     rw [if_neg (mt (by rintro rfl; exact h) (by simp_all))]
 
 @[simp, grind =] theorem toList_modify {xs : Array α} {f : α → α} {i : Nat} :

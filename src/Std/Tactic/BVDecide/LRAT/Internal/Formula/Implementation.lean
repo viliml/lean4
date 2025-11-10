@@ -328,7 +328,7 @@ def performRatAdd {n : Nat} (f : DefaultFormula n) (c : DefaultClause n)
             (f.insert c, true)
   else (f, false)
 
-def numClausesInFormula {n : Nat} (f : DefaultFormula n) : Nat := Id.run do
+def numClausesInFormula {n : Nat} (f : DefaultFormula n) : Nat := id.run do
   let mut numClauses := 0
   for cOpt in f.clauses do
     if cOpt != none then

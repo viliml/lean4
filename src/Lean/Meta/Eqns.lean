@@ -79,7 +79,7 @@ def isEqnLikeSuffix (s : String) : Bool :=
 The equational theorem for a definition can be private even if the definition itself is not.
 So un-private the name here when looking for a declaration
 -/
-def declFromEqLikeName (env : Environment) (name : Name) : Option (Name × String) := Id.run do
+def declFromEqLikeName (env : Environment) (name : Name) : Option (Name × String) := id.run do
   if let .str p s := name then
     if isEqnLikeSuffix s then
       for p in [p, privateToUserName p] do
@@ -107,7 +107,7 @@ def ensureEqnReservedNamesAvailable (declName : Name) : CoreM Unit := do
 /--
 Ensures that `f.eq_def`, `f.unfold` and `f.eq_<idx>` are reserved names if `f` is a safe definition.
 -/
-builtin_initialize registerReservedNamePredicate fun env n => Id.run do
+builtin_initialize registerReservedNamePredicate fun env n => id.run do
   if let some (declName, suffix) := declFromEqLikeName env n then
     -- The reserved name predicate has to be precise, as `resolveExact`
     -- will believe it. So make sure that `n` is exactly the name we expect,

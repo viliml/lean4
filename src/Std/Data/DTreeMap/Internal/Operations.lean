@@ -458,7 +458,7 @@ abbrev IteratedErasureFrom [Ord α] (t) :=
 /-- Iterate over `l` and erase all of its elements from `t`. -/
 @[inline]
 def eraseMany [Ord α] {ρ : Type w} [ForIn Id ρ α] (t : Impl α β) (l : ρ) (h : t.Balanced) :
-    IteratedErasureFrom t := Id.run do
+    IteratedErasureFrom t := id.run do
   let mut r := ⟨t, fun h _ => h⟩
   for a in l do
     let hr := r.2 h (fun t'' a h _ => (t''.erase a h).balanced_impl)
@@ -475,7 +475,7 @@ assumes the preconditions of `eraseMany`, otherwise might panic.
 -/
 @[inline]
 def eraseMany! [Ord α] {ρ : Type w} [ForIn Id ρ α] (t : Impl α β) (l : ρ) :
-    IteratedSlowErasureFrom t := Id.run do
+    IteratedSlowErasureFrom t := id.run do
   let mut r := ⟨t, fun h _ => h⟩
   for a in l do
     r := ⟨r.val.erase! a, fun h₀ h₁ => h₁ _ _ (r.2 h₀ h₁)⟩
@@ -488,7 +488,7 @@ abbrev IteratedInsertionInto [Ord α] (t) :=
 /-- Iterate over `l` and insert all of its elements into `t`. -/
 @[inline]
 def insertMany [Ord α] {ρ : Type w} [ForIn Id ρ ((a : α) × β a)] (t : Impl α β) (l : ρ) (h : t.Balanced) :
-    IteratedInsertionInto t := Id.run do
+    IteratedInsertionInto t := id.run do
   let mut r := ⟨t, fun h _ => h⟩
   for ⟨a, b⟩ in l do
     let hr := r.2 h (fun t'' a b h _ => (t''.insert a b h).balanced_impl)
@@ -505,7 +505,7 @@ assumes the preconditions of `insertMany`, otherwise might panic.
 -/
 @[inline]
 def insertMany! [Ord α] {ρ : Type w} [ForIn Id ρ ((a : α) × β a)] (t : Impl α β) (l : ρ) :
-    IteratedSlowInsertionInto t := Id.run do
+    IteratedSlowInsertionInto t := id.run do
   let mut r := ⟨t, fun h _ => h⟩
   for ⟨a, b⟩ in l do
     r := ⟨r.val.insert! a b, fun h₀ h₁ => h₁ _ _ _ (r.2 h₀ h₁)⟩
@@ -522,7 +522,7 @@ abbrev IteratedInsertionInto [Ord α] (t) :=
 /-- Iterate over `l` and insert all of its elements into `t`. -/
 @[inline]
 def insertMany [Ord α] {ρ : Type w} [ForIn Id ρ (α × β)] (t : Impl α (fun _ => β)) (l : ρ) (h : t.Balanced) :
-    IteratedInsertionInto t := Id.run do
+    IteratedInsertionInto t := id.run do
   let mut r := ⟨t, fun h _ => h⟩
   for ⟨a, b⟩ in l do
     let hr := r.2 h (fun t'' a b h _ => (t''.insert a b h).balanced_impl)
@@ -539,7 +539,7 @@ assumes the preconditions of `insertMany`, otherwise might panic.
 -/
 @[inline]
 def insertMany! [Ord α] {ρ : Type w} [ForIn Id ρ (α × β)] (t : Impl α (fun _ => β)) (l : ρ) :
-    IteratedSlowInsertionInto t := Id.run do
+    IteratedSlowInsertionInto t := id.run do
   let mut r := ⟨t, fun h _ => h⟩
   for ⟨a, b⟩ in l do
     r := ⟨r.val.insert! a b, fun h₀ h₁ => h₁ _ _ _ (r.2 h₀ h₁)⟩
@@ -553,7 +553,7 @@ abbrev IteratedUnitInsertionInto [Ord α] (t) :=
 /-- Iterate over `l` and insert all of its elements into `t`. -/
 @[inline]
 def insertManyIfNewUnit [Ord α] {ρ : Type w} [ForIn Id ρ α] (t : Impl α (fun _ => Unit)) (l : ρ) (h : t.Balanced) :
-    IteratedUnitInsertionInto t := Id.run do
+    IteratedUnitInsertionInto t := id.run do
   let mut r := ⟨t, fun h _ => h⟩
   for a in l do
     let hr := r.2 h (fun t'' a h _ => (t''.insertIfNew a () h).balanced_impl)
@@ -571,7 +571,7 @@ assumes the preconditions of `insertManyIfNewUnit`, otherwise might panic.
 -/
 @[inline]
 def insertManyIfNewUnit! [Ord α] {ρ : Type w} [ForIn Id ρ α] (t : Impl α (fun _ => Unit)) (l : ρ) :
-    IteratedSlowUnitInsertionInto t := Id.run do
+    IteratedSlowUnitInsertionInto t := id.run do
   let mut r := ⟨t, fun h _ => h⟩
   for a in l do
     r := ⟨r.val.insertIfNew! a (), fun h₀ h₁ => h₁ _ _ (r.2 h₀ h₁)⟩

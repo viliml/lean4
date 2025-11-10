@@ -202,7 +202,7 @@ def ScopedEnvExtension.activateScoped (ext : ScopedEnvExtension α β σ) (env :
           match s.scopedEntries.map.find? namespaceName with
           | none =>
             { top with activeScopes := activeScopes }
-          | some bs => Id.run do
+          | some bs => id.run do
             let mut state := top.state
             for b in bs do
               state := ext.descr.addEntry state b

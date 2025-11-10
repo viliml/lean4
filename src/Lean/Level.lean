@@ -48,7 +48,7 @@ def Level.Data.hasParam (c : Level.Data) : Bool :=
 opaque Level.mkData (h : UInt64) (depth : Nat := 0) (hasMVar hasParam : Bool := false) : Level.Data
 
 instance : Repr Level.Data where
-  reprPrec v prec := Id.run do
+  reprPrec v prec := id.run do
     let mut r := "Level.mkData " ++ toString v.hash
     if v.depth != 0 then
       r := r ++ " (depth := " ++ toString v.depth ++ ")"

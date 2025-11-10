@@ -309,7 +309,7 @@ processed.
 -/
 @[inline]
 def foldl {β : Type v} (f : β → UInt8 → β) (init : β) (as : ByteArray) (start := 0) (stop := as.size) : β :=
-  Id.run <| as.foldlM (pure <| f · ·) init start stop
+  id.run <| as.foldlM f init start stop
 
 set_option doc.verso false -- Awaiting intra-module forward reference support
 /--

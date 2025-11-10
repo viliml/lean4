@@ -14,6 +14,8 @@ public section
 
 universe u
 
+namespace id
+
 /--
 The identity function on types, used primarily for its `Monad` instance.
 
@@ -23,7 +25,7 @@ local mutability, `for`-loops, and early returns in code that does not otherwise
 
 Examples:
 ```lean example
-def containsFive (xs : List Nat) : Bool := Id.run do
+def containsFive (xs : List Nat) : Bool := id.run do
   for x in xs do
     if x == 5 then return true
   return false
@@ -36,12 +38,8 @@ def containsFive (xs : List Nat) : Bool := Id.run do
 true
 ```
 -/
-@[expose] def Id (type : Type u) : Type u := type
-
-namespace Id
-
 @[always_inline]
-instance : Monad Id where
+instance : Monad id where
   pure x := x
   bind x f := f x
   map f x := f x
@@ -49,7 +47,7 @@ instance : Monad Id where
 /--
 The identity monad has a `bind` operator.
 -/
-def hasBind : Bind Id :=
+def hasBind : Bind id :=
   inferInstance
 
 /--
@@ -58,13 +56,13 @@ Runs a computation in the identity monad.
 This function is the identity function. Because its parameter has type `Id α`, it causes
 `do`-notation in its arguments to use the `Monad Id` instance.
 -/
-@[always_inline, inline, expose]
-protected def run (x : Id α) : α := x
+@[always_inline, inline, expose, simp]
+protected def run (x : id α) : α := x
 
-instance [OfNat α n] : OfNat (Id α) n :=
+instance [OfNat α n] : OfNat (id α) n :=
   inferInstanceAs (OfNat α n)
 
-instance {m : Type u → Type v} [Pure m] : MonadLiftT Id m where
-  monadLift x := pure x.run
+instance {m : Type u → Type v} [Pure m] : MonadLiftT id m where
+  monadLift x := pure x
 
-end Id
+end id

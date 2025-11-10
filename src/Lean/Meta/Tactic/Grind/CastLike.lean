@@ -19,7 +19,7 @@ public def isCastLikeDeclName (declName : Name) : Bool :=
   declName == ``IntCast.intCast
 
 /-- Returns `true` if `f` is a cast-like operation. -/
-public def isCastLikeFn (f : Expr) : Bool := Id.run do
+public def isCastLikeFn (f : Expr) : Bool := id.run do
   let .const declName _ := f | return false
   return isCastLikeDeclName declName
 

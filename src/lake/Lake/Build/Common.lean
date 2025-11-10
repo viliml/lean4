@@ -756,7 +756,7 @@ public def buildStaticLib
 
 private def mkLinkObjArgs
   (objs : Array FilePath) (libs : Array Dynlib) : Array String
-:= Id.run do
+:= id.run do
   let mut args := #[]
   for obj in objs do
     args := args.push obj.toString

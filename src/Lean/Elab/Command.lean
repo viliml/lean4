@@ -388,7 +388,7 @@ Disables incremental command reuse *and* reporting for `act` if `cond` is true b
 -/
 def withoutCommandIncrementality (cond : Bool) (act : CommandElabM α) : CommandElabM α := do
   let opts ← getOptions
-  withReader (fun ctx => { ctx with snap? := ctx.snap?.filter fun snap => Id.run do
+  withReader (fun ctx => { ctx with snap? := ctx.snap?.filter fun snap => id.run do
     if let some old := snap.old? then
       if cond && opts.getBool `trace.Elab.reuse then
         dbg_trace "reuse stopped: guard failed at {old.stx}"

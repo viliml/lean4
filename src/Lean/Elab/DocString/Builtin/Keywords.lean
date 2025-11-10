@@ -390,7 +390,7 @@ private def kwImpl (cat : Ident := mkIdent .anonymous) (of : Ident := mkIdent .a
 
     return .other {name := ``Data.Atom, val := .mk (Data.Atom.mk k catName)} #[.code s.getString]
 where
-  categorySuggestions (c candidates) := Id.run do
+  categorySuggestions (c candidates) := id.run do
     if c.isAnonymous then
       let mut counts : NameMap Nat := {}
       for (cat, _) in candidates do

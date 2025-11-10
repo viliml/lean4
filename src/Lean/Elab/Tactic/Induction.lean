@@ -655,7 +655,7 @@ def shouldExpandAlt (alt : Syntax) : Bool :=
 Returns `some #[alt_1, ..., alt_n]` if `alt` has multiple LHSs or if `alt` has no RHS.
 If there is no RHS, it is filled in with a hole.
 -/
-def expandAlt? (alt : Syntax) : Option (Array Syntax) := Id.run do
+def expandAlt? (alt : Syntax) : Option (Array Syntax) := id.run do
   if shouldExpandAlt alt then
     some <| alt[0].getArgs.map fun lhs =>
       let alt := alt.setArg 0 (mkNullNode #[lhs])
@@ -676,7 +676,7 @@ In the new `inductionAlts'` all alternatives have a single LHS.
 
 Remark: the `RHS` of alternatives with multi LHSs is copied.
 -/
-def expandInductionAlts? (inductionAlts : Syntax) : Option Syntax := Id.run do
+def expandInductionAlts? (inductionAlts : Syntax) : Option Syntax := id.run do
   let alts := getAltsOfInductionAlts inductionAlts
   if alts.any shouldExpandAlt then
     let mut altsNew := #[]

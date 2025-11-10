@@ -18,7 +18,7 @@ iterator `it` to an element of `motive it` by defining `f it` in terms of the va
 the plausible successors of `it'.
 -/
 @[specialize]
-def Iter.inductSteps {α β} [Iterator α Id β] [Finite α Id]
+def Iter.inductSteps {α β} [Iterator α id β] [Finite α id]
   (motive : Iter (α := α) β → Sort x)
   (step : (it : Iter (α := α) β) →
     (ih_yield : ∀ {it' : Iter (α := α) β} {out : β},
@@ -37,7 +37,7 @@ iterator `it` to an element of `motive it` by defining `f it` in terms of the va
 the plausible skip successors of `it'.
 -/
 @[specialize]
-def Iter.inductSkips {α β} [Iterator α Id β] [Productive α Id]
+def Iter.inductSkips {α β} [Iterator α id β] [Productive α id]
   (motive : Iter (α := α) β → Sort x)
   (step : (it : Iter (α := α) β) →
     (ih_skip : ∀ {it' : Iter (α := α) β}, it.IsPlausibleStep (.skip it') → motive it') →

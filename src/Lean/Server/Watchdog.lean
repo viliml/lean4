@@ -121,7 +121,7 @@ section Utils
       queue := m.queue.insert m.i (req.id, req)
     }
 
-    def erase (m : RequestQueueMap) (id : RequestID) : RequestQueueMap := Id.run do
+    def erase (m : RequestQueueMap) (id : RequestID) : RequestQueueMap := id.run do
       let some (i, _) := m.reqs.get? id
         | return m
       return { m with
@@ -152,7 +152,7 @@ section Utils
       uriByRequest := ∅
     }
 
-    def clearWorkerRequestData (d : RequestData) (uri : DocumentUri) : RequestData := Id.run do
+    def clearWorkerRequestData (d : RequestData) (uri : DocumentUri) : RequestData := id.run do
       let some requestQueue := d.requestQueues.get? uri
         | return d
       let mut uriByRequest := d.uriByRequest
@@ -174,7 +174,7 @@ section Utils
       requestQueues := d.requestQueues.modify uri (·.erase id)
       uriByRequest := d.uriByRequest.erase id
 
-    def contains (d : RequestData) (uri : DocumentUri) (id : RequestID) : Bool := Id.run do
+    def contains (d : RequestData) (uri : DocumentUri) (id : RequestID) : Bool := id.run do
       let some uri' := d.uriByRequest.get? id
         | return false
       return uri == uri'
@@ -277,7 +277,7 @@ section ServerM
     fileWorkers := m.fileWorkers.insert uri fw
     uriByMod    := m.uriByMod.insert fw.doc.mod uri
 
-  def FileWorkerMap.erase (m : FileWorkerMap) (uri : DocumentUri) : FileWorkerMap := Id.run do
+  def FileWorkerMap.erase (m : FileWorkerMap) (uri : DocumentUri) : FileWorkerMap := id.run do
     let some fw := m.fileWorkers.get? uri
       | return m
     return {
@@ -299,7 +299,7 @@ section ServerM
 
   /-- Updates `d` with the new set of `imports` for the file `uri`. -/
   def ImportData.update (d : ImportData) (uri : DocumentUri) (imports : Std.TreeSet DocumentUri)
-      : ImportData := Id.run do
+      : ImportData := id.run do
     let oldImports     := d.imports.getD uri ∅
     let removedImports := oldImports.eraseMany imports
     let addedImports   := imports.eraseMany oldImports
@@ -704,7 +704,7 @@ section ServerM
   def bendLocationLinks (fw : FileWorker) (req : JsonRpc.Request Json) (r : Array LeanLocationLink) :
       ServerM Json := do
     let refs ← getReferences
-    let r : Array LeanLocationLink := r.filterMap fun ll => Id.run do
+    let r : Array LeanLocationLink := r.filterMap fun ll => id.run do
       let some ident := ll.ident?
         | return ll
       let ident : RefIdent := .const ident.module.toString ident.decl.toString
@@ -1110,7 +1110,7 @@ def handleCallHierarchyOutgoingCalls (p : CallHierarchyOutgoingCallsParams)
     | return #[]
 
   let items ← refs.toArray.filterMapM fun ⟨ident, info⟩ => do
-    let outgoingUsages := info.usages.filter fun usage => Id.run do
+    let outgoingUsages := info.usages.filter fun usage => id.run do
       let some parentDecl := usage.parentDecl?
         | return false
       return itemData.name == parentDecl.name.toName
@@ -1215,7 +1215,7 @@ def handleRename (p : RenameParams) : ReaderT ReferenceRequestContext IO Lsp.Wor
     refs := refs.insert uri <| (refs.getD uri ∅).insert range.start range.end
   -- We have to filter the list of changes to put the ranges in order and
   -- remove any duplicates or overlapping ranges, or else the rename will not apply
-  let changes := refs.fold (init := ∅) fun changes uri map => Id.run do
+  let changes := refs.fold (init := ∅) fun changes uri map => id.run do
     let mut last := ⟨0, 0⟩
     let mut arr := #[]
     for (start, stop) in map do

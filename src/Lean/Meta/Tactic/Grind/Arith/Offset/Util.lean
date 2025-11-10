@@ -13,7 +13,7 @@ public section
 namespace Lean.Meta.Grind.Arith.Offset
 
 /-- Returns `some (a, k)` if `e` is of the form `a + k`.  -/
-def isNatOffset? (e : Expr) : Option (Expr × Nat) := Id.run do
+def isNatOffset? (e : Expr) : Option (Expr × Nat) := id.run do
   let some (a, b) := isNatAdd? e | none
   let some k := isNatNum? b | none
   some (a, k)

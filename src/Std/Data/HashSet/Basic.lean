@@ -256,13 +256,13 @@ section Unverified
   ⟨⟨l⟩, ⟨r⟩⟩
 
 /-- Check if all elements satisfy the predicate, short-circuiting if a predicate fails. -/
-@[inline] def all (m : HashSet α) (p : α → Bool) : Bool := Id.run do
+@[inline] def all (m : HashSet α) (p : α → Bool) : Bool := id.run do
   for a in m do
     if ¬ p a then return false
   return true
 
 /-- Check if any element satisfies the predicate, short-circuiting if a predicate succeeds. -/
-@[inline] def any (m : HashSet α) (p : α → Bool) : Bool := Id.run do
+@[inline] def any (m : HashSet α) (p : α → Bool) : Bool := id.run do
   for a in m do
     if p a then return true
   return false

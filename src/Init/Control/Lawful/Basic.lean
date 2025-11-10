@@ -240,27 +240,26 @@ theorem LawfulMonad.mk' (m : Type u → Type v) [Monad m]
 
 /-! # Id -/
 
-namespace Id
+namespace id
 
-@[ext] theorem ext {x y : Id α} (h : x.run = y.run) : x = y := h
+@[ext] theorem ext {x y : id α} (h : x.run = y.run) : x = y := h
 
-instance : LawfulMonad Id := by
+instance : LawfulMonad id := by
   refine LawfulMonad.mk' _ ?_ ?_ ?_ <;> intros <;> rfl
 
-@[simp] theorem run_map (x : Id α) (f : α → β) : (f <$> x).run = f x.run := rfl
-@[simp] theorem run_bind (x : Id α) (f : α → Id β) : (x >>= f).run = (f x.run).run := rfl
-@[simp] theorem run_pure (a : α) : (pure a : Id α).run = a := rfl
-@[simp] theorem pure_run (a : Id α) : pure a.run = a := rfl
-@[simp] theorem run_seqRight (x y : Id α) : (x *> y).run = y.run := rfl
-@[simp] theorem run_seqLeft (x y : Id α) : (x <* y).run = x.run := rfl
-@[simp] theorem run_seq (f : Id (α → β)) (x : Id α) : (f <*> x).run = f.run x.run := rfl
+@[simp] theorem run_map (x : id α) (f : α → β) : (f <$> x).run = f x.run := rfl
+@[simp] theorem run_bind (x : id α) (f : α → id β) : (x >>= f).run = (f x.run).run := rfl
+@[simp] theorem run_pure (a : α) : (pure a : id α).run = a := rfl
+@[simp] theorem pure_run (a : id α) : pure a.run = a := rfl
+@[simp] theorem run_seqRight (x y : id α) : (x *> y).run = y.run := rfl
+@[simp] theorem run_seqLeft (x y : id α) : (x <* y).run = x.run := rfl
+@[simp] theorem run_seq (f : id (α → β)) (x : id α) : (f <*> x).run = f.run x.run := rfl
 
--- These lemmas are bad as they abuse the defeq of `Id α` and `α`
-@[deprecated run_map (since := "2025-03-05")] theorem map_eq (x : Id α) (f : α → β) : f <$> x = f x := rfl
-@[deprecated run_bind (since := "2025-03-05")] theorem bind_eq (x : Id α) (f : α → id β) : x >>= f = f x := rfl
-@[deprecated run_pure (since := "2025-03-05")] theorem pure_eq (a : α) : (pure a : Id α) = a := rfl
+@[simp] theorem map_eq (x : id α) (f : α → β) : f <$> x = f x := rfl
+@[simp] theorem bind_eq (x : id α) (f : α → id β) : x >>= f = f x := rfl
+@[simp] theorem pure_eq (a : α) : (pure a : id α) = a := rfl
 
-end Id
+end id
 
 /-! # Option -/
 

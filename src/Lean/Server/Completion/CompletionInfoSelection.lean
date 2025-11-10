@@ -15,7 +15,7 @@ open Elab
 
 private def filterDuplicateCompletionInfos
     (infos : Array ContextualizedCompletionInfo)
-    : Array ContextualizedCompletionInfo := Id.run do
+    : Array ContextualizedCompletionInfo := id.run do
   -- We don't expect there to be too many duplicate completion infos,
   -- so it's fine if this is quadratic (we don't need to implement `Hashable` / `LT` this way).
   let mut deduplicatedInfos : Array ContextualizedCompletionInfo := #[]
@@ -52,7 +52,7 @@ def findCompletionInfosAt
     (hoverPos : String.Pos.Raw)
     (cmdStx   : Syntax)
     (infoTree : InfoTree)
-    : Array ContextualizedCompletionInfo × Bool := Id.run do
+    : Array ContextualizedCompletionInfo × Bool := id.run do
   let ⟨hoverLine, _⟩ := fileMap.toPosition hoverPos
   let mut isComplete := true
   let mut completionInfoCandidates := infoTree.foldInfo (init := #[]) (go hoverLine)
@@ -66,7 +66,7 @@ where
       (ctx       : ContextInfo)
       (info      : Info)
       (best     : Array ContextualizedCompletionInfo)
-      : Array ContextualizedCompletionInfo := Id.run do
+      : Array ContextualizedCompletionInfo := id.run do
     let .ofCompletionInfo completionInfo := info
       | return best
     if ! containsHoverPos completionInfo then
@@ -83,7 +83,7 @@ where
     if headPosLine != hoverLine || headPosLine != tailPosLine then
       return best
     return best.push { hoverInfo, ctx, info := completionInfo }
-  containsHoverPos (i : CompletionInfo) : Bool := Id.run do
+  containsHoverPos (i : CompletionInfo) : Bool := id.run do
     if let .option stx := i then
       if stx[1].isMissing then
         let some range := stx.getRangeWithTrailing? (canonicalOnly := true)
@@ -113,7 +113,7 @@ private def computePrioritizedCompletionPartitions
         match isId₁, isId₂ with
         | false, true  => true
         | true,  false => false
-        | _,     _     => Id.run do
+        | _,     _     => id.run do
           let some size₁ := size₁?
             | return false
           let some size₂ := size₂?

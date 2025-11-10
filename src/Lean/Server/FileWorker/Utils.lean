@@ -20,9 +20,9 @@ open IO
 
 -- TEMP: translate from new heterogeneous snapshot tree to old homogeneous async list
 private partial def mkCmdSnaps (initSnap : Language.Lean.InitialSnapshot) :
-    AsyncList IO.Error Snapshot := Id.run do
+    AsyncList IO.Error Snapshot := id.run do
   let some headerParsed := initSnap.result? | return .nil
-  .delayed <| headerParsed.processedSnap.task.asServerTask.bindCheap fun headerProcessed => Id.run do
+  .delayed <| headerParsed.processedSnap.task.asServerTask.bindCheap fun headerProcessed => id.run do
     let some headerSuccess := headerProcessed.result? | return .pure <| .ok .nil
     return .pure <| .ok <| .cons {
       stx := initSnap.stx

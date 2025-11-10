@@ -14,7 +14,7 @@ namespace Lean.Meta.Grind
 
 private abbrev M := StateRefT (Std.HashMap ExprPtr Expr) GrindM
 
-def isMarkedSubsingletonConst (e : Expr) : Bool := Id.run do
+def isMarkedSubsingletonConst (e : Expr) : Bool := id.run do
   let .const declName _ := e | false
   return declName == ``Grind.nestedProof || declName == ``Grind.nestedDecidable
 

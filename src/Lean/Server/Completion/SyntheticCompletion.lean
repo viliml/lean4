@@ -116,7 +116,7 @@ private partial def isSyntheticTacticCompletion
     (fileMap  : FileMap)
     (hoverPos : String.Pos.Raw)
     (cmdStx   : Syntax)
-    : Bool := Id.run do
+    : Bool := id.run do
   let hoverFilePos := fileMap.toPosition hoverPos
   go hoverFilePos cmdStx 0
 where
@@ -124,7 +124,7 @@ where
       (hoverFilePos : Position)
       (stx : Syntax)
       (leadingWs : Nat)
-      : Bool := Id.run do
+      : Bool := id.run do
     match stx.getPos?, stx.getTailPos? with
     | some startPos, some endPos =>
       let isCursorInCompletionRange :=
@@ -156,7 +156,7 @@ where
   isCompletionOnTacticBlockIndentation
       (hoverFilePos : Position)
       (stx : Syntax)
-      : Bool := Id.run do
+      : Bool := id.run do
     let some tacticsNode := getTacticsNode? stx
       | return false
     let some firstTacticPos := tacticsNode.getPos?
@@ -168,13 +168,13 @@ where
     let isCursorInTacticBlock := hoverFilePos.column == firstTacticColumn
     return isCursorInProperWhitespace fileMap hoverPos && isCursorInTacticBlock
 
-  isCompletionAfterSemicolon (stx : Syntax) : Bool := Id.run do
+  isCompletionAfterSemicolon (stx : Syntax) : Bool := id.run do
     let some tacticsNode := getTacticsNode? stx
       | return false
     let tactics := tacticsNode.getArgs
     -- We want to provide completions in the case of `skip;<CURSOR>`, so the cursor must only be on
     -- whitespace, not in proper whitespace.
-    return isCursorOnWhitespace fileMap hoverPos && tactics.any fun tactic => Id.run do
+    return isCursorOnWhitespace fileMap hoverPos && tactics.any fun tactic => id.run do
       let some tailPos := tactic.getTailPos?
         | return false
       let isCursorAfterSemicolon :=
@@ -236,7 +236,7 @@ private def findSyntheticTacticCompletion?
   return { hoverInfo := HoverInfo.after, ctx, info := .tactic .missing }
 
 private def findExpectedTypeAt (infoTree : InfoTree) (hoverPos : String.Pos.Raw) : Option (ContextInfo × Expr) := do
-  let (ctx, .ofTermInfo i) ← infoTree.smallestInfo? fun i => Id.run do
+  let (ctx, .ofTermInfo i) ← infoTree.smallestInfo? fun i => id.run do
       let some pos := i.pos?
         | return false
       let some tailPos := i.tailPos?
@@ -261,7 +261,7 @@ where
     | .missing  => (none, acc)
     | .atom ..  => (stx, acc)
     | .ident .. => (stx, acc)
-    | .node _ _ args => Id.run do
+    | .node _ _ args => id.run do
       let mut acc := acc
       let mut lastToken? := none
       for arg in args do
@@ -287,7 +287,7 @@ private def isSyntheticStructFieldCompletion
     (fileMap  : FileMap)
     (hoverPos : String.Pos.Raw)
     (cmdStx   : Syntax)
-    : Bool := Id.run do
+    : Bool := id.run do
   let isCursorOnWhitespace := isCursorOnWhitespace fileMap hoverPos
   let isCursorInProperWhitespace := isCursorInProperWhitespace fileMap hoverPos
   if ! isCursorOnWhitespace then
@@ -295,7 +295,7 @@ private def isSyntheticStructFieldCompletion
 
   let hoverFilePos := fileMap.toPosition hoverPos
 
-  return Option.isSome <| findWithLeadingToken? (stx := cmdStx) fun leadingToken? stx => Id.run do
+  return Option.isSome <| findWithLeadingToken? (stx := cmdStx) fun leadingToken? stx => id.run do
     let some leadingToken := leadingToken?
       | return false
 
@@ -316,7 +316,7 @@ private def isSyntheticStructFieldCompletion
     if isCompletionInEmptyBlock then
       return true
 
-    let isCompletionAfterSep := fieldsAndSeps.zipIdx.any fun (fieldOrSep, i) => Id.run do
+    let isCompletionAfterSep := fieldsAndSeps.zipIdx.any fun (fieldOrSep, i) => id.run do
       if i % 2 == 0 || !fieldOrSep.isAtom then
         return false
       let sep := fieldOrSep
@@ -327,7 +327,7 @@ private def isSyntheticStructFieldCompletion
     if isCompletionAfterSep then
       return true
 
-    let isCompletionOnIndentation := Id.run do
+    let isCompletionOnIndentation := id.run do
       if ! isCursorInProperWhitespace then
         return false
       let some firstFieldPos := stx.getPos?

@@ -13,7 +13,7 @@ public section
 
 namespace Std.Iterators
 
-instance {α β} [Iterator α Id β] [Productive α Id] [IteratorAccess α Id] :
+instance {α β} [Iterator α id β] [Productive α id] [IteratorAccess α id] :
     Stream (Iter (α := α) β) β where
   next? it := match (it.toIterM.nextAtIdx? 0).run with
     | .yield it' out _ => some (out, it'.toIter)

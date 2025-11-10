@@ -92,9 +92,9 @@ instance : DecidableLE Slice :=
 section ForwardPatternUsers
 
 variable {ρ : Type} {σ : Slice → Type}
-variable [∀ s, Std.Iterators.Iterator (σ s) Id (SearchStep s)]
-variable [∀ s, Std.Iterators.Finite (σ s) Id]
-variable [∀ s, Std.Iterators.IteratorLoop (σ s) Id Id]
+variable [∀ s, Std.Iterators.Iterator (σ s) id (SearchStep s)]
+variable [∀ s, Std.Iterators.Finite (σ s) id]
+variable [∀ s, Std.Iterators.IteratorLoop (σ s) id id]
 
 /--
 Checks whether the slice ({name}`s`) begins with the pattern ({name}`pat`).
@@ -425,9 +425,9 @@ end ForwardPatternUsers
 section BackwardPatternUsers
 
 variable {σ : Slice → Type}
-variable [∀ s, Std.Iterators.Iterator (σ s) Id (SearchStep s)]
-variable [∀ s, Std.Iterators.Finite (σ s) Id]
-variable [∀ s, Std.Iterators.IteratorLoop (σ s) Id Id]
+variable [∀ s, Std.Iterators.Iterator (σ s) id (SearchStep s)]
+variable [∀ s, Std.Iterators.Finite (σ s) id]
+variable [∀ s, Std.Iterators.IteratorLoop (σ s) id id]
 
 /--
 Checks whether the slice ({name}`s`) ends with the pattern ({name}`pat`).

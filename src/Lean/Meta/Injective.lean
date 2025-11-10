@@ -17,7 +17,7 @@ public section
 
 namespace Lean.Meta
 
-private def mkAnd? (args : Array Expr) : Option Expr := Id.run do
+private def mkAnd? (args : Array Expr) : Option Expr := id.run do
   if args.isEmpty then
     return none
   else

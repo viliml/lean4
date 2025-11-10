@@ -293,7 +293,7 @@ where
 Given the specialization mask `paramsInfo` and the arguments `args`,
 return the arguments that have not been considered for specialization.
 -/
-def getRemainingArgs (paramsInfo : Array SpecParamInfo) (args : Array Arg) : Array Arg := Id.run do
+def getRemainingArgs (paramsInfo : Array SpecParamInfo) (args : Array Arg) : Array Arg := id.run do
   let mut result := #[]
   for info in paramsInfo, arg in args do
     if info matches .other then

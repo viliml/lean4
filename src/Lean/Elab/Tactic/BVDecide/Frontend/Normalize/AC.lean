@@ -81,7 +81,7 @@ Returns false if `op'` fails to parse.
 
 Note that the width of the operation is *not* compared.
  -/
-def isSameKind (op : Op) (op' : Expr) : Bool := Id.run do
+def isSameKind (op : Op) (op' : Expr) : Bool := id.run do
   let some op' := ofExpr? op' | false
   match op, op' with
   | .mul _, .mul _ => true

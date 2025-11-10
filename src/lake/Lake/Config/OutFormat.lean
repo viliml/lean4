@@ -69,7 +69,7 @@ public def nullFormat (fmt : OutFormat) (_ : α) : String :=
   | .text => queryText a
   | .json => queryJson a |>.compress
 
-public def ppImport (imp : Import) (isModule : Bool) (init := "") : String := Id.run do
+public def ppImport (imp : Import) (isModule : Bool) (init := "") : String := id.run do
   let mut s := init
   if isModule && imp.isExported then
     s := s ++ "public "

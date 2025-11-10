@@ -84,7 +84,7 @@ By default, the package's plus the executable's `moreLinkArgs`.
 If `supportInterpreter := true`, Lake prepends `-rdynamic` on non-Windows
 systems. On Windows, it links in a manifest for Unicode path support.
 -/
-public def linkArgs (self : LeanExe) : Array String := Id.run do
+public def linkArgs (self : LeanExe) : Array String := id.run do
   let mut linkArgs := self.pkg.moreLinkArgs ++ self.config.moreLinkArgs
   if self.config.supportInterpreter && !Platform.isWindows then
     linkArgs := #["-rdynamic"] ++ linkArgs

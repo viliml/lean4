@@ -510,7 +510,7 @@ affect the set of eligible completion candidates.
 private def trailingDotCompletion [ForIn Id Coll (Name × α)]
     (entries : Coll) (stx : Syntax) (caps : ClientCapabilities) (ctx : ContextInfo)
     (mkItem : Name → α → Option InsertReplaceEdit → ResolvableCompletionItem) :
-    Array ResolvableCompletionItem := Id.run do
+    Array ResolvableCompletionItem := id.run do
   let (partialName, trailingDot) :=
     match stx.getSubstring? (withLeading := false) (withTrailing := false) with
     | none => ("", false)  -- the `ident` is `missing`, list all options
@@ -609,7 +609,7 @@ def tacticCompletion
   return items
 
 private def findEndSectionCompletionCandidates
-    (idComponents : Array String) (scopeNames : Array String) : Array String := Id.run do
+    (idComponents : Array String) (scopeNames : Array String) : Array String := id.run do
   let mut r := #[]
   for i in 0...<scopeNames.size do
     let some partiallyCompletedIdComponent := idComponents[idComponents.size - 1]?

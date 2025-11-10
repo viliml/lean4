@@ -39,7 +39,7 @@ Returns `some e'` if a prefix is a candidate.
 Example: suppose `e` is `(if b then f else g) x`, then
 the result is `some e'` where `e'` is the subterm `(if b then f else g)`
 -/
-private def isCandidate? (env : Environment) (ctx : Context) (e : Expr) : Option Expr := Id.run do
+private def isCandidate? (env : Environment) (ctx : Context) (e : Expr) : Option Expr := id.run do
   let ret (e : Expr) : Option Expr :=
     if ctx.exceptionSet.contains e then none else some e
   if ctx.kind.considerIte then

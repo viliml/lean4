@@ -84,7 +84,7 @@ inductive SearchControl where
   /-- Stop the search through a syntax stack. -/
   | stop
 
-private def lineCommentPosition? (s : String) : Option String.Pos.Raw := Id.run do
+private def lineCommentPosition? (s : String) : Option String.Pos.Raw := id.run do
   let mut it := s.mkIterator
   while h : it.hasNext do
     let pos := it.pos
@@ -98,7 +98,7 @@ private def lineCommentPosition? (s : String) : Option String.Pos.Raw := Id.run 
           return some pos
   return none
 
-private def isPositionInLineComment (text : FileMap) (pos : String.Pos.Raw) : Bool := Id.run do
+private def isPositionInLineComment (text : FileMap) (pos : String.Pos.Raw) : Bool := id.run do
   let requestedLineNumber := text.toPosition pos |>.line
   let lineStartPos := text.lineStart requestedLineNumber
   let lineEndPos := text.lineStart (requestedLineNumber + 1)
@@ -117,7 +117,7 @@ def findSignatureHelp? (text : FileMap) (ctx? : Option Lsp.SignatureHelpContext)
   -- triggering on other comment kinds.
   if isPositionInLineComment text requestedPos then
     return none
-  let stack? := cmdStx.findStack? fun stx => Id.run do
+  let stack? := cmdStx.findStack? fun stx => id.run do
     let some range := stx.getRangeWithTrailing? (canonicalOnly := true)
       | return false
     return range.contains requestedPos (includeStop := true)
@@ -153,7 +153,7 @@ def findSignatureHelp? (text : FileMap) (ctx? : Option Lsp.SignatureHelpContext)
   return none
 where
   determineCandidateKind (stx : Syntax) (parent : Syntax)
-      : Option CandidateKind × SearchControl := Id.run do
+      : Option CandidateKind × SearchControl := id.run do
     let c kind? : Option CandidateKind × SearchControl := (kind?, .continue)
     let some tailPos := stx.getTailPos? (canonicalOnly := true)
       | return (none, .continue)

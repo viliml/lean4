@@ -112,7 +112,7 @@ def FooMap.get? (self : FooMap) (idx : Name) [FamilyOut FooFam idx α] : Option 
 
 family_def bar : FooFam `bar := Nat
 family_def baz : FooFam `baz := String
-def foo := Id.run do
+def foo := id.run do
   let mut map : FooMap := {}
   map := map.insert `bar 5
   map := map.insert `baz "str"

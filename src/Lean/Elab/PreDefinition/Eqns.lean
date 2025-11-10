@@ -238,7 +238,7 @@ def shouldUseSimpMatch (e : Expr) : MetaM Bool := do
 
 def findMatchToSplit? (deepRecursiveSplit : Bool) (env : Environment) (e : Expr)
     (declNames : Array Name) (exceptionSet : ExprSet) : Option Expr :=
-  e.findExt? fun e => Id.run do
+  e.findExt? fun e => id.run do
     if e.hasLooseBVars || exceptionSet.contains e then
       return Expr.FindStep.visit
     else if let some info := isMatcherAppCore? env e then

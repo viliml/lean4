@@ -320,7 +320,7 @@ can break congruence. The subtype is still used to provide the `insertMany_ind` 
 
 @[inline, inherit_doc DHashMap.insertMany]
 def insertMany [EquivBEq α] [LawfulHashable α] {ρ : Type w}
-    [ForIn Id ρ ((a : α) × β a)] (m : ExtDHashMap α β) (l : ρ) : ExtDHashMap α β := Id.run do
+    [ForIn Id ρ ((a : α) × β a)] (m : ExtDHashMap α β) (l : ρ) : ExtDHashMap α β := id.run do
   let mut m : { x // ∀ P : ExtDHashMap α β → Prop,
     P m → (∀ {m a b}, P m → P (m.insert a b)) → P x } := ⟨m, fun _ h _ => h⟩
   for ⟨a, b⟩ in l do
@@ -330,7 +330,7 @@ def insertMany [EquivBEq α] [LawfulHashable α] {ρ : Type w}
 @[inline, inherit_doc DHashMap.Const.insertMany]
 def Const.insertMany [EquivBEq α] [LawfulHashable α] {β : Type v} {ρ : Type w}
     [ForIn Id ρ (α × β)] (m : ExtDHashMap α (fun _ => β))
-    (l : ρ) : ExtDHashMap α (fun _ => β) := Id.run do
+    (l : ρ) : ExtDHashMap α (fun _ => β) := id.run do
   let mut m : { x // ∀ P : ExtDHashMap α (fun _ => β) → Prop,
     P m → (∀ {m a b}, P m → P (m.insert a b)) → P x } := ⟨m, fun _ h _ => h⟩
   for (a, b) in l do
@@ -340,7 +340,7 @@ def Const.insertMany [EquivBEq α] [LawfulHashable α] {β : Type v} {ρ : Type 
 @[inline, inherit_doc DHashMap.Const.insertManyIfNewUnit]
 def Const.insertManyIfNewUnit [EquivBEq α] [LawfulHashable α] {ρ : Type w}
     [ForIn Id ρ α] (m : ExtDHashMap α (fun _ => Unit))
-    (l : ρ) : ExtDHashMap α (fun _ => Unit) := Id.run do
+    (l : ρ) : ExtDHashMap α (fun _ => Unit) := id.run do
   let mut m : { x // ∀ P : ExtDHashMap α (fun _ => Unit) → Prop,
     P m → (∀ {m a}, P m → P (m.insertIfNew a ())) → P x } := ⟨m, fun _ h _ => h⟩
   for a in l do

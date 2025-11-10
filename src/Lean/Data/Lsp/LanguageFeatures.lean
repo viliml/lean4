@@ -129,7 +129,7 @@ structure ResolvableCompletionItemData where
   deriving BEq, Hashable
 
 instance : ToJson ResolvableCompletionItemData where
-  toJson d := Id.run do
+  toJson d := id.run do
     let mut arr : Array Json := #[
       toJson d.mod,
       d.pos.line,

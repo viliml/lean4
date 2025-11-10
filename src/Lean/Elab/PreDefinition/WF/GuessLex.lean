@@ -323,7 +323,7 @@ calls, and confusing in the output of GuessLex. So prune the list of recursive c
 and remove those where another call exists that has the same goal and context that is no more
 specific.
 -/
-def filterSubsumed (rcs : Array RecCallWithContext ) : Array RecCallWithContext := Id.run do
+def filterSubsumed (rcs : Array RecCallWithContext ) : Array RecCallWithContext := id.run do
   rcs.filterPairsM fun rci rcj => do
     if rci.caller == rcj.caller && rci.callee == rcj.callee &&
       rci.params == rcj.params && rci.args == rcj.args then
@@ -631,7 +631,7 @@ Given a matrix (row-major) of strings, arranges them in tabular form.
 First column is left-aligned, others right-aligned.
 Single space as column separator.
 -/
-def formatTable : Array (Array String) → String := fun xss => Id.run do
+def formatTable : Array (Array String) → String := fun xss => id.run do
   let mut colWidths := xss[0]!.map (fun _ => 0)
   for hi : i in *...xss.size do
     for hj : j in *...xss[i].size do

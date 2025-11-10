@@ -22,7 +22,7 @@ def isMatchCondCandidate (e : Expr) : Bool :=
 Given a splitter alternative, annotate the terms that are `match`-expression
 conditions corresponding to overlapping patterns.
 -/
-private def addMatchCondsToAlt (alt : Expr) : Expr := Id.run do
+private def addMatchCondsToAlt (alt : Expr) : Expr := id.run do
   let .forallE _ d b _ := alt
     | return alt
   let d := if isMatchCondCandidate d then markAsPreMatchCond d else d
@@ -32,7 +32,7 @@ private def addMatchCondsToAlt (alt : Expr) : Expr := Id.run do
 Annotates the `match`-expression conditions in the alternatives in the given
 `match` splitter type.
 -/
-private def addMatchCondsToSplitter (splitterType : Expr) (numAlts : Nat) : Expr := Id.run do
+private def addMatchCondsToSplitter (splitterType : Expr) (numAlts : Nat) : Expr := id.run do
   if numAlts == 0 then return splitterType
   let .forallE _ alt b _ := splitterType
     | return splitterType

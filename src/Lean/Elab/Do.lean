@@ -130,7 +130,7 @@ private partial def extractBind (expectedType? : Option Expr) : TermElabM Extrac
           | none => return none
   match (← extract? expectedType) with
   | some r => return r
-  | none   => throwError "invalid `do` notation, expected type is not a monad application{indentExpr expectedType}\nYou can use the `do` notation in pure code by writing `Id.run do` instead of `do`, where `Id` is the identity monad."
+  | none   => throwError "invalid `do` notation, expected type is not a monad application{indentExpr expectedType}\nYou can use the `do` notation in pure code by writing `id.run do` instead of `do`, where `Id` is the identity monad."
 
 namespace Do
 
@@ -153,7 +153,7 @@ structure AltExpr (σ : Type) where
   rhs     : σ
   deriving Inhabited
 
-def AltExpr.vars (alt : AltExpr σ) : Array Var := Id.run do
+def AltExpr.vars (alt : AltExpr σ) : Array Var := id.run do
   let mut vars := #[]
   if let some var := alt.var? then
     vars := vars.push var

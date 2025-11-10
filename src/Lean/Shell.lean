@@ -99,7 +99,7 @@ def shortVersionString : String :=
     versionStringCore
 
 /-- The full Lean version header (i.e, what is printed by `lean --version`). -/
-def versionHeader : String := Id.run do
+def versionHeader : String := id.run do
   let mut ver := shortVersionString
   if Platform.target ≠ "" then
     ver := s!"{ver}, {Platform.target}"

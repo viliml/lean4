@@ -419,7 +419,7 @@ def erase [BEq α] [Hashable α] (m : Raw₀ α β) (a : α) : Raw₀ α β :=
 /-- Internal implementation detail of the hash map -/
 def insertMany {ρ : Type w} [ForIn Id ρ ((a : α) × β a)] [BEq α] [Hashable α]
     (m : Raw₀ α β) (l : ρ) : { m' : Raw₀ α β // ∀ (P : Raw₀ α β → Prop),
-      (∀ {m'' a b}, P m'' → P (m''.insert a b)) → P m → P m' } := Id.run do
+      (∀ {m'' a b}, P m'' → P (m''.insert a b)) → P m → P m' } := id.run do
   let mut r : { m' : Raw₀ α β // ∀ (P : Raw₀ α β → Prop),
     (∀ {m'' a b}, P m'' → P (m''.insert a b)) → P m → P m' } := ⟨m, fun _ _ => id⟩
   for ⟨a, b⟩ in l do
@@ -429,7 +429,7 @@ def insertMany {ρ : Type w} [ForIn Id ρ ((a : α) × β a)] [BEq α] [Hashable
 /-- Internal implementation detail of the hash map -/
 @[inline] def insertManyIfNew {ρ : Type w} [ForIn Id ρ ((a : α) × β a)] [BEq α] [Hashable α]
     (m : Raw₀ α β) (l : ρ) : { m' : Raw₀ α β // ∀ (P : Raw₀ α β → Prop),
-      (∀ {m'' a b}, P m'' → P (m''.insertIfNew a b)) → P m → P m' } := Id.run do
+      (∀ {m'' a b}, P m'' → P (m''.insertIfNew a b)) → P m → P m' } := id.run do
   let mut r : { m' : Raw₀ α β // ∀ (P : Raw₀ α β → Prop),
     (∀ {m'' a b}, P m'' → P (m''.insertIfNew a b)) → P m → P m' } := ⟨m, fun _ _ => id⟩
   for ⟨a, b⟩ in l do
@@ -487,7 +487,7 @@ def Const.get! [BEq α] [Hashable α] [Inhabited β] (m : Raw₀ α (fun _ => β
 def Const.insertMany {ρ : Type w} [ForIn Id ρ (α × β)] [BEq α] [Hashable α]
     (m : Raw₀ α (fun _ => β)) (l : ρ) :
     { m' : Raw₀ α (fun _ => β) // ∀ (P : Raw₀ α (fun _ => β) → Prop),
-      (∀ {m'' a b}, P m'' → P (m''.insert a b)) → P m → P m' } := Id.run do
+      (∀ {m'' a b}, P m'' → P (m''.insert a b)) → P m → P m' } := id.run do
   let mut r : { m' : Raw₀ α (fun _ => β) // ∀ (P : Raw₀ α (fun _ => β) → Prop),
     (∀ {m'' a b}, P m'' → P (m''.insert a b)) → P m → P m' } := ⟨m, fun _ _ => id⟩
   for (a, b) in l do
@@ -498,7 +498,7 @@ def Const.insertMany {ρ : Type w} [ForIn Id ρ (α × β)] [BEq α] [Hashable �
 def Const.insertManyIfNewUnit {ρ : Type w} [ForIn Id ρ α] [BEq α] [Hashable α]
     (m : Raw₀ α (fun _ => Unit)) (l : ρ) :
     { m' : Raw₀ α (fun _ => Unit) // ∀ (P : Raw₀ α (fun _ => Unit) → Prop),
-      (∀ {m'' a b}, P m'' → P (m''.insertIfNew a b)) → P m → P m' } := Id.run do
+      (∀ {m'' a b}, P m'' → P (m''.insertIfNew a b)) → P m → P m' } := id.run do
   let mut r : { m' : Raw₀ α (fun _ => Unit) // ∀ (P : Raw₀ α (fun _ => Unit) → Prop),
     (∀ {m'' a b}, P m'' → P (m''.insertIfNew a b)) → P m → P m' } := ⟨m, fun _ _ => id⟩
   for a in l do

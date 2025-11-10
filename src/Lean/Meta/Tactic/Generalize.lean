@@ -146,7 +146,7 @@ def _root_.Lean.MVarId.generalizeHyp (mvarId : MVarId) (args : Array GeneralizeA
   let (reverted, mvarId) ← mvarId.revert hyps true
   let (newVars, mvarId) ← mvarId.generalize args transparency
   let (reintros, mvarId) ← mvarId.introNP reverted.size
-  let fvarSubst := Id.run do
+  let fvarSubst := id.run do
     let mut subst : FVarSubst := fvarSubst
     for h in reverted, reintro in reintros do
       subst := subst.insert h (mkFVar reintro)

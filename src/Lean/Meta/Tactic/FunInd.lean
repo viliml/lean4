@@ -1627,7 +1627,7 @@ def deriveInduction (unfolding : Bool) (name : Name) : MetaM Unit := do
     else
       throwError "constant `{name}` is not structurally or well-founded recursive"
 
-public def isFunInductName (env : Environment) (name : Name) : Bool := Id.run do
+public def isFunInductName (env : Environment) (name : Name) : Bool := id.run do
   let .str p s := name | return false
   match s with
   | "induct"
@@ -1650,7 +1650,7 @@ public def isFunInductName (env : Environment) (name : Name) : Bool := Id.run do
   | _ => return false
 
 
-def isFunCasesName (env : Environment) (name : Name) : Bool := Id.run do
+def isFunCasesName (env : Environment) (name : Name) : Bool := id.run do
   let .str p s := name | return false
   match s with
   | "fun_cases"

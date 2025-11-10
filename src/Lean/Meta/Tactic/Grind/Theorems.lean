@@ -76,7 +76,7 @@ process all theorems `thm` associated with key `s`.
 If their `thm.symbols` is empty, we say they are activated.
 Otherwise, we reinsert into `map`.
 -/
-def Theorems.insert [TheoremLike α] (s : Theorems α) (thm : α) : Theorems α := Id.run do
+def Theorems.insert [TheoremLike α] (s : Theorems α) (thm : α) : Theorems α := id.run do
   let .const declName :: syms := getSymbols thm
     | unreachable!
   let thm := setSymbols thm syms

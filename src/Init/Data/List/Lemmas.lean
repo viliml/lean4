@@ -2520,26 +2520,24 @@ theorem flatten_reverse {L : List (List α)} :
   induction l generalizing b <;> simp [*]
 
 theorem foldl_eq_foldlM {f : β → α → β} {b : β} {l : List α} :
-    l.foldl f b = (l.foldlM (m := Id) (pure <| f · ·) b).run := by
-  simp
+    l.foldl f b = (l.foldlM (m := id) f b).run := foldlM_pure (m := id) |>.symm
 
 theorem foldr_eq_foldrM {f : α → β → β} {b : β} {l : List α} :
-    l.foldr f b = (l.foldrM (m := Id) (pure <| f · ·) b).run := by
-  simp
+    l.foldr f b = (l.foldrM (m := id) f b).run := foldrM_pure (m := id) |>.symm
 
-theorem idRun_foldlM {f : β → α → Id β} {b : β} {l : List α} :
-    Id.run (l.foldlM f b) = l.foldl (f · · |>.run) b := foldl_eq_foldlM.symm
+-- theorem idRun_foldlM {f : β → α → Id β} {b : β} {l : List α} :
+--     Id.run (l.foldlM f b) = l.foldl (f · · |>.run) b := foldl_eq_foldlM.symm
 
-@[deprecated idRun_foldlM (since := "2025-05-21")]
-theorem id_run_foldlM {f : β → α → Id β} {b : β} {l : List α} :
-    Id.run (l.foldlM f b) = l.foldl f b := foldl_eq_foldlM.symm
+-- @[deprecated idRun_foldlM (since := "2025-05-21")]
+-- theorem id_run_foldlM {f : β → α → Id β} {b : β} {l : List α} :
+--     Id.run (l.foldlM f b) = l.foldl f b := foldl_eq_foldlM.symm
 
-theorem idRun_foldrM {f : α → β → Id β} {b : β} {l : List α} :
-    Id.run (l.foldrM f b) = l.foldr (f · · |>.run) b := foldr_eq_foldrM.symm
+-- theorem idRun_foldrM {f : α → β → Id β} {b : β} {l : List α} :
+--     Id.run (l.foldrM f b) = l.foldr (f · · |>.run) b := foldr_eq_foldrM.symm
 
-@[deprecated idRun_foldrM (since := "2025-05-21")]
-theorem id_run_foldrM {f : α → β → Id β} {b : β} {l : List α} :
-    Id.run (l.foldrM f b) = l.foldr f b := foldr_eq_foldrM.symm
+-- @[deprecated idRun_foldrM (since := "2025-05-21")]
+-- theorem id_run_foldrM {f : α → β → Id β} {b : β} {l : List α} :
+--     Id.run (l.foldrM f b) = l.foldr f b := foldr_eq_foldrM.symm
 
 @[simp] theorem foldlM_reverse [Monad m] {l : List α} {f : β → α → m β} {b : β} :
     l.reverse.foldlM f b = l.foldrM (fun x y => f y x) b := rfl

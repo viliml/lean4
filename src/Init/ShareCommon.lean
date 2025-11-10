@@ -96,7 +96,7 @@ abbrev shareCommonM [MonadShareCommon m] (a : α) : m α :=
   withShareCommon a
 
 abbrev ShareCommonT (σ) (m : Type u → Type v) := StateT (ShareCommon.State σ) m
-abbrev ShareCommonM (σ) := ShareCommonT σ Id
+abbrev ShareCommonM (σ) := ShareCommonT σ id
 
 @[specialize] def ShareCommonT.withShareCommon [Monad m] (a : α) : ShareCommonT σ m α :=
   modifyGet fun s => s.shareCommon a

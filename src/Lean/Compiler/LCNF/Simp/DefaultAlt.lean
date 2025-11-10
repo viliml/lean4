@@ -19,7 +19,7 @@ and the number of occurrences.
 We use this function to decide whether to create a `.default` case
 or not.
 -/
-private def getMaxOccs (alts : Array Alt) : Alt × Nat := Id.run do
+private def getMaxOccs (alts : Array Alt) : Alt × Nat := id.run do
   let mut maxAlt := alts[0]!
   let mut max    := getNumOccsOf alts 0
   for h : i in 1...alts.size do
@@ -35,7 +35,7 @@ where
   Note that the number of occurrences can be greater than 1 only when
   the alternative does not depend on field parameters
   -/
-  getNumOccsOf (alts : Array Alt) (i : Nat) : Nat := Id.run do
+  getNumOccsOf (alts : Array Alt) (i : Nat) : Nat := id.run do
     let code := alts[i]!.getCode
     let mut n := 1
     for h : j in (i+1)...alts.size do

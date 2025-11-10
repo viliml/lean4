@@ -37,7 +37,7 @@ public def mkMessageStringCore
   (fileName caption body : String)
   (pos : Position) (endPos? : Option Position := none)
   (infoWithPos := false)
-: String := Id.run do
+: String := id.run do
   let mut str := body
   unless caption == "" do
     str := caption ++ ":\n" ++ str

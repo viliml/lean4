@@ -499,11 +499,11 @@ private partial def AsyncConsts.findRec? (aconsts : AsyncConsts) (declName : Nam
   AsyncConsts.findRec? aconsts declName
 
 /-- Like `findRec?`; allocating tasks is (currently?) too costly to do always. -/
-private partial def AsyncConsts.findRecTask (aconsts : AsyncConsts) (declName : Name) : Task (Option AsyncConst) := Id.run do
+private partial def AsyncConsts.findRecTask (aconsts : AsyncConsts) (declName : Name) : Task (Option AsyncConst) := id.run do
   let some c := aconsts.findPrefix? declName | .pure none
   if c.constInfo.name == declName then
     return .pure c
-  c.aconsts.bind (sync := true) fun aconsts => Id.run do
+  c.aconsts.bind (sync := true) fun aconsts => id.run do
     AsyncConsts.findRecTask aconsts declName
 
 /-- Like `findRec?` but also returns the constant that has `declName` in its `consts`, if any. -/
@@ -778,7 +778,7 @@ private def findAsyncCore? (env : Environment) (n : Name) (skipRealize := false)
 
 /-- Like `findAsyncCore?`; allocating tasks is (currently?) too costly to do always. -/
 private def findTaskCore (env : Environment) (n : Name) (skipRealize := false) :
-    Task (Option AsyncConstantInfo) := Id.run do
+    Task (Option AsyncConstantInfo) := id.run do
   if let some c := env.asyncConsts.find? n then
     -- Constant for which an asynchronous elaboration task was spawned
     -- (this is an optimized special case of the next branch)
@@ -787,7 +787,7 @@ private def findTaskCore (env : Environment) (n : Name) (skipRealize := false) :
   | some c =>
     -- Constant generated in a different environment branch
     .pure c.constInfo
-  | _ => Id.run do
+  | _ => id.run do
     if isReservedName env n && !skipRealize then
       return env.allRealizations.map (sync := true) fun allRealizations => do
         if let some c := allRealizations.find? n then
@@ -818,7 +818,7 @@ def findAsync? (env : Environment) (n : Name) (skipRealize := false) : Option As
   findAsyncCore? (skipRealize := skipRealize) env n
 
 /-- Like `findAsync?` but returns a task instead of resorting to blocking. -/
-def findTask (env : Environment) (n : Name) (skipRealize := false) : Task (Option AsyncConstantInfo) := Id.run do
+def findTask (env : Environment) (n : Name) (skipRealize := false) : Task (Option AsyncConstantInfo) := id.run do
   -- Avoid going through `AsyncConstantInfo` for `base` access
   if let some c := env.base.get env |>.constants.map₁[n]? then
     return .pure <| some <| .ofConstantInfo c
@@ -1145,7 +1145,7 @@ not block.
 def containsOnBranch (env : Environment) (n : Name) : Bool :=
   (env.asyncConsts.find? n |>.isSome) || (env.base.get env).constants.contains n
 
-def setMainModule (env : Environment) (m : Name) : Environment := Id.run do
+def setMainModule (env : Environment) (m : Name) : Environment := id.run do
   let env := env.modifyCheckedAsync ({ · with
     header.mainModule := m
   })
@@ -1369,7 +1369,7 @@ Note that in modes `sync` and `async`, `f` will be called twice, on the local an
 state.
 -/
 def modifyState {σ : Type} (ext : EnvExtension σ) (env : Environment) (f : σ → σ)
-    (asyncMode := ext.asyncMode) (asyncDecl : Name := .anonymous) : Environment := Id.run do
+    (asyncMode := ext.asyncMode) (asyncDecl : Name := .anonymous) : Environment := id.run do
   -- for panics
   let _ : Inhabited Environment := ⟨env⟩
   -- safety: `ext`'s constructor is private, so we can assume the entry at `ext.idx` is of type `σ`
@@ -1406,7 +1406,7 @@ def setState {σ : Type} (ext : EnvExtension σ) (env : Environment) (s : σ) (a
 
 -- `unsafe` fails to infer `Nonempty` here
 private unsafe def getStateUnsafe {σ : Type} [Inhabited σ] (ext : EnvExtension σ)
-    (env : Environment) (asyncMode := ext.asyncMode) (asyncDecl : Name := .anonymous) : σ := Id.run do
+    (env : Environment) (asyncMode := ext.asyncMode) (asyncDecl : Name := .anonymous) : σ := id.run do
   -- safety: `ext`'s constructor is private, so we can assume the entry at `ext.idx` is of type `σ`
   match asyncMode with
   | .sync => ext.getStateImpl env.checked.get.extensions
@@ -1773,7 +1773,7 @@ private opaque getIRExtraConstNames (env : Environment) (level : OLeanLevel) (in
 def mkModuleData (env : Environment) (level : OLeanLevel := .private) : IO ModuleData := do
   let env := env.setExporting (level != .private)
   let pExts ← persistentEnvExtensionsRef.get
-  let entries := pExts.map fun pExt => Id.run do
+  let entries := pExts.map fun pExt => id.run do
     -- get state from `checked` at the end if `async`; it would otherwise panic
     let mut asyncMode := pExt.toEnvExtension.asyncMode
     if asyncMode matches .async _ then
@@ -1960,7 +1960,7 @@ structure ImportState where
 deriving Inhabited
 
 /-- Bumps all modules' `isExported` flag to true, intended for use in `shake` only. -/
-def ImportState.markAllExported (self : ImportState) : ImportState := Id.run do
+def ImportState.markAllExported (self : ImportState) : ImportState := id.run do
   let mut self := self
   for (k, v) in self.moduleNameMap do
     unless v.isExported do
@@ -2165,7 +2165,7 @@ where
   Check if `ty = ∀ ..., p xs...` and `p : ∀ args..., Prop` where `xs` and `args` are of the same
   length.
   -/
-  isPropCheap (ty : Expr) : Bool := Id.run do
+  isPropCheap (ty : Expr) : Bool := id.run do
     let mut ty := ty
     while ty.isForall do
       let .forallE (body := body) .. := ty | return false
@@ -2199,7 +2199,7 @@ def finalizeImport (s : ImportState) (imports : Array Import) (opts : Options) (
     numPrivateConsts + data.constants.size
   let numPrivateConsts := irData.foldl (init := numPrivateConsts) fun numPrivateConsts data =>
     numPrivateConsts + data.extraConstNames.size
-  let numPublicConsts := modules.foldl (init := 0) fun numPublicConsts mod => Id.run do
+  let numPublicConsts := modules.foldl (init := 0) fun numPublicConsts mod => id.run do
     if !mod.isExported then numPublicConsts else
       let some data := mod.publicModule? | numPublicConsts
       numPublicConsts + data.constants.size

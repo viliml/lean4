@@ -17,7 +17,7 @@ open Elab
 
 private def filterDuplicateCompletionItems
     (items : Array ResolvableCompletionItem)
-    : Array ResolvableCompletionItem := Id.run do
+    : Array ResolvableCompletionItem := id.run do
   let mut r : Array ResolvableCompletionItem := #[]
   let mut index : Std.HashSet (String × Option InsertReplaceEdit) := ∅
   for i in items do

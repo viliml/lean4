@@ -226,7 +226,7 @@ where
 
   determineLastEditTimestamp? (oldInlayHints : Array Elab.InlayHintInfo) : RequestM (Option Nat) := do
     let text := (← read).doc.meta.text
-    let isInlayHintInsertionEdit := p.contentChanges.all fun c => Id.run do
+    let isInlayHintInsertionEdit := p.contentChanges.all fun c => id.run do
       let .rangeChange changeRange newText := c
         | return false
       let changeRange := text.lspRangeToUtf8Range changeRange

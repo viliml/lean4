@@ -197,7 +197,7 @@ def subset : KVMap → KVMap → Bool
   | ⟨m₁⟩, m₂ => subsetAux m₁ m₂
 
 def mergeBy (mergeFn : Name → DataValue → DataValue → DataValue) (l r : KVMap)
-    : KVMap := Id.run do
+    : KVMap := id.run do
   let mut result := l
   for ⟨k, vᵣ⟩ in r do
     if let some vₗ := result.find k then

@@ -181,7 +181,7 @@ opaque Expr.mkAppData (fData : Data) (aData : Data) : Data
   Expr.mkData h looseBVarRange approxDepth hasFVar hasExprMVar hasLevelMVar hasLevelParam
 
 instance : Repr Expr.Data where
-  reprPrec v prec := Id.run do
+  reprPrec v prec := id.run do
     let mut r := "Expr.mkData " ++ toString v.hash
     if v.looseBVarRange != 0 then
       r := r ++ " (looseBVarRange := " ++ toString v.looseBVarRange ++ ")"

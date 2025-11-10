@@ -23,7 +23,7 @@ public structure ModuleOutputDescrs where
   c : ArtifactDescr
   bc? : Option ArtifactDescr := none
 
-public def ModuleOutputDescrs.oleanParts (self : ModuleOutputDescrs) : Array ArtifactDescr := Id.run do
+public def ModuleOutputDescrs.oleanParts (self : ModuleOutputDescrs) : Array ArtifactDescr := id.run do
   let mut descrs := #[self.olean]
   if let some hash := self.oleanServer? then
     descrs := descrs.push hash
@@ -31,7 +31,7 @@ public def ModuleOutputDescrs.oleanParts (self : ModuleOutputDescrs) : Array Art
     descrs := descrs.push hash
   return descrs
 
-public protected def ModuleOutputDescrs.toJson (self : ModuleOutputDescrs) : Json := Id.run do
+public protected def ModuleOutputDescrs.toJson (self : ModuleOutputDescrs) : Json := id.run do
   let mut obj : JsonObject := {}
   obj := obj.insert "o" self.oleanParts
   obj := obj.insert "i" self.ilean

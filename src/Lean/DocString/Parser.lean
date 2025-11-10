@@ -18,7 +18,7 @@ open Lean.Doc.Syntax
 local instance : Coe Char ParserFn where
   coe := chFn
 
-private partial def atLeastAux (n : Nat) (p : ParserFn) : ParserFn := fun c s => Id.run do
+private partial def atLeastAux (n : Nat) (p : ParserFn) : ParserFn := fun c s => id.run do
   let iniSz  := s.stackSize
   let iniPos := s.pos
   let mut s  := p c s
@@ -56,7 +56,7 @@ partial def satisfyFn' (p : Char → Bool)
   else s.mkUnexpectedError errorMsg
 
 private partial def atMostAux (n : Nat) (p : ParserFn) (msg : String) : ParserFn :=
-  fun c s => Id.run do
+  fun c s => id.run do
     let iniSz  := s.stackSize
     let iniPos := s.pos
     if n == 0 then return notFollowedByFn p msg c s
@@ -121,7 +121,7 @@ private def withInfoSyntaxFn (p : ParserFn) (infoP : SourceInfo → ParserFn) : 
   let info     := SourceInfo.original leading startPos trailing stopPos
   infoP info c (s.shrinkStack iniSz)
 
-private def unescapeStr (str : String) : String := Id.run do
+private def unescapeStr (str : String) : String := id.run do
   let mut out := ""
   let mut iter := str.iter
   while !iter.atEnd do
@@ -200,7 +200,7 @@ nestable block openers
 private def onlyBlockOpeners : ParserFn := fun c s =>
   let position := c.fileMap.toPosition s.pos
   let lineStart := c.fileMap.lineStart position.line
-  let ok : Bool := Id.run do
+  let ok : Bool := id.run do
     let mut iter := {c.inputString.iter with i := lineStart}
     while iter.i < s.pos && iter.hasNext && iter.i < c.endPos do
       if iter.curr.isDigit then
@@ -1044,7 +1044,7 @@ mutual
           s.mkError s!"Internal error - not a Nat {col}"
       | other => s.mkError s!"Internal error - not a column node {other}"
 
-    deIndent (n : Nat) (str : String) : String := Id.run do
+    deIndent (n : Nat) (str : String) : String := id.run do
       let str := if str != "" && str.back == '\n' then str.dropRight 1 else str
       let mut out := ""
       for line in str.splitOn "\n" do

@@ -240,7 +240,7 @@ Examples:
 -/
 @[inline]
 def foldr {β : Type v} (f : UInt8 → β → β) (init : β) (as : ByteSlice) : β :=
-  Id.run <| as.foldrM (pure <| f · ·) (init := init)
+  id.run <| as.foldrM f (init := init)
 
 /--
 Creates a sub-slice of the byte slice with the given bounds.

@@ -35,7 +35,7 @@ partial def mkAdmProj (packedInst : Expr) (i : Nat) (e : Expr) : MetaM Expr := d
     assert! i == 0
     return e
 
-def CCPOProdProjs (n : Nat) (inst : Expr) : Array Expr := Id.run do
+def CCPOProdProjs (n : Nat) (inst : Expr) : Array Expr := id.run do
   let mut insts := #[inst]
   while insts.size < n do
     let inst := insts.back!
@@ -93,7 +93,7 @@ def unfoldPredRelMutual (eqnInfo : EqnInfo) (body : Expr) (reduceConclusion : Bo
 
 /-- `maskArray mask xs` keeps those `x` where the corresponding entry in `mask` is `true` -/
 -- Worth having in the standard library?
-private def maskArray {α} (mask : Array Bool) (xs : Array α) : Array α := Id.run do
+private def maskArray {α} (mask : Array Bool) (xs : Array α) : Array α := id.run do
   let mut ys := #[]
   for b in mask, x in xs do
     if b then ys := ys.push x
@@ -277,7 +277,7 @@ def deriveInduction (name : Name) (isMutual : Bool) : MetaM Unit := do
 
     addDecl <| (←mkThmOrUnsafeDef { name := inductName, levelParams := us, type := eTyp, value := e' })
 
-def isInductName (env : Environment) (name : Name) : Bool := Id.run do
+def isInductName (env : Environment) (name : Name) : Bool := id.run do
   let .str p s := name | return false
   match s with
   | "fixpoint_induct" =>
@@ -335,7 +335,7 @@ def isOptionFixpoint (env : Environment) (name : Name) : Bool := Option.isSome d
       inst := inst.appArg!.bindingBody!
     guard <| inst.isAppOfArity ``instCCPOOption 1
 
-def isPartialCorrectnessName (env : Environment) (name : Name) : Bool := Id.run do
+def isPartialCorrectnessName (env : Environment) (name : Name) : Bool := id.run do
   let .str p s := name | return false
   match s with
   | "partial_correctness" => return isOptionFixpoint env p

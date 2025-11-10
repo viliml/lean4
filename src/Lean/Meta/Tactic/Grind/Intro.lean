@@ -182,7 +182,7 @@ private partial def introNext (goal : Goal) (generation : Nat) : GrindM IntroRes
     else
       return .done goal
 
-private def isEagerCasesCandidate (goal : Goal) (type : Expr) : Bool := Id.run do
+private def isEagerCasesCandidate (goal : Goal) (type : Expr) : Bool := id.run do
   let .const declName _ := type.getAppFn | return false
   return goal.split.casesTypes.isEagerSplit declName
 

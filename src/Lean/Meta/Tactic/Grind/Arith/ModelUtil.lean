@@ -20,7 +20,7 @@ Helper functions for constructing counterexamples in the `linarith` and `cutsat`
 /--
 Returns `true` if adding the assignment `e := v` to `a` will falsify any asserted disequality in core.
 -/
-private partial def satisfyDiseqs (goal : Goal) (a : Std.HashMap Expr Rat) (e : Expr) (v : Int) : Bool := Id.run do
+private partial def satisfyDiseqs (goal : Goal) (a : Std.HashMap Expr Rat) (e : Expr) (v : Int) : Bool := id.run do
   let some parents := goal.parents.find? { expr := e } | return true
   for parent in parents do
     let_expr Eq _ lhs rhs := parent | continue
@@ -65,7 +65,7 @@ def isInterpretedTerm (e : Expr) : Bool :=
 /--
 Adds the assignments `e' := v` to `a` for each `e'` in the equivalence class os `e`.
 -/
-def assignEqc (goal : Goal) (e : Expr) (v : Rat) (a : Std.HashMap Expr Rat) : Std.HashMap Expr Rat := Id.run do
+def assignEqc (goal : Goal) (e : Expr) (v : Rat) (a : Std.HashMap Expr Rat) : Std.HashMap Expr Rat := id.run do
   let mut a := a
   for e in goal.getEqc e do
     a := a.insert e v

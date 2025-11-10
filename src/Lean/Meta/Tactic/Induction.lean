@@ -221,7 +221,7 @@ def _root_.Lean.MVarId.induction (mvarId : MVarId) (majorFVarId : FVarId) (recur
       let (indices', mvarId) ← mvarId.introNP indices.size
       let (majorFVarId', mvarId) ← mvarId.intro1P
       -- Create FVarSubst with indices
-      let baseSubst := Id.run do
+      let baseSubst := id.run do
         let mut subst : FVarSubst := {}
         let mut i := 0
         for index in indices do

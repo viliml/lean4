@@ -46,7 +46,7 @@ def waitUnknownIdentifierRanges (doc : EditableDocument) (requestedRange : Strin
     ranges := ranges.push msgRange
   let isAnyUnknownIdentifierMessage := ! ranges.isEmpty
   let autoImplicitUsages : ServerTask (Std.TreeSet String.Range compareRanges) :=
-    tree.foldInfosInRange requestedRange ∅ fun ctx i acc => Id.run do
+    tree.foldInfosInRange requestedRange ∅ fun ctx i acc => id.run do
       let .ofTermInfo ti := i
         | return acc
       let some r := ti.stx.getRange? (canonicalOnly := true)
@@ -74,7 +74,7 @@ def waitAllUnknownIdentifierMessageRanges (doc : EditableDocument)
   let (cmdSnaps, _) := doc.cmdSnaps.waitAll.get
   for snap in cmdSnaps do
     let autoImplicitUsages : Std.TreeSet String.Range compareRanges :=
-      snap.infoTree.foldInfo (init := ∅) fun ctx i acc => Id.run do
+      snap.infoTree.foldInfo (init := ∅) fun ctx i acc => id.run do
         let .ofTermInfo ti := i
           | return acc
         let some r := ti.stx.getRange? (canonicalOnly := true)
@@ -96,7 +96,7 @@ structure Query extends LeanModuleQuery where
   determineInsertion : Name → Insertion
 
 partial def collectOpenNamespaces (currentNamespace : Name) (openDecls : List OpenDecl)
-    : Array OpenNamespace := Id.run do
+    : Array OpenNamespace := id.run do
   let mut openNamespaces : Array OpenNamespace := #[]
   let mut currentNamespace := currentNamespace
   while ! currentNamespace.isAnonymous do

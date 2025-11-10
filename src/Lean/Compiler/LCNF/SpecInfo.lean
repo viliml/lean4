@@ -133,7 +133,7 @@ and `k` is tagged as `.user`, `.fixedHO`, or `.fixedInst`.
 
 See comment at `.fixedNeutral`.
 -/
-private def hasFwdDeps (decl : Decl) (paramsInfo : Array SpecParamInfo) (j : Nat) : Bool := Id.run do
+private def hasFwdDeps (decl : Decl) (paramsInfo : Array SpecParamInfo) (j : Nat) : Bool := id.run do
   let param := decl.params[j]!
   for h : k in (j+1)...decl.params.size do
     if paramsInfo[k]! matches .user | .fixedHO | .fixedInst then

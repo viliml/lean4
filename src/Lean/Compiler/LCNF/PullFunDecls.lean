@@ -83,7 +83,7 @@ def ToPull.attach (p : ToPull) (k : Code) : Code :=
 /--
 Attach the given array of local function declarations and join points to `k`.
 -/
-partial def attach (ps : Array ToPull) (k : Code) : Code := Id.run do
+partial def attach (ps : Array ToPull) (k : Code) : Code := id.run do
   let visited := ps.map fun _ => false
   let (_, (k, _)) := go |>.run (k, visited)
   return k

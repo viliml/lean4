@@ -28,7 +28,7 @@ The comment marker is always added at the indicated indentation. If the content 
 least as indented, then its relative indentation is preserved. Otherwise, it's placed just after the
 line comment marker.
 -/
-private def addCommentAt (indent : Nat) (line : String) : String := Id.run do
+private def addCommentAt (indent : Nat) (line : String) : String := id.run do
   let s := "".pushn ' ' indent ++ "-- "
   let mut iter := line.iter
   for _i in *...indent do
@@ -51,7 +51,7 @@ private def addCommentAt (indent : Nat) (line : String) : String := Id.run do
 /--
 Splits a string into lines, preserving newline characters.
 -/
-private def lines (s : String) : Array String := Id.run do
+private def lines (s : String) : Array String := id.run do
   let mut result := #[]
   let mut lineStart := s.iter
   let mut iter := lineStart
@@ -82,7 +82,7 @@ not typically distinguish between code block classes, so some other visual indic
 separate them. This function is not based on a compliant Markdown parser and may give unpredictable
 results when used with invalid Markdown.
 -/
-def rewriteExamples (docstring : String) : String := Id.run do
+def rewriteExamples (docstring : String) : String := id.run do
   let lines := lines docstring
   let mut result : String := ""
   -- The current state, which tracks the context of the line being processed

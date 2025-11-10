@@ -35,7 +35,7 @@ A code action which calls all `@[hole_code_action]` code actions on each hole
   let doc ← readDoc
   let startPos := doc.meta.text.lspPosToUtf8Pos params.range.start
   let endPos := doc.meta.text.lspPosToUtf8Pos params.range.end
-  have holes := snap.infoTree.foldInfo (init := #[]) fun ctx info result => Id.run do
+  have holes := snap.infoTree.foldInfo (init := #[]) fun ctx info result => id.run do
     let .ofTermInfo info := info | result
     unless [``elabHole, ``elabSyntheticHole, ``elabSorry].contains info.elaborator do
       return result
@@ -115,7 +115,7 @@ where
       let argIdx := if bracket then 1 else 0
       let (stack, stx) := ((stx[0], argIdx) :: (stx, 0) :: stack, stx[0][argIdx])
       let mainRes := stx[0].getPos?.map fun pos =>
-        let i := Id.run do
+        let i := id.run do
           for i in *...stx.getNumArgs do
             if let some pos' := stx[2*i].getPos? then
               if range.stop < pos' then
@@ -174,7 +174,7 @@ A code action which calls all `@[command_code_action]` code actions on each comm
   let doc ← readDoc
   let startPos := doc.meta.text.lspPosToUtf8Pos params.range.start
   let endPos := doc.meta.text.lspPosToUtf8Pos params.range.end
-  have cmds := snap.infoTree.foldInfoTree (init := #[]) fun ctx node result => Id.run do
+  have cmds := snap.infoTree.foldInfoTree (init := #[]) fun ctx node result => id.run do
     let .node (.ofCommandInfo info) _ := node | result
     let (some head, some tail) := (info.stx.getPos? true, info.stx.getTailPos? true) | result
     unless head ≤ endPos && startPos ≤ tail do return result

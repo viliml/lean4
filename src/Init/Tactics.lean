@@ -2236,7 +2236,7 @@ this must hold at the end of the loop" by looking at the corresponding VCs.
 Although the suggested invariant is a good starting point, it is too strong and requires users to
 interpolate it such that the inductive step can be proved. Example:
 ```
-def mySum (l : List Nat) : Nat := Id.run do
+def mySum (l : List Nat) : Nat := id.run do
   let mut acc := 0
   for x in l do
     acc := acc + x

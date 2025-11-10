@@ -14,33 +14,33 @@ public section
 
 namespace Std.Iterators
 
-variable {α β γ : Type w} [Iterator α Id β] {it : Iter (α := α) β}
+variable {α β γ : Type w} [Iterator α id β] {it : Iter (α := α) β}
     {m : Type w → Type w'} {n : Type w → Type w''}
 
 theorem Iter.filterMapWithPostcondition_eq_toIter_filterMapWithPostcondition_toIterM [Monad m]
     {f : β → PostconditionT m (Option γ)} :
-    it.filterMapWithPostcondition f = (letI : MonadLift Id m := ⟨pure⟩; it.toIterM.filterMapWithPostcondition f) :=
+    it.filterMapWithPostcondition f = (letI : MonadLift id m := ⟨pure⟩; it.toIterM.filterMapWithPostcondition f) :=
   rfl
 
 theorem Iter.filterWithPostcondition_eq_toIter_filterMapWithPostcondition_toIterM [Monad m]
     {f : β → PostconditionT m (ULift Bool)} :
-    it.filterWithPostcondition f = (letI : MonadLift Id m := ⟨pure⟩; it.toIterM.filterWithPostcondition f) :=
+    it.filterWithPostcondition f = (letI : MonadLift id m := ⟨pure⟩; it.toIterM.filterWithPostcondition f) :=
   rfl
 
 theorem Iter.mapWithPostcondition_eq_toIter_mapWithPostcondition_toIterM [Monad m] {f : β → PostconditionT m γ} :
-    it.mapWithPostcondition f = (letI : MonadLift Id m := ⟨pure⟩; it.toIterM.mapWithPostcondition f) :=
+    it.mapWithPostcondition f = (letI : MonadLift id m := ⟨pure⟩; it.toIterM.mapWithPostcondition f) :=
   rfl
 
 theorem Iter.filterMapM_eq_toIter_filterMapM_toIterM [Monad m] {f : β → m (Option γ)} :
-    it.filterMapM f = (letI : MonadLift Id m := ⟨pure⟩; it.toIterM.filterMapM f) :=
+    it.filterMapM f = (letI : MonadLift id m := ⟨pure⟩; it.toIterM.filterMapM f) :=
   rfl
 
 theorem Iter.filterM_eq_toIter_filterM_toIterM [Monad m] {f : β → m (ULift Bool)} :
-    it.filterM f = (letI : MonadLift Id m := ⟨pure⟩; it.toIterM.filterM f) :=
+    it.filterM f = (letI : MonadLift id m := ⟨pure⟩; it.toIterM.filterM f) :=
   rfl
 
 theorem Iter.mapM_eq_toIter_mapM_toIterM [Monad m] {f : β → m γ} :
-    it.mapM f = (letI : MonadLift Id m := ⟨pure⟩; it.toIterM.mapM f) :=
+    it.mapM f = (letI : MonadLift id m := ⟨pure⟩; it.toIterM.mapM f) :=
   rfl
 
 theorem Iter.filterMap_eq_toIter_filterMap_toIterM {f : β → Option γ} :
@@ -208,8 +208,8 @@ theorem Iter.step_filterMap {f : β → Option γ} :
       | .skip it' h => .skip (it'.filterMap f) (.skip h)
       | .done h => .done (.done h) := by
   simp only [filterMap_eq_toIter_filterMap_toIterM, toIterM_toIter, IterM.step_filterMap, step]
-  simp only [monadLift, Id.run_bind]
-  generalize it.toIterM.step.run = step
+  simp only [monadLift, id.bind_eq]
+  generalize it.toIterM.step = step
   cases step.inflate using PlausibleIterStep.casesOn
   · simp only [IterM.Step.toPure_yield, toIter_toIterM, toIterM_toIter]
     split <;> split <;> (try exfalso; simp_all; done)
@@ -247,8 +247,8 @@ theorem Iter.step_map {f : β → γ} :
         .skip (it'.map f) (.skip h)
       | .done h =>
         .done (.done h) := by
-  simp only [map_eq_toIter_map_toIterM, step, toIterM_toIter, IterM.step_map, Id.run_bind]
-  generalize it.toIterM.step.run = step
+  simp only [map_eq_toIter_map_toIterM, step, toIterM_toIter, IterM.step_map, id.bind_eq]
+  generalize it.toIterM.step = step
   cases step.inflate using PlausibleIterStep.casesOn <;> simp
 
 def Iter.step_filter {f : β → Bool} :
@@ -262,8 +262,8 @@ def Iter.step_filter {f : β → Bool} :
         .skip (it'.filter f) (.skip h)
       | .done h =>
         .done (.done h) := by
-  simp only [filter_eq_toIter_filter_toIterM, step, toIterM_toIter, IterM.step_filter, Id.run_bind]
-  generalize it.toIterM.step.run = step
+  simp only [filter_eq_toIter_filter_toIterM, step, toIterM_toIter, IterM.step_filter, id.bind_eq]
+  generalize it.toIterM.step = step
   cases step.inflate using PlausibleIterStep.casesOn
   · simp only
     split <;> simp [*]
@@ -281,8 +281,8 @@ def Iter.val_step_filter {f : β → Bool} :
         .skip (it'.filter f)
       | .done =>
         .done := by
-  simp only [filter_eq_toIter_filter_toIterM, step, toIterM_toIter, IterM.step_filter, Id.run_bind]
-  generalize it.toIterM.step.run = step
+  simp only [filter_eq_toIter_filter_toIterM, step, toIterM_toIter, IterM.step_filter, id.bind_eq]
+  generalize it.toIterM.step = step
   cases step.inflate using PlausibleIterStep.casesOn
   · simp only
     split <;> simp [*]
@@ -291,63 +291,63 @@ def Iter.val_step_filter {f : β → Bool} :
 
 @[simp]
 theorem Iter.toList_filterMap
-    [IteratorCollect α Id Id] [LawfulIteratorCollect α Id Id] [Finite α Id]
+    [IteratorCollect α id id] [LawfulIteratorCollect α id id] [Finite α id]
     {f : β → Option γ} :
     (it.filterMap f).toList = it.toList.filterMap f := by
   simp [filterMap_eq_toIter_filterMap_toIterM, toList_eq_toList_toIterM, IterM.toList_filterMap]
 
 @[simp]
 theorem Iter.toList_map
-    [IteratorCollect α Id Id] [LawfulIteratorCollect α Id Id] [Finite α Id]
+    [IteratorCollect α id id] [LawfulIteratorCollect α id id] [Finite α id]
     {f : β → γ} :
     (it.map f).toList = it.toList.map f := by
   simp [map_eq_toIter_map_toIterM, IterM.toList_map, Iter.toList_eq_toList_toIterM]
 
 @[simp]
 theorem Iter.toList_filter
-    [IteratorCollect α Id Id] [LawfulIteratorCollect α Id Id] [Finite α Id]
+    [IteratorCollect α id id] [LawfulIteratorCollect α id id] [Finite α id]
     {f : β → Bool} :
     (it.filter f).toList = it.toList.filter f := by
   simp [filter_eq_toIter_filter_toIterM, IterM.toList_filter, Iter.toList_eq_toList_toIterM]
 
 @[simp]
 theorem Iter.toListRev_filterMap
-    [IteratorCollect α Id Id] [LawfulIteratorCollect α Id Id] [Finite α Id]
+    [IteratorCollect α id id] [LawfulIteratorCollect α id id] [Finite α id]
     {f : β → Option γ} :
     (it.filterMap f).toListRev = it.toListRev.filterMap f := by
   simp [filterMap_eq_toIter_filterMap_toIterM, toListRev_eq_toListRev_toIterM, IterM.toListRev_filterMap]
 
 @[simp]
 theorem Iter.toListRev_map
-    [IteratorCollect α Id Id] [LawfulIteratorCollect α Id Id] [Finite α Id]
+    [IteratorCollect α id id] [LawfulIteratorCollect α id id] [Finite α id]
     {f : β → γ} :
     (it.map f).toListRev = it.toListRev.map f := by
   simp [map_eq_toIter_map_toIterM, IterM.toListRev_map, Iter.toListRev_eq_toListRev_toIterM]
 
 @[simp]
 theorem Iter.toListRev_filter
-    [IteratorCollect α Id Id] [LawfulIteratorCollect α Id Id] [Finite α Id]
+    [IteratorCollect α id id] [LawfulIteratorCollect α id id] [Finite α id]
     {f : β → Bool} :
     (it.filter f).toListRev = it.toListRev.filter f := by
   simp [filter_eq_toIter_filter_toIterM, IterM.toListRev_filter, Iter.toListRev_eq_toListRev_toIterM]
 
 @[simp]
 theorem Iter.toArray_filterMap
-    [IteratorCollect α Id Id] [LawfulIteratorCollect α Id Id] [Finite α Id]
+    [IteratorCollect α id id] [LawfulIteratorCollect α id id] [Finite α id]
     {f : β → Option γ} :
     (it.filterMap f).toArray = it.toArray.filterMap f := by
   simp [filterMap_eq_toIter_filterMap_toIterM, toArray_eq_toArray_toIterM, IterM.toArray_filterMap]
 
 @[simp]
 theorem Iter.toArray_map
-    [IteratorCollect α Id Id] [LawfulIteratorCollect α Id Id] [Finite α Id]
+    [IteratorCollect α id id] [LawfulIteratorCollect α id id] [Finite α id]
     {f : β → γ} :
     (it.map f).toArray = it.toArray.map f := by
   simp [map_eq_toIter_map_toIterM, IterM.toArray_map, Iter.toArray_eq_toArray_toIterM]
 
 @[simp]
 theorem Iter.toArray_filter
-    [IteratorCollect α Id Id] [LawfulIteratorCollect α Id Id] [Finite α Id]
+    [IteratorCollect α id id] [LawfulIteratorCollect α id id] [Finite α id]
     {f : β → Bool} :
     (it.filter f).toArray = it.toArray.filter f := by
   simp [filter_eq_toIter_filter_toIterM, IterM.toArray_filter, Iter.toArray_eq_toArray_toIterM]
@@ -355,10 +355,10 @@ theorem Iter.toArray_filter
 section Fold
 
 theorem Iter.foldM_filterMapM {α β γ δ : Type w} {m : Type w → Type w'} {n : Type w → Type w''}
-    [Iterator α Id β] [Finite α Id] [Monad m] [Monad n] [LawfulMonad m] [LawfulMonad n]
-    [IteratorLoop α Id Id] [IteratorLoop α Id m] [IteratorLoop α Id n]
+    [Iterator α id β] [Finite α id] [Monad m] [Monad n] [LawfulMonad m] [LawfulMonad n]
+    [IteratorLoop α id id] [IteratorLoop α id m] [IteratorLoop α id n]
     [MonadLiftT m n] [LawfulMonadLiftT m n]
-    [LawfulIteratorLoop α Id Id] [LawfulIteratorLoop α Id m] [LawfulIteratorLoop α Id n]
+    [LawfulIteratorLoop α id id] [LawfulIteratorLoop α id m] [LawfulIteratorLoop α id n]
     {f : β → m (Option γ)} {g : δ → γ → n δ} {init : δ} {it : Iter (α := α) β} :
     (it.filterMapM f).foldM (init := init) g =
       it.foldM (init := init) (fun d b => do
@@ -366,23 +366,23 @@ theorem Iter.foldM_filterMapM {α β γ δ : Type w} {m : Type w → Type w'} {n
           g d c) := by
   rw [foldM_eq_foldM_toIterM, filterMapM_eq_toIter_filterMapM_toIterM, IterM.foldM_filterMapM]
   congr
-  simp [instMonadLiftTOfMonadLift, Id.instMonadLiftTOfPure]
+  simp [instMonadLiftTOfMonadLift, id.instMonadLiftTOfPure]
 
 theorem Iter.foldM_mapM {α β γ δ : Type w} {m : Type w → Type w'} {n : Type w → Type w''}
-    [Iterator α Id β] [Finite α Id] [Monad m] [Monad n] [LawfulMonad m] [LawfulMonad n]
-    [IteratorLoop α Id m] [IteratorLoop α Id n]
-    [LawfulIteratorLoop α Id m] [LawfulIteratorLoop α Id n]
+    [Iterator α id β] [Finite α id] [Monad m] [Monad n] [LawfulMonad m] [LawfulMonad n]
+    [IteratorLoop α id m] [IteratorLoop α id n]
+    [LawfulIteratorLoop α id m] [LawfulIteratorLoop α id n]
     [MonadLiftT m n] [LawfulMonadLiftT m n]
     {f : β → m γ} {g : δ → γ → n δ} {init : δ} {it : Iter (α := α) β} :
     (it.mapM f).foldM (init := init) g =
       it.foldM (init := init) (fun d b => do let c ← f b; g d c) := by
   rw [foldM_eq_foldM_toIterM, mapM_eq_toIter_mapM_toIterM, IterM.foldM_mapM]
   congr
-  simp [instMonadLiftTOfMonadLift, Id.instMonadLiftTOfPure]
+  simp [instMonadLiftTOfMonadLift, id.instMonadLiftTOfPure]
 
 theorem Iter.foldM_filterMap {α β γ : Type w} {δ : Type x} {m : Type x → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [LawfulMonad m]
-    [IteratorLoop α Id m] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m] [LawfulMonad m]
+    [IteratorLoop α id m] [LawfulIteratorLoop α id m]
     {f : β → Option γ} {g : δ → γ → m δ} {init : δ} {it : Iter (α := α) β} :
     (it.filterMap f).foldM (init := init) g =
       it.foldM (init := init) (fun d b => do
@@ -413,8 +413,8 @@ theorem Iter.foldM_filterMap {α β γ : Type w} {δ : Type x} {m : Type x → T
     · simp [*]
 
 theorem Iter.foldM_map {α β γ : Type w} {δ : Type x} {m : Type x → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [LawfulMonad m]
-    [IteratorLoop α Id m] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m] [LawfulMonad m]
+    [IteratorLoop α id m] [LawfulIteratorLoop α id m]
     {f : β → γ} {g : δ → γ → m δ} {init : δ} {it : Iter (α := α) β} :
     (it.map f).foldM (init := init) g =
       it.foldM (init := init) (fun d b => g d (f b)) := by
@@ -426,9 +426,9 @@ theorem Iter.foldM_map {α β γ : Type w} {δ : Type x} {m : Type x → Type w'
   · simp
 
 theorem Iter.fold_filterMapM {α β γ δ : Type w} {m : Type w → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [LawfulMonad m]
-    [IteratorLoop α Id Id.{w}] [IteratorLoop α Id m]
-    [LawfulIteratorLoop α Id Id] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m] [LawfulMonad m]
+    [IteratorLoop.{w, w, w, w} α id id] [IteratorLoop α id m]
+    [LawfulIteratorLoop α id id] [LawfulIteratorLoop α id m]
     {f : β → m (Option γ)} {g : δ → γ → δ} {init : δ} {it : Iter (α := α) β} :
     (it.filterMapM f).fold (init := init) g =
       it.foldM (init := init) (fun d b => do
@@ -438,16 +438,16 @@ theorem Iter.fold_filterMapM {α β γ δ : Type w} {m : Type w → Type w'}
   rfl
 
 theorem Iter.fold_mapM {α β γ δ : Type w} {m : Type w → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [LawfulMonad m]
-    [IteratorLoop α Id Id.{w}] [IteratorLoop α Id m]
-    [LawfulIteratorLoop α Id Id] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m] [LawfulMonad m]
+    [IteratorLoop.{w, w, w, w} α id id] [IteratorLoop α id m]
+    [LawfulIteratorLoop α id id] [LawfulIteratorLoop α id m]
     {f : β → m γ} {g : δ → γ → δ} {init : δ} {it : Iter (α := α) β} :
     (it.mapM f).fold (init := init) g =
       it.foldM (init := init) (fun d b => do return g d (← f b)) := by
   rw [foldM_eq_foldM_toIterM, mapM_eq_toIter_mapM_toIterM, IterM.fold_mapM]
 
 theorem Iter.fold_filterMap {α β γ : Type w} {δ : Type x}
-    [Iterator α Id β] [Finite α Id] [IteratorLoop α Id Id] [LawfulIteratorLoop α Id Id]
+    [Iterator α id β] [Finite α id] [IteratorLoop α id id] [LawfulIteratorLoop α id id]
     {f : β → Option γ} {g : δ → γ → δ} {init : δ} {it : Iter (α := α) β} :
     (it.filterMap f).fold (init := init) g =
       it.fold (init := init) (fun d b =>
@@ -458,8 +458,8 @@ theorem Iter.fold_filterMap {α β γ : Type w} {δ : Type x}
   rfl
 
 theorem Iter.fold_map {α β γ : Type w} {δ : Type x}
-    [Iterator α Id β] [Finite α Id]
-    [IteratorLoop α Id Id] [LawfulIteratorLoop α Id Id]
+    [Iterator α id β] [Finite α id]
+    [IteratorLoop α id id] [LawfulIteratorLoop α id id]
     {f : β → γ} {g : δ → γ → δ} {init : δ} {it : Iter (α := α) β} :
     (it.map f).fold (init := init) g =
       it.fold (init := init) (fun d b => g d (f b)) := by
@@ -468,7 +468,7 @@ theorem Iter.fold_map {α β γ : Type w} {δ : Type x}
 end Fold
 
 theorem Iter.anyM_filterMapM {α β β' : Type w} {m : Type w → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [LawfulMonad m]
+    [Iterator α id β] [Finite α id] [Monad m] [LawfulMonad m]
     {it : Iter (α := α) β} {f : β → m (Option β')} {p : β' → m (ULift Bool)} :
     (it.filterMapM f).anyM p = (it.mapM (pure (f := m))).anyM (fun x => do
       match ← f x with
@@ -482,8 +482,8 @@ theorem Iter.anyM_filterMapM {α β β' : Type w} {m : Type w → Type w'}
 This lemma expresses `Iter.anyM` in terms of `IterM.anyM`.
 It requires all involved types to live in `Type 0`.
 -/
-theorem Iter.anyM_eq_anyM_mapM_pure {α β : Type} {m : Type → Type w'} [Iterator α Id β]
-    [Finite α Id] [Monad m] [LawfulMonad m] [IteratorLoop α Id m] [LawfulIteratorLoop α Id m]
+theorem Iter.anyM_eq_anyM_mapM_pure {α β : Type} {m : Type → Type w'} [Iterator α id β]
+    [Finite α id] [Monad m] [LawfulMonad m] [IteratorLoop α id m] [LawfulIteratorLoop α id m]
     {it : Iter (α := α) β} {p : β → m Bool} :
     it.anyM p = ULift.down <$> (it.mapM (α := α) (pure (f := m))).anyM (fun x => ULift.up <$> p x) := by
   rw [anyM_eq_forIn, IterM.anyM_eq_forIn, map_eq_pure_bind]
@@ -499,13 +499,13 @@ theorem Iter.anyM_eq_anyM_mapM_pure {α β : Type} {m : Type → Type w'} [Itera
   · simp
 
 theorem Iter.anyM_mapM {α β β' : Type w} {m : Type w → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [LawfulMonad m]
+    [Iterator α id β] [Finite α id] [Monad m] [LawfulMonad m]
     {it : Iter (α := α) β} {f : β → m β'} {p : β' → m (ULift Bool)} :
     (it.mapM f).anyM p = (it.mapM (pure (f := m))).anyM (fun x => do p (← f x)) := by
   rw [mapM_eq_toIter_mapM_toIterM, IterM.anyM_mapM, mapM_eq_toIter_mapM_toIterM]
 
 theorem Iter.anyM_filterM {α β : Type w} {m : Type w → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [LawfulMonad m]
+    [Iterator α id β] [Finite α id] [Monad m] [LawfulMonad m]
     {it : Iter (α := α) β} {f : β → m (ULift Bool)} {p : β → m (ULift Bool)} :
     (it.filterM f).anyM p = (it.mapM (pure (f := m))).anyM (fun x => do
         if (← f x).down then
@@ -515,8 +515,8 @@ theorem Iter.anyM_filterM {α β : Type w} {m : Type w → Type w'}
   rw [filterM_eq_toIter_filterM_toIterM, IterM.anyM_filterM, mapM_eq_toIter_mapM_toIterM]
 
 theorem Iter.anyM_filterMap {α β β' : Type w} {m : Type → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [IteratorLoop α Id m]
-    [LawfulMonad m] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m] [IteratorLoop α id m]
+    [LawfulMonad m] [LawfulIteratorLoop α id m]
     {it : Iter (α := α) β} {f : β → Option β'} {p : β' → m Bool} :
     (it.filterMap f).anyM p = it.anyM (fun x => do
       match f x with
@@ -535,8 +535,8 @@ theorem Iter.anyM_filterMap {α β β' : Type w} {m : Type → Type w'}
   · simp
 
 theorem Iter.anyM_map {α β β' : Type w} {m : Type → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [IteratorLoop α Id m]
-    [LawfulMonad m] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m] [IteratorLoop α id m]
+    [LawfulMonad m] [LawfulIteratorLoop α id m]
     {it : Iter (α := α) β} {f : β → β'} {p : β' → m Bool} :
     (it.map f).anyM p = it.anyM (fun x => p (f x)) := by
   induction it using Iter.inductSteps with | step it ihy ihs
@@ -547,8 +547,8 @@ theorem Iter.anyM_map {α β β' : Type w} {m : Type → Type w'}
   · simp
 
 theorem Iter.anyM_filter {α β : Type w} {m : Type → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m][IteratorLoop α Id m]
-    [LawfulMonad m] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m][IteratorLoop α id m]
+    [LawfulMonad m] [LawfulIteratorLoop α id m]
     {it : Iter (α := α) β} {f : β → Bool} {p : β → m Bool} :
     (it.filter f).anyM p = it.anyM (fun x => do
         if f x then
@@ -565,8 +565,8 @@ theorem Iter.anyM_filter {α β : Type w} {m : Type → Type w'}
   · simp
 
 theorem Iter.any_filterMapM {α β β' : Type w} {m : Type w → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [IteratorLoop α Id m]
-    [LawfulMonad m] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m] [IteratorLoop α id m]
+    [LawfulMonad m] [LawfulIteratorLoop α id m]
     {it : Iter (α := α) β} {f : β → m (Option β')} {p : β' → Bool} :
     (it.filterMapM f).any p = (it.mapM (pure (f := m))).anyM (fun x => do
       match ← f x with
@@ -575,15 +575,15 @@ theorem Iter.any_filterMapM {α β β' : Type w} {m : Type w → Type w'}
   simp [IterM.any_eq_anyM, anyM_filterMapM]
 
 theorem Iter.any_mapM {α β β' : Type w} {m : Type w → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [IteratorLoop α Id m]
-    [LawfulMonad m] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m] [IteratorLoop α id m]
+    [LawfulMonad m] [LawfulIteratorLoop α id m]
     {it : Iter (α := α) β} {f : β → m β'} {p : β' → Bool} :
     (it.mapM f).any p = (it.mapM pure).anyM (fun x => (.up <| p ·) <$> (f x)) := by
   simp [IterM.any_eq_anyM, anyM_mapM]
 
 theorem Iter.any_filterM {α β : Type w} {m : Type w → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [IteratorLoop α Id m]
-    [LawfulMonad m] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m] [IteratorLoop α id m]
+    [LawfulMonad m] [LawfulIteratorLoop α id m]
     {it : Iter (α := α) β} {f : β → m (ULift Bool)} {p : β → Bool} :
     (it.filterM f).any p = (it.mapM (pure (f := m))).anyM (fun x => do
         if (← f x).down then
@@ -593,8 +593,8 @@ theorem Iter.any_filterM {α β : Type w} {m : Type w → Type w'}
   simp [IterM.any_eq_anyM, anyM_filterM]
 
 theorem Iter.any_filterMap {α β β' : Type w}
-    [Iterator α Id β] [Finite α Id][IteratorLoop α Id Id]
-    [LawfulIteratorLoop α Id Id]
+    [Iterator α id β] [Finite α id][IteratorLoop α id id]
+    [LawfulIteratorLoop α id id]
     {it : Iter (α := α) β} {f : β → Option β'} {p : β' → Bool} :
     (it.filterMap f).any p = it.any (fun x =>
       match f x with
@@ -613,8 +613,8 @@ theorem Iter.any_filterMap {α β β' : Type w}
   · simp
 
 theorem Iter.any_map {α β β' : Type w}
-    [Iterator α Id β] [Finite α Id] [IteratorLoop α Id Id]
-    [LawfulIteratorLoop α Id Id]
+    [Iterator α id β] [Finite α id] [IteratorLoop α id id]
+    [LawfulIteratorLoop α id id]
     {it : Iter (α := α) β} {f : β → β'} {p : β' → Bool} :
     (it.map f).any p = it.any (fun x => p (f x)) := by
   induction it using Iter.inductSteps with | step it ihy ihs
@@ -625,7 +625,7 @@ theorem Iter.any_map {α β β' : Type w}
   · simp
 
 theorem Iter.allM_filterMapM {α β β' : Type w} {m : Type w → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [LawfulMonad m]
+    [Iterator α id β] [Finite α id] [Monad m] [LawfulMonad m]
     {it : Iter (α := α) β} {f : β → m (Option β')} {p : β' → m (ULift Bool)} :
     (it.filterMapM f).allM p = (it.mapM (pure (f := m))).allM (fun x => do
       match ← f x with
@@ -638,8 +638,8 @@ theorem Iter.allM_filterMapM {α β β' : Type w} {m : Type w → Type w'}
 This lemma expresses `Iter.allM` in terms of `IterM.allM`.
 It requires all involved types to live in `Type 0`.
 -/
-theorem Iter.allM_eq_allM_mapM_pure {α β : Type} {m : Type → Type w'} [Iterator α Id β]
-    [Finite α Id] [Monad m] [LawfulMonad m] [IteratorLoop α Id m] [LawfulIteratorLoop α Id m]
+theorem Iter.allM_eq_allM_mapM_pure {α β : Type} {m : Type → Type w'} [Iterator α id β]
+    [Finite α id] [Monad m] [LawfulMonad m] [IteratorLoop α id m] [LawfulIteratorLoop α id m]
     {it : Iter (α := α) β} {p : β → m Bool} :
     it.allM p = ULift.down <$> (it.mapM (α := α) (pure (f := m))).allM (fun x => ULift.up <$> p x) := by
   rw [allM_eq_forIn, IterM.allM_eq_forIn, map_eq_pure_bind]
@@ -655,13 +655,13 @@ theorem Iter.allM_eq_allM_mapM_pure {α β : Type} {m : Type → Type w'} [Itera
   · simp
 
 theorem Iter.allM_mapM {α β β' : Type w} {m : Type w → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [LawfulMonad m]
+    [Iterator α id β] [Finite α id] [Monad m] [LawfulMonad m]
     {it : Iter (α := α) β} {f : β → m β'} {p : β' → m (ULift Bool)} :
     (it.mapM f).allM p = (it.mapM (pure (f := m))).allM (fun x => do p (← f x)) := by
   rw [mapM_eq_toIter_mapM_toIterM, IterM.allM_mapM, mapM_eq_toIter_mapM_toIterM]
 
 theorem Iter.allM_filterM {α β : Type w} {m : Type w → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [LawfulMonad m]
+    [Iterator α id β] [Finite α id] [Monad m] [LawfulMonad m]
     {it : Iter (α := α) β} {f : β → m (ULift Bool)} {p : β → m (ULift Bool)} :
     (it.filterM f).allM p = (it.mapM (pure (f := m))).allM (fun x => do
         if (← f x).down then
@@ -671,8 +671,8 @@ theorem Iter.allM_filterM {α β : Type w} {m : Type w → Type w'}
   rw [filterM_eq_toIter_filterM_toIterM, IterM.allM_filterM, mapM_eq_toIter_mapM_toIterM]
 
 theorem Iter.allM_filterMap {α β β' : Type w} {m : Type → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [IteratorLoop α Id m]
-    [LawfulMonad m] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m] [IteratorLoop α id m]
+    [LawfulMonad m] [LawfulIteratorLoop α id m]
     {it : Iter (α := α) β} {f : β → Option β'} {p : β' → m Bool} :
     (it.filterMap f).allM p = it.allM (fun x => do
       match f x with
@@ -691,8 +691,8 @@ theorem Iter.allM_filterMap {α β β' : Type w} {m : Type → Type w'}
   · simp
 
 theorem Iter.allM_map {α β β' : Type w} {m : Type → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [IteratorLoop α Id m]
-    [LawfulMonad m] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m] [IteratorLoop α id m]
+    [LawfulMonad m] [LawfulIteratorLoop α id m]
     {it : Iter (α := α) β} {f : β → β'} {p : β' → m Bool} :
     (it.map f).allM p = it.allM (fun x => p (f x)) := by
   induction it using Iter.inductSteps with | step it ihy ihs
@@ -703,8 +703,8 @@ theorem Iter.allM_map {α β β' : Type w} {m : Type → Type w'}
   · simp
 
 theorem Iter.allM_filter {α β : Type w} {m : Type → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m][IteratorLoop α Id m]
-    [LawfulMonad m] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m][IteratorLoop α id m]
+    [LawfulMonad m] [LawfulIteratorLoop α id m]
     {it : Iter (α := α) β} {f : β → Bool} {p : β → m Bool} :
     (it.filter f).allM p = it.allM (fun x => do
         if f x then
@@ -721,8 +721,8 @@ theorem Iter.allM_filter {α β : Type w} {m : Type → Type w'}
   · simp
 
 theorem Iter.all_filterMapM {α β β' : Type w} {m : Type w → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [IteratorLoop α Id m]
-    [LawfulMonad m] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m] [IteratorLoop α id m]
+    [LawfulMonad m] [LawfulIteratorLoop α id m]
     {it : Iter (α := α) β} {f : β → m (Option β')} {p : β' → Bool} :
     (it.filterMapM f).all p = (it.mapM (pure (f := m))).allM (fun x => do
       match ← f x with
@@ -731,15 +731,15 @@ theorem Iter.all_filterMapM {α β β' : Type w} {m : Type w → Type w'}
   simp [IterM.all_eq_allM, allM_filterMapM]
 
 theorem Iter.all_mapM {α β β' : Type w} {m : Type w → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [IteratorLoop α Id m]
-    [LawfulMonad m] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m] [IteratorLoop α id m]
+    [LawfulMonad m] [LawfulIteratorLoop α id m]
     {it : Iter (α := α) β} {f : β → m β'} {p : β' → Bool} :
     (it.mapM f).all p = (it.mapM pure).allM (fun x => (.up <| p ·) <$> (f x)) := by
   simp [IterM.all_eq_allM, allM_mapM]
 
 theorem Iter.all_filterM {α β : Type w} {m : Type w → Type w'}
-    [Iterator α Id β] [Finite α Id] [Monad m] [IteratorLoop α Id m]
-    [LawfulMonad m] [LawfulIteratorLoop α Id m]
+    [Iterator α id β] [Finite α id] [Monad m] [IteratorLoop α id m]
+    [LawfulMonad m] [LawfulIteratorLoop α id m]
     {it : Iter (α := α) β} {f : β → m (ULift Bool)} {p : β → Bool} :
     (it.filterM f).all p = (it.mapM (pure (f := m))).allM (fun x => do
         if (← f x).down then
@@ -749,8 +749,8 @@ theorem Iter.all_filterM {α β : Type w} {m : Type w → Type w'}
   simp [IterM.all_eq_allM, allM_filterM]
 
 theorem Iter.all_filterMap {α β β' : Type w}
-    [Iterator α Id β] [Finite α Id][IteratorLoop α Id Id]
-    [LawfulIteratorLoop α Id Id]
+    [Iterator α id β] [Finite α id][IteratorLoop α id id]
+    [LawfulIteratorLoop α id id]
     {it : Iter (α := α) β} {f : β → Option β'} {p : β' → Bool} :
     (it.filterMap f).all p = it.all (fun x =>
       match f x with
@@ -769,8 +769,8 @@ theorem Iter.all_filterMap {α β β' : Type w}
   · simp
 
 theorem Iter.all_map {α β β' : Type w}
-    [Iterator α Id β] [Finite α Id] [IteratorLoop α Id Id]
-    [LawfulIteratorLoop α Id Id]
+    [Iterator α id β] [Finite α id] [IteratorLoop α id id]
+    [LawfulIteratorLoop α id id]
     {it : Iter (α := α) β} {f : β → β'} {p : β' → Bool} :
     (it.map f).all p = it.all (fun x => p (f x)) := by
   induction it using Iter.inductSteps with | step it ihy ihs

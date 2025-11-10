@@ -74,7 +74,7 @@ In particular:
 There is no guarantee that two equivalent paths normalize to the same path.
 -/
 -- TODO: normalize `a/`, `a//b`, etc.
-def normalize (p : FilePath) : FilePath := Id.run do
+def normalize (p : FilePath) : FilePath := id.run do
   let mut p := p
   -- normalize drive letter
   if isWindows && p.toString.length >= 2 && p.toString.front.isLower && String.Pos.Raw.get p.toString ⟨1⟩ == ':' then

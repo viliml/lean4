@@ -113,7 +113,7 @@ private def isCDotTac (tac : TSyntax `tactic) : Bool :=
   | `(tactic| · $_:tacticSeq) => true
   | _ => false
 
-private def appendSeq (tacs : Array (TSyntax `tactic)) (tac : TSyntax `tactic) : Array (TSyntax `tactic) := Id.run do
+private def appendSeq (tacs : Array (TSyntax `tactic)) (tac : TSyntax `tactic) : Array (TSyntax `tactic) := id.run do
   match tac with
   | `(tactic| ($tseq:tacticSeq)) =>
     if let some tacs' := getTacSeqElems? tseq then
@@ -149,7 +149,7 @@ private def filterSorry (s : Array (TSyntax `tactic)) : Array (TSyntax `tactic) 
     | _ => true
 
 /-- Erases duplicate tactics from `s`. -/
-private def removeDuplicates (s : Array (TSyntax `tactic)) : Array (TSyntax `tactic) := Id.run do
+private def removeDuplicates (s : Array (TSyntax `tactic)) : Array (TSyntax `tactic) := id.run do
   let mut r := #[]
   for t in s do
     unless r.contains t do
@@ -162,7 +162,7 @@ private def getSuggestionsCore (tac : TSyntax `tactic): Array (TSyntax `tactic) 
   removeDuplicates tacs
 
 /-- Return tactics that could solve all subgoals. -/
-private def getTacsSolvedAll (tacs2 : Array (Array (TSyntax `tactic))) : Array (TSyntax `tactic) := Id.run do
+private def getTacsSolvedAll (tacs2 : Array (Array (TSyntax `tactic))) : Array (TSyntax `tactic) := id.run do
   if tacs2.isEmpty then
     return #[]
   else
@@ -177,7 +177,7 @@ private def eraseTacs (tacss : Array (Array (TSyntax `tactic))) (tacs : Array (T
   tacss.map fun ts => ts.filter fun t => !tacs.contains t
 
 /-- Returns tactic kinds that could solve all subgoals. -/
-private def getKindsSolvedAll (tacss : Array (Array (TSyntax `tactic))) : Array SyntaxNodeKind := Id.run do
+private def getKindsSolvedAll (tacss : Array (Array (TSyntax `tactic))) : Array SyntaxNodeKind := id.run do
   if tacss.isEmpty then
     return #[]
   else
@@ -248,20 +248,20 @@ def observing (x : TryTacticM α) : TryTacticM (TacticResult α) := do
       s.restore (restoreInfo := true)
       return .error ex sNew
 
-private def mergeParams (ps1 ps2 : Array Syntax) : Array Syntax := Id.run do
+private def mergeParams (ps1 ps2 : Array Syntax) : Array Syntax := id.run do
   let mut r := ps1
   for p in ps2 do
     unless r.contains p do
       r := r.push p
   return r
 
-private def mergeSimp? (tac1 tac2 : TSyntax `tactic) : Option (TSyntax `tactic) := Id.run do
+private def mergeSimp? (tac1 tac2 : TSyntax `tactic) : Option (TSyntax `tactic) := id.run do
   if setSimpParams tac1 #[] != setSimpParams tac2 #[] then return none
   let ps1 := getSimpParams tac1
   let ps2 := getSimpParams tac2
   return some (setSimpParams tac1 (mergeParams ps1 ps2))
 
-private def mergeGrind? (tac1 tac2 : TSyntax `tactic) : Option (TSyntax `tactic) := Id.run do
+private def mergeGrind? (tac1 tac2 : TSyntax `tactic) : Option (TSyntax `tactic) := id.run do
   if setGrindParams tac1 #[] != setGrindParams tac2 #[] then return none
   let ps1 := getGrindParams tac1
   let ps2 := getGrindParams tac2
@@ -300,7 +300,7 @@ We say suggestions mixing `only` and non-`only` tactics are suboptimal and shoul
 the user.
 -/
 -- TODO: we may add a mechanism for making this extensible.
-private def isOnlyAndNonOnly (tacs2 : Array (TSyntax `tactic)) : Bool := Id.run do
+private def isOnlyAndNonOnly (tacs2 : Array (TSyntax `tactic)) : Bool := id.run do
   if tacs2.isEmpty then return false
   let k := tacs2[0]!.raw.getKind
   unless tacs2.all fun tac => tac.raw.getKind == k do return false

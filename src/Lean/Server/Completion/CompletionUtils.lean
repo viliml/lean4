@@ -41,7 +41,7 @@ structure ContextualizedCompletionInfo where
   info      : CompletionInfo
 
 partial def minimizeGlobalIdentifierInContext (currNamespace : Name) (openDecls : List OpenDecl) (id : Name)
-    : Name := Id.run do
+    : Name := id.run do
   let mut minimized := shortenInCurrentNamespace id currNamespace
   for openDecl in openDecls do
     let candidate? := match openDecl with

@@ -731,7 +731,7 @@ def mkIdent (val : Name) : Ident :=
 @[inline] def mkGroupNode (args : Array Syntax := #[]) : Syntax :=
   mkNode groupKind args
 
-def mkSepArray (as : Array Syntax) (sep : Syntax) : Array Syntax := Id.run do
+def mkSepArray (as : Array Syntax) (sep : Syntax) : Array Syntax := id.run do
   let mut i := 0
   let mut r := #[]
   for a in as do
@@ -1414,7 +1414,7 @@ test with the predicate `p`. The resulting array contains the tested elements fo
 `true`, separated by the corresponding separator elements.
 -/
 def filterSepElems (a : Array Syntax) (p : Syntax → Bool) : Array Syntax :=
-  Id.run <| a.filterSepElemsM (pure <| p ·)
+  id.run <| a.filterSepElemsM p
 
 private partial def mapSepElemsMAux {m : Type → Type} [Monad m] (a : Array Syntax) (f : Syntax → m Syntax) (i : Nat) (acc : Array Syntax) : m (Array Syntax) := do
   if h : i < a.size then
@@ -1431,7 +1431,7 @@ def mapSepElemsM {m : Type → Type} [Monad m] (a : Array Syntax) (f : Syntax �
   mapSepElemsMAux a f 0 #[]
 
 def mapSepElems (a : Array Syntax) (f : Syntax → Syntax) : Array Syntax :=
-  Id.run <| a.mapSepElemsM (pure <| f ·)
+  id.run <| a.mapSepElemsM f
 
 end Array
 

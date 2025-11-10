@@ -62,7 +62,7 @@ def toTimestampAssumingUTC (dt : PlainDateTime) : Timestamp :=
 /--
 Converts a `Timestamp` to a `PlainDateTime`.
 -/
-def ofTimestampAssumingUTC (stamp : Timestamp) : PlainDateTime := Id.run do
+def ofTimestampAssumingUTC (stamp : Timestamp) : PlainDateTime := id.run do
   let leapYearEpoch := 11017
   let daysPer400Y := 365 * 400 + 97
   let daysPer100Y := 365 * 100 + 24

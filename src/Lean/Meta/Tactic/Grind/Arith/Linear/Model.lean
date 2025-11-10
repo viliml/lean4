@@ -11,7 +11,7 @@ import Init.Grind.Module.Envelope
 public section
 namespace Lean.Meta.Grind.Arith.Linear
 
-def getAssignment? (s : Struct) (e : Expr) : Option Rat := Id.run do
+def getAssignment? (s : Struct) (e : Expr) : Option Rat := id.run do
   let some x := s.varMap.find? { expr := e } | return none
   if h : x < s.assignment.size then
     return some s.assignment[x]

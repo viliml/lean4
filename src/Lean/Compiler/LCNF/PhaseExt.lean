@@ -50,7 +50,7 @@ private def getTransparencyExt : Phase → EnvExtension (List Name × NameSet)
   | .base => baseTransparentDeclsExt
   | .mono => monoTransparentDeclsExt
 
-def isDeclPublic (env : Environment) (declName : Name) : Bool := Id.run do
+def isDeclPublic (env : Environment) (declName : Name) : Bool := id.run do
   if !env.header.isModule then
     return true
   -- The IR compiler may call the boxed variant it introduces after we do visibility inference, so
@@ -68,7 +68,7 @@ def setDeclPublic (env : Environment) (declName : Name) : Environment :=
     publicDeclsExt.modifyState env fun s =>
       (declName :: s.1, s.2.insert declName)
 
-def isDeclTransparent (env : Environment) (phase : Phase) (declName : Name) : Bool := Id.run do
+def isDeclTransparent (env : Environment) (phase : Phase) (declName : Name) : Bool := id.run do
   if !env.header.isModule then
     return true
   let (_, map) := getTransparencyExt phase |>.getState env
@@ -106,7 +106,7 @@ def mkDeclExt (phase : Phase) (name : Name := by exact decl_name%) : IO DeclExt 
     mkInitial := pure {},
     addImportedFn := fun _ => pure {},
     addEntryFn := fun s decl => s.insert decl.name decl
-    exportEntriesFnEx env s level := Id.run do
+    exportEntriesFnEx env s level := id.run do
       let mut entries := sortedDecls s
       if level != .private then
         entries := entries.filterMap fun decl => do

@@ -217,7 +217,7 @@ def lakeShortOption : (opt : Char) → CliM PUnit
 
 /-- Returns an error if the string is not valid GitHub repository name. -/
 -- Limitations derived from https://github.com/dead-claudia/github-limits
-def validateRepo? (repo : String) : Option String := Id.run do
+def validateRepo? (repo : String) : Option String := id.run do
   unless repo.all isValidRepoChar do
     return "invalid characters in repository name"
   match repo.splitToList (· == '/') with

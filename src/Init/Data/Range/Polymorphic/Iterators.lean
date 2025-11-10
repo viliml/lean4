@@ -25,10 +25,10 @@ namespace Rxc
 Iterators for right-closed ranges implementing {name}`Rxc.HasSize` support {name}`Iter.size`.
 -/
 instance [Rxc.HasSize α] [UpwardEnumerable α] [LE α] [DecidableLE α] :
-    IteratorSize (Rxc.Iterator α) Id where
+    IteratorSize (Rxc.Iterator α) id where
   size it := match it.internalState.next with
-    | none => pure (.up 0)
-    | some next => pure (.up (Rxc.HasSize.size next it.internalState.upperBound))
+    | none => .up 0
+    | some next => .up (Rxc.HasSize.size next it.internalState.upperBound)
 
 end Rxc
 
@@ -38,10 +38,10 @@ namespace Rxo
 Iterators for ranges implementing {name}`Rxo.HasSize` support {name}`Iter.size`.
 -/
 instance [Rxo.HasSize α] [UpwardEnumerable α] [LT α] [DecidableLT α] :
-    IteratorSize (Rxo.Iterator α) Id where
+    IteratorSize (Rxo.Iterator α) id where
   size it := match it.internalState.next with
-    | none => pure (.up 0)
-    | some next => pure (.up (Rxo.HasSize.size next it.internalState.upperBound))
+    | none => .up 0
+    | some next => .up (Rxo.HasSize.size next it.internalState.upperBound)
 
 end Rxo
 
@@ -51,10 +51,10 @@ namespace Rxi
 Iterators for ranges implementing {name}`Rxi.HasSize` support {name}`Iter.size`.
 -/
 instance [Rxi.HasSize α] [UpwardEnumerable α] :
-    IteratorSize (Rxi.Iterator α) Id where
+    IteratorSize (Rxi.Iterator α) id where
   size it := match it.internalState.next with
-    | none => pure (.up 0)
-    | some next => pure (.up (Rxi.HasSize.size next))
+    | none => .up 0
+    | some next => .up (Rxi.HasSize.size next)
 
 end Rxi
 
@@ -132,7 +132,7 @@ theorem _root_.Std.Rxc.Iterator.upwardEnumerableLe_of_isPlausibleIndirectOutput
 @[no_expose]
 instance {m} [UpwardEnumerable α]
     [LE α] [DecidableLE α] [LawfulUpwardEnumerable α] [LawfulUpwardEnumerableLE α]
-    [Monad m] [Finite (Rxc.Iterator α) Id] :
+    [Monad m] [Finite (Rxc.Iterator α) id] :
     ForIn' m (Rcc α) α inferInstance where
   forIn' r init f := by
     haveI := Iter.instForIn' (α := Rxc.Iterator α) (β := α) (n := m)
@@ -218,7 +218,7 @@ theorem _root_.Std.Rxo.Iterator.upwardEnumerableLe_of_isPlausibleIndirectOutput
 @[no_expose]
 instance {m} [UpwardEnumerable α] [LE α] [LT α] [DecidableLT α]
     [LawfulUpwardEnumerable α] [LawfulUpwardEnumerableLE α] [LawfulUpwardEnumerableLT α]
-    [Monad m] [Finite (Rxo.Iterator α) Id] :
+    [Monad m] [Finite (Rxo.Iterator α) id] :
     ForIn' m (Rco α) α inferInstance where
   forIn' r init f := by
     haveI := Iter.instForIn' (α := Rxo.Iterator α) (β := α) (n := m)
@@ -303,7 +303,7 @@ theorem _root_.Std.Rxi.Iterator.upwardEnumerableLe_of_isPlausibleIndirectOutput
 instance {m} [UpwardEnumerable α]
     [LE α]
     [LawfulUpwardEnumerable α] [LawfulUpwardEnumerableLE α]
-    [Monad m] [Finite (Rxi.Iterator α) Id] :
+    [Monad m] [Finite (Rxi.Iterator α) id] :
     ForIn' m (Rci α) α inferInstance where
   forIn' r init f := by
     haveI := Iter.instForIn' (α := Rxi.Iterator α) (β := α) (n := m)
@@ -382,7 +382,7 @@ theorem Internal.isPlausibleIndirectOutput_iter_iff
 instance {m} [UpwardEnumerable α]
     [LE α] [DecidableLE α] [LawfulUpwardEnumerable α] [LawfulUpwardEnumerableLE α]
     [LT α] [LawfulUpwardEnumerableLT α]
-    [Monad m] [Finite (Rxc.Iterator α) Id] :
+    [Monad m] [Finite (Rxc.Iterator α) id] :
     ForIn' m (Roc α) α inferInstance where
   forIn' r init f := by
     haveI := Iter.instForIn' (α := Rxc.Iterator α) (β := α) (n := m)
@@ -460,7 +460,7 @@ theorem Internal.isPlausibleIndirectOutput_iter_iff
 instance {m} [UpwardEnumerable α]
     [LT α] [DecidableLT α]
     [LawfulUpwardEnumerable α] [LawfulUpwardEnumerableLT α]
-    [Monad m] [Finite (Rxo.Iterator α) Id] :
+    [Monad m] [Finite (Rxo.Iterator α) id] :
     ForIn' m (Roo α) α inferInstance where
   forIn' r init f := by
     haveI := Iter.instForIn' (α := Rxo.Iterator α) (β := α) (n := m)
@@ -534,7 +534,7 @@ theorem Internal.isPlausibleIndirectOutput_iter_iff
 @[no_expose]
 instance {m} [UpwardEnumerable α]
     [LT α] [LawfulUpwardEnumerable α] [LawfulUpwardEnumerableLT α]
-    [Monad m] [Finite (Rxi.Iterator α) Id] :
+    [Monad m] [Finite (Rxi.Iterator α) id] :
     ForIn' m (Roi α) α inferInstance where
   forIn' r init f := by
     haveI := Iter.instForIn' (α := Rxi.Iterator α) (β := α) (n := m)
@@ -607,7 +607,7 @@ instance {m} [UpwardEnumerable α]
     [LE α] [DecidableLE α] [Least? α]
     [LawfulUpwardEnumerable α] [LawfulUpwardEnumerableLE α]
     [LawfulUpwardEnumerableLeast? α]
-    [Monad m] [Finite (Rxc.Iterator α) Id] :
+    [Monad m] [Finite (Rxc.Iterator α) id] :
     ForIn' m (Ric α) α inferInstance where
   forIn' r init f := by
     haveI := Iter.instForIn' (α := Rxc.Iterator α) (β := α) (n := m)
@@ -679,7 +679,7 @@ instance {m} [UpwardEnumerable α]
     [LT α] [DecidableLT α] [Least? α]
     [LawfulUpwardEnumerable α] [LawfulUpwardEnumerableLT α]
     [LawfulUpwardEnumerableLeast? α]
-    [Monad m] [Finite (Rxo.Iterator α) Id] :
+    [Monad m] [Finite (Rxo.Iterator α) id] :
     ForIn' m (Rio α) α inferInstance where
   forIn' r init f := by
     haveI := Iter.instForIn' (α := Rxo.Iterator α) (β := α) (n := m)
@@ -710,8 +710,8 @@ Returns the elements of the given full range as a list in ascending order.
 -/
 @[always_inline, inline, expose]
 def toList [UpwardEnumerable α] [Least? α] (r : Rii α)
-    [Iterator (Rxi.Iterator α) Id α] [Finite (Rxi.Iterator α) Id]
-    [IteratorCollect (Rxi.Iterator α) Id Id] : List α :=
+    [Iterator (Rxi.Iterator α) id α] [Finite (Rxi.Iterator α) id]
+    [IteratorCollect (Rxi.Iterator α) id id] : List α :=
   Internal.iter r |>.toList
 
 /--
@@ -719,15 +719,15 @@ Returns the elements of the given full range as an array in ascending order.
 -/
 @[always_inline, inline, expose]
 def toArray {α} [UpwardEnumerable α] [Least? α] (r : Rii α)
-    [Iterator (Rxi.Iterator α) Id α] [Finite (Rxi.Iterator α) Id]
-    [IteratorCollect (Rxi.Iterator α) Id Id] : Array α :=
+    [Iterator (Rxi.Iterator α) id α] [Finite (Rxi.Iterator α) id]
+    [IteratorCollect (Rxi.Iterator α) id id] : Array α :=
   Internal.iter r |>.toArray
 
 /--
 Returns the number of elements contained in the full range.
 -/
 @[always_inline, inline]
-def size [UpwardEnumerable α] [Least? α] (r : Rii α) [IteratorSize (Rxi.Iterator α) Id] : Nat :=
+def size [UpwardEnumerable α] [Least? α] (r : Rii α) [IteratorSize (Rxi.Iterator α) id] : Nat :=
   Internal.iter r |>.size
 
 section Iterator
@@ -744,7 +744,7 @@ theorem Internal.isPlausibleIndirectOutput_iter_iff
 @[no_expose]
 instance {m} [UpwardEnumerable α] [Least? α]
     [LawfulUpwardEnumerable α] [LawfulUpwardEnumerableLeast? α]
-    [Monad m] [Finite (Rxi.Iterator α) Id] :
+    [Monad m] [Finite (Rxi.Iterator α) id] :
     ForIn' m (Rii α) α inferInstance where
   forIn' r init f := by
     haveI := Iter.instForIn' (α := Rxi.Iterator α) (β := α) (n := m)

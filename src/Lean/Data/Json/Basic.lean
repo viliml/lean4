@@ -44,7 +44,7 @@ private partial def countDigits (n : Nat) : Nat :=
 
 -- convert mantissa * 10^-exponent to 0.mantissa * 10^exponent
 protected def normalize : JsonNumber → Int × Nat × Int
-  | ⟨m, e⟩ => Id.run do
+  | ⟨m, e⟩ => id.run do
     if m = 0 then (0, 0, 0)
     else
       let sign : Int := if m > 0 then 1 else -1

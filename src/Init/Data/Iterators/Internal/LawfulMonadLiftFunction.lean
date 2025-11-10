@@ -27,6 +27,10 @@ class LawfulMonadLiftBindFunction {m : Type u → Type v} {n : Type w → Type x
   liftBind_bind {β γ δ} (f : γ → n δ) (x : m β) (g : β → m γ) :
     liftBind γ δ f (x >>= g) = liftBind β δ (fun b => liftBind γ δ f (g b)) x
 
+theorem LawfulMonadLiftBindFunction.liftBind_id {m : Type u → Type v} [Monad m] (liftBind : ∀ γ δ, (γ → m δ) → γ → m δ)
+    [LawfulMonadLiftBindFunction (m := id) liftBind] {γ δ} (f : γ → m δ) (a : γ) : liftBind γ δ f a = f a :=
+  LawfulMonadLiftBindFunction.liftBind_pure (m := id) f a
+
 class LawfulMonadLiftFunction {m : Type u → Type v} {n : Type u → Type w}
     [Monad m] [Monad n] (lift : ⦃α : Type u⦄ → m α → n α) where
   lift_pure {α : Type u} (a : α) : lift (pure a) = pure a
@@ -67,13 +71,18 @@ theorem LawfulMonadLiftFunction.lift_seqRight [LawfulMonad m] [LawfulMonad n]
     lift (x *> y) = (lift x : n α) *> (lift y : n β) := by
   simp only [seqRight_eq, lift_map, lift_seq]
 
-abbrev idToMonad [Monad m] ⦃α : Type u⦄ (x : Id α) : m α :=
-    pure x.run
+abbrev idToMonad [Monad m] ⦃α : Type u⦄ (x : id α) : m α :=
+    pure x
 
 def LawfulMonadLiftFunction.idToMonad [Monad m] [LawfulMonad m] :
-    LawfulMonadLiftFunction (m := Id) (n := m) idToMonad where
+    LawfulMonadLiftFunction (m := id) (n := m) idToMonad where
   lift_pure := by simp [Internal.idToMonad]
   lift_bind := by simp [Internal.idToMonad]
+
+def LawfulMonadLiftFunction.pure [Monad m] [LawfulMonad m] :
+    LawfulMonadLiftFunction (m := id) (n := m) (pure : {_ : _} -> _) where
+  lift_pure := by simp
+  lift_bind := by simp
 
 instance [LawfulMonadLiftFunction lift] :
     letI : MonadLift m n := ⟨lift (α := _)⟩
@@ -96,7 +105,7 @@ instance [LawfulMonadLiftBindFunction (n := n) (fun _ _ f x => lift x >>= f)] [L
       (liftBind := fun _ _ f x => lift x >>= f) (β := β) (γ := γ) (δ := γ) pure x g
 
 def LawfulMonadLiftBindFunction.id [Monad m] [LawfulMonad m] :
-    LawfulMonadLiftBindFunction (m := Id) (n := m) (fun _ _ f x => f x.run) where
+    LawfulMonadLiftBindFunction (m := id) (n := m) (fun _ _ f x => f x) where
   liftBind_pure := by simp
   liftBind_bind := by simp
 
@@ -107,7 +116,7 @@ instance {m : Type u → Type v} [Monad m] {n : Type u → Type w} [Monad n] [Mo
   liftBind_bind := by simp
 
 instance {n : Type u → Type w} [Monad n] [LawfulMonad n] :
-    LawfulMonadLiftBindFunction (fun γ δ (f : γ → n δ) (x : Id γ) => f x.run) where
+    LawfulMonadLiftBindFunction (fun γ δ (f : γ → n δ) (x : id γ) => f x) where
   liftBind_pure := by simp
   liftBind_bind := by simp
 

@@ -38,12 +38,12 @@ def mkModel (goal : Goal) : MetaM (Array (Expr × Nat)) := do
       pre := pre.set! u (Int.ofNat v)
   -- Set remaining values
   for u in *...nodes.size do
-    let lower? := s.sources[u]!.foldl (init := none) fun val? v k => Id.run do
+    let lower? := s.sources[u]!.foldl (init := none) fun val? v k => id.run do
       let some va := pre[v]! | return val?
       let val' := va - k
       let some val := val? | return val'
       if val' > val then return val' else val?
-    let upper? := s.targets[u]!.foldl (init := none) fun val? v k => Id.run do
+    let upper? := s.targets[u]!.foldl (init := none) fun val? v k => id.run do
       let some va := pre[v]! | return val?
       let val' := va + k
       let some val := val? | return val'
@@ -58,7 +58,7 @@ def mkModel (goal : Goal) : MetaM (Array (Expr × Nat)) := do
     unless pre[u]!.isSome do
       let val := lower?.getD (upper?.getD 0)
       pre := pre.set! u (some val)
-  let min := pre.foldl (init := 0) fun min val? => Id.run do
+  let min := pre.foldl (init := 0) fun min val? => id.run do
     let some val := val? | return min
     if val < min then val else min
   let mut r := {}

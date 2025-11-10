@@ -115,7 +115,7 @@ def unpack (arity : Nat) (e : Expr) : Option (Array Expr) := do
   Return an array containing its "elements".
   Example: `mkTupleElems a 4` returns `#[a.1, a.2.1, a.2.2.1, a.2.2.2]`.
   -/
-private def mkTupleElems (t : Expr) (arity : Nat) : Array Expr := Id.run do
+private def mkTupleElems (t : Expr) (arity : Nat) : Array Expr := id.run do
   if arity = 0 then return #[]
   let mut result := #[]
   let mut t := t

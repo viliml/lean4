@@ -34,13 +34,13 @@ def Expr.hasSyntheticSorry (e : Expr) : Bool :=
 def Expr.hasNonSyntheticSorry (e : Expr) : Bool :=
   Option.isSome <| e.find? (·.isNonSyntheticSorry)
 
-def Declaration.hasSorry (d : Declaration) : Bool := Id.run do
+def Declaration.hasSorry (d : Declaration) : Bool := id.run do
   d.foldExprM (fun r e => r || e.hasSorry) false
 
-def Declaration.hasSyntheticSorry (d : Declaration) : Bool := Id.run do
+def Declaration.hasSyntheticSorry (d : Declaration) : Bool := id.run do
   d.foldExprM (fun r e => r || e.hasSyntheticSorry) false
 
-def Declaration.hasNonSyntheticSorry (d : Declaration) : Bool := Id.run do
+def Declaration.hasNonSyntheticSorry (d : Declaration) : Bool := id.run do
   d.foldExprM (fun r e => r || e.hasNonSyntheticSorry) false
 
 end Lean
